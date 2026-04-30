@@ -26,9 +26,10 @@ export default function LoginPage() {
                 console.log("The data is: ", res)
                 localStorage.setItem('UserId', JSON.stringify(res.user.UserId))
                 localStorage.setItem('Username', JSON.stringify(res.user.Username))
+                localStorage.setItem('Profile_Image', JSON.stringify(res.user.Profile_Image))
                 localStorage.setItem('token', res.token)
-                router.push('/')
-                
+                // router.push('/')
+                window.location.href = '/'
                 
             }
             else {

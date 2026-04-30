@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Logo from '../public/logos/Black.png';
+import Logo from '../public/logos/Logo.png';
 import { AiOutlineMenu, AiOutlineClose, AiOutlineInstagram, AiOutlineFacebook, AiOutlineX } from 'react-icons/ai';
 import { useState, useEffect } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
@@ -14,7 +14,12 @@ const NavBar = () => {
     const [ token, setToken ] = useState(null)
 
     useEffect(() => {
-        setToken(localStorage.getItem('token'))
+        const storedToken = localStorage.getItem('token')
+        setToken(storedToken)
+
+        if (storedToken) {
+            getProfileLogo(storedToken)
+        }
     }, [])
 
     const handleNav = () => {
@@ -56,6 +61,22 @@ const NavBar = () => {
     //     }
     // }
 
+    const getProfileLogo = async (authToken) => {
+        const userId = localStorage.getItem('UserId')
+        if (!userId) return
+        try {
+            const res = await fetch(`/api/profiles?userId=${userId}`, {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            })
+            const data = await res.json()
+            if (data[0]?.Profile_Image) {
+                setImageUrl(data[0].Profile_Image)
+            }
+        } catch (error){
+            console.log("Profile error:", error)
+        }
+    }
+
   return (
     <nav className='fixed w-full h-24 shadow-xl bg-white'>
         <div className='flex justify-between items-center h-full w-full px-4 2xl:px-16'>
@@ -63,8 +84,8 @@ const NavBar = () => {
                 <Image
                 src={Logo}
                 alt="Logo"
-                width="75"
-                height="75"
+                width="100"
+                
                 
                 className="cursor-pointer rounded-full"
                 priority
@@ -73,7 +94,7 @@ const NavBar = () => {
             <div className='hidden sm:flex'>
                 <ul className="hidden sm:flex items-center px-4">
                     <Link href="/todo">
-                        <li className="ml-10 hover:border-b text-xl">To do</li>
+                        <li className="ml-10 mr-8 hover:border-b text-xl ">To do</li>
                     </Link>
                     {/* <Link href="/profile">
                         <li className="ml-10 hover:border-b text-xl">Profile</li>
@@ -83,8 +104,12 @@ const NavBar = () => {
                             <div>
                                 <form onSubmit={onSubmit} className="flex flex-col items-center">
                                     {imageUrl
-                                        ? <img src={imageUrl} alt="profile_img" className="rounded-full object-cover w-[150px] h-[150px] cursor-pointer" />
-                                        : <FaUserCircle size={80} className="text-gray-400 cursor-pointer" />
+                                        ? <div className='p-4'>
+                                            <img src={imageUrl} alt="profile_img" className="rounded-full object-cover w-[80px] h-[80px] cursor-pointer" />
+                                          </div>
+                                        : <div className='p-4'>
+                                            <FaUserCircle size={80} className="text-gray-400 cursor-pointer" />
+                                          </div>
                                     }
                                 </form>
                             </div>
@@ -110,7 +135,7 @@ const NavBar = () => {
                     <AiOutlineClose size={25}/>
                 </div>
             </div>
-            <div className='flex justify-around pt-10 items-center'>
+            {/* <div className='flex justify-around pt-10 items-center'>
                 <Link href="/">
                 <Image
                 src={Logo}
@@ -122,6 +147,16 @@ const NavBar = () => {
                 priority
                 />
             </Link>
+            </div> */}
+            <div className='flex justify-around pt-10 items-center'>
+                {imageUrl
+                    ? <div className='p-4'>
+                        <img src={imageUrl} alt="profile_img" className="rounded-full object-cover w-[80px] h-[80px] cursor-pointer" />
+                        </div>
+                    : <div className='p-4'>
+                        <FaUserCircle size={80} className="text-gray-400 cursor-pointer" />
+                        </div>
+                }
             </div>
             <div className='flex-col py-4'>
                 <ul>
