@@ -184,8 +184,6 @@ async function handleStatus(i) {
               handleEdit = {handleEdit}
               handleDelete = {handleDelete}
               />
-
-
             )
             // <div
             // className="bg-blue-500 text-white gap-6 mx-10 flex p-4 rounded-xl justify-center"

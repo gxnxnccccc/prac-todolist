@@ -21,7 +21,7 @@ export default function ItemCard(props) {
               <button onClick={() => handleDelete(data)} className="border px-3 py-2 rounded">Delete</button>
               <button onClick={() => handleEdit(data)} className="border px-3 py-2 rounded">Edit</button>
             </div>
-            </div>
+          </div>
         </div>
     )
 }
