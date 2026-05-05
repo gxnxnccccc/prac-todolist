@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Logo from '../public/logos/Logo.png';
+import Logo from '../public/logos/Logos.png';
 import { AiOutlineMenu, AiOutlineClose, AiOutlineInstagram, AiOutlineFacebook, AiOutlineX } from 'react-icons/ai';
 import { useState, useEffect } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
@@ -78,13 +78,13 @@ const NavBar = () => {
     }
 
   return (
-    <nav className='fixed w-full h-24 shadow-xl bg-white'>
-        <div className='flex justify-between items-center h-full w-full px-4 2xl:px-16'>
+    <nav className='fixed w-full h-24 shadow-xl bg-white font-[family-name:var(--font-geologica)]'>
+        <div className='flex justify-between items-center h-full w-full 2xl:px-16'>
             <Link href="/">
                 <Image
                 src={Logo}
                 alt="Logo"
-                width="100"
+                width="150"
                 
                 
                 className="cursor-pointer rounded-full"
@@ -93,8 +93,11 @@ const NavBar = () => {
             </Link>
             <div className='hidden sm:flex'>
                 <ul className="hidden sm:flex items-center px-4">
+                    <Link href="/">
+                        <li className="ml-10 mr-8 hover:border-b text-xl">Home</li>
+                    </Link>
                     <Link href="/todo">
-                        <li className="ml-10 mr-8 hover:border-b text-xl ">To do</li>
+                        <li className="ml-10 mr-8 hover:border-b text-xl">To do</li>
                     </Link>
                     {/* <Link href="/profile">
                         <li className="ml-10 hover:border-b text-xl">Profile</li>

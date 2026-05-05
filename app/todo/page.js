@@ -90,6 +90,7 @@ async function handleDelete(i){
   // const deleteData = item.filter((j) => j.id != i.id)
   try {
     console.log("DELETE NA JA")
+
     const res = await fetch("/api/todos", {method:'DELETE',
                   headers:{ 'Content-Type': 'application/json',
                             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -145,19 +146,18 @@ async function handleStatus(i) {
 
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)]">
       <div>
         
       </div>
       <div className="">
         <div>
-          <div className="">
-            <h1 style={{ textAlign: 'center' }}>To do list</h1>
+          <div className="mt-5">
+            <h1 className="text-center text-4xl">To Do List</h1>
             {/* <div className="text-center">{user} is back!</div> */}
           </div>
           {/* Fill Box */}
           <div className="flex flex-col items-center justify-center">
-            <label style={{ textAlign: 'center' }}></label>
             <br />
             <input 
               type="text"
@@ -170,9 +170,13 @@ async function handleStatus(i) {
             <button onClick={handleClick} className="border px-3 py-2 rounded w-64">{edit == ''?"Add":"Save"}</button>
           </div>
         </div>
-
+        
         {/* History */}
-        <div className="flex flex-col gap-6 mt-6"> 
+
+        {/* <div className="flex flex-col gap-6 mt-6">  */} {/*  */}
+        {/* <div className="grid grid-cols-2 gap-6 mt-6"> */} {/* 2 per row */} 
+        {/* <div className="grid grid-cols-3 gap-6 mt-6"> */} {/* 3 per row */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-6"> {/* responsive */}
           {item.map((i) => 
             (
               <ItemCard

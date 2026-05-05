@@ -127,7 +127,7 @@ export default function Profile() {
 
     return (
         <main>
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-5 font-[family-name:var(--font-geologica)]">
                 <h1 className="text-center m-4 text-xl">Profile Page</h1>
 
                 {/* <form onSubmit={onSubmit} className="flex flex-col items-center">
@@ -218,11 +218,11 @@ export default function Profile() {
                                     />
                                 </div>
 
-                                <div className="flex justify-center gap-2">
+                                <div className="flex gap-2 self-end">
                                     <button onClick={handleChangePassword} className="border px-3 py-2 rounded bg-blue-200">Save</button>
                                     <button onClick={() => setIsOpen(false)} className="border px-3 py-2 rounded bg-gray-200">Cancel</button>
                                 </div>
-                        </div>
+                            </div>
                         </div>
                     )}
 

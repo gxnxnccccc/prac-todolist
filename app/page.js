@@ -4,6 +4,9 @@ import NavBar from '../components/NavBar';
 import { use, useState, useEffect } from 'react'; 
 import { useRouter } from 'next/navigation';
 import { Playfair_Display } from 'next/font/google';
+import { AiOutlineSearch } from 'react-icons/ai'; 
+import SearchIcon from '@mui/icons-material/Search';
+
 // const playfairdisplay = playfair_Display({
 //     subsets: ['latin'],
 //     weight: '400'
@@ -16,6 +19,7 @@ export default function Home() {
     const [ allTasks, setAllTasks] = useState([])
     const [ tasks, setTasks ] = useState([])
     const [ selected, setSelected] = useState('all')
+    const [ text, setText ] = useState('')
     const router = useRouter()
 
     useEffect(() => {
@@ -91,88 +95,105 @@ export default function Home() {
                 setTasks(allTasks)
             }
         }
-        
-
-
-
     }
    
 
 return (
-    <div className='mt-10'>
-        <div className={`text-center w-24 m-auto`}>
-                TO DO LIST
-        </div>
+    <div>
+        <div className='mt-10 font-[family-name:var(--font-geologica)]'>
+            <p className={`text-center m-auto`}>
+                " Your future depends on today."
+            </p>
 
-        {/* <select onChange={handleChange}>
-                <option value="all">
-                    All
-                </option>
-                <option value="undone">
-                    Undone
-                </option>
-                <option value="done">
-                    Done
-                </option>
-        </select> */}
-            
-        <div className='flex justify-center mt-3'>
-            <input type='text' className='border' onChange={handleSearch}/>
-        </div>
-        
+            {/* Select Options */}
+            {/* <select onChange={handleChange}>
+                    <option value="all">
+                        All
+                    </option>
+                    <option value="undone">
+                        Undone
+                    </option>
+                    <option value="done">
+                        Done
+                    </option>
+            </select> */}
 
-        <div className='flex flex-row justify-center w-full bg-blue-100 m-5'>
-                <button className={`${selected=='all'
-                        ? 'bg-blue-500'
-                        : 'bg-blue-100'} basis-1/3 text-center p-2.5 hover:bg-blue-500 transition ease-in-out duration-100`} onClick={handleChange} value='all'>All</button>
+            {/* Search Box */}
 
-                <button className={`${selected=='undone'
-                        ? 'bg-blue-500'
-                        : 'bg-blue-100'} basis-1/3 text-center p-2.5 hover:bg-blue-500 transition ease-in-out duration-100`} onClick={handleChange} value='undone'>Undone</button>
+            {/* <div className='flex flew-col justify-center mt-3'>
+                <input 
+                    type='text' 
+                    className='border rounded-4xl' 
+                    onChange={handleSearch}/>
+            </div> */}
 
-                <button className={`${selected=='done'
-                        ? 'bg-blue-500'
-                        : 'bg-blue-100'} basis-1/3 text-center p-2.5 hover:bg-blue-500 transition ease-in-out duration-100`} onClick={handleChange} value='done'>Done</button>
-        </div>
+            <form className='relative mt-3 w-1/2 mx-auto'>
+                <div className='relative'>
+                    <input
+                        type="search"
+                        placeholder='Type here!'
+                        className='w-full p-4 rounded-full bg-gray-200'
+                        onChange={handleSearch}/>
+                        <button className='absolute right-1 top-1/2 -translate-y-1/2 p-4 bg-gray-300 rounded-full'>
+                            <AiOutlineSearch/>
+                        </button>
+                </div>
+            </form>
 
-        <div className='bg-red-100 rounded-3xl mx-10 pb-10 m-10 shadow-md'>
-                <h1 className='mx-3 text-xl text-center p-3'>{}</h1>
-                <ul className="flex flex-col gap-3 mt-3 ml-15 list-disc">
-                    {tasks.map((task) => (
+            <div className='flex flex-row justify-center w-1/3 bg-gray-100 mt-5 mx-auto rounded-xl overflow-hidden'>
+                    <button className={`${selected=='all'
+                            ? 'bg-gray-300 shadow-lg'
+                            : 'bg-gray-100'} basis-1/3 text-center p-2.5 hover:bg-gray-400 transition ease-in-out duration-100`} onClick={handleChange} value='all'>All</button>
+
+                    <button className={`${selected=='undone'
+                            ? 'bg-gray-300 shadow-lg'
+                            : 'bg-gray-100'} basis-1/3 text-center p-2.5 hover:bg-gray-400 transition ease-in-out duration-100`} onClick={handleChange} value='undone'>Undone</button>
+
+                    <button className={`${selected=='done'
+                            ? 'bg-gray-300 shadow-lg'
+                            : 'bg-gray-100'} basis-1/3 text-center p-2.5 hover:bg-gray-400 transition ease-in-out duration-100`} onClick={handleChange} value='done'>Done</button>
+            </div>
+
+            <div className='bg-gray-100 rounded-3xl w-1/2 mx-auto pb-10 m-10 shadow-md'>
+                    <h1 className='mx-3 text-xl text-center p-3'>{}</h1>
+                    <ul className="flex flex-col gap-3 mt-3 ml-15 list-disc">
+                        {tasks.map((task) => (
+                                <li
+                                className=""
+                                key={task.ItemId}>
+                                    
+                                    {task.List}
+                                </li>
+                        ))}
+                    </ul>
+            </div>
+
+            {/* <div className='bg-red-100 rounded-3xl mx-10 pb-10 m-10 shadow-md'>
+                    <h1 className='mx-3 text-xl text-center p-3'>Undone</h1>
+                    <ul className="flex flex-col gap-3 mt-3 ml-15 list-disc">
+                        {undone.map((task) => (
+                                <li
+                                className=""
+                                key={task.ItemId}>
+                                    {task.List}
+                                </li>
+                        ))}
+                    </ul>
+            </div>
+
+            <div className='bg-green-100 rounded-3xl mx-10 pb-10 m-10 shadow-md'>
+                    <h1 className='mx-3 text-xl text-center p-3'>Done</h1>
+                    <ul className="flex flex-col gap-3 mt-3 ml-15 list-disc"> 
+                        {done.map((task) => (
                             <li
                             className=""
                             key={task.ItemId}>
                                 {task.List}
                             </li>
-                    ))}
-                </ul>
+                        ))}
+                    </ul>
+            </div> */}
         </div>
-
-        {/* <div className='bg-red-100 rounded-3xl mx-10 pb-10 m-10 shadow-md'>
-                <h1 className='mx-3 text-xl text-center p-3'>Undone</h1>
-                <ul className="flex flex-col gap-3 mt-3 ml-15 list-disc">
-                    {undone.map((task) => (
-                            <li
-                            className=""
-                            key={task.ItemId}>
-                                {task.List}
-                            </li>
-                    ))}
-                </ul>
-        </div>
-
-        <div className='bg-green-100 rounded-3xl mx-10 pb-10 m-10 shadow-md'>
-                <h1 className='mx-3 text-xl text-center p-3'>Done</h1>
-                <ul className="flex flex-col gap-3 mt-3 ml-15 list-disc"> 
-                    {done.map((task) => (
-                        <li
-                        className=""
-                        key={task.ItemId}>
-                            {task.List}
-                        </li>
-                    ))}
-                </ul>
-        </div> */}
     </div>
     )
 }
