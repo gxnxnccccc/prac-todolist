@@ -167,7 +167,7 @@ async function handleStatus(i) {
               className="border px-3 py-2 rounded w-64"
               />
             <br/>
-            <button onClick={handleClick} className="border px-3 py-2 rounded w-64">{edit == ''?"Add":"Save"}</button>
+            <button onClick={handleClick} className="border px-3 py-2 rounded w-64 hover:bg-gray-200 shadow-md">{edit == ''?"Add":"Save"}</button>
           </div>
         </div>
         
