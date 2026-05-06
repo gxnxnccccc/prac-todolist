@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Logo from '../public/logos/Logos.png';
+import Logo from '../public/logos/newLogo.png';
 import { AiOutlineMenu, AiOutlineClose, AiOutlineInstagram, AiOutlineFacebook, AiOutlineX } from 'react-icons/ai';
 import { useState, useEffect } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
@@ -95,6 +95,9 @@ const NavBar = () => {
                 <ul className="hidden sm:flex items-center px-4">
                     <Link href="/">
                         <li className="ml-10 mr-8 hover:border-b text-xl">Home</li>
+                    </Link>
+                    <Link href="/dashboard">
+                        <li className="ml-10 mr-8 hover:border-b text-xl">Dashboard</li>
                     </Link>
                     <Link href="/todo">
                         <li className="ml-10 mr-8 hover:border-b text-xl">To do</li>

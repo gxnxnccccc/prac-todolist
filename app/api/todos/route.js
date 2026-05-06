@@ -32,12 +32,14 @@ export async function POST(req) { // request(req) is the data from frontend
     const body = await req.json();  // convert list and userId datas (that originally json) to js for collecting
     console.log(body)
     
-
+    
 
     const request = pool.request()
     request.input('List', body.List)
     request.input('UserId', body.UserId)
-    await request.query('INSERT INTO todo_item (List, UserId, Status) VALUES (@list, @userId, 0)'); // Status 0 = Undone
+    request.input('create_at', body.timeCreated)
+    request.input('update_at', body.timeUpdated)
+    await request.query('INSERT INTO todo_item (List, UserId, Status, create_at, update_at) VALUES (@list, @userId, 0, GETDATE(), GETDATE())'); // Status 0 = Undone
     
     return NextResponse.json({
         success:'tested'
@@ -63,6 +65,37 @@ export async function DELETE(req) {
     })
 }
 
+// export async function PUT(req) {
+//     const user = verifyToken(req)
+//     if (!user) {
+//         return NextResponse.json({ statusCode: 401 }, { status: 401 })
+//     }
+
+//     const pool = await getConnection();
+//     const body = await req.json();
+
+//     const request = await pool.request()
+
+//     if (body.Status == undefined) {
+//         request.input("ItemId", body.ItemId)
+//         request.input('List', body.List)
+//         await request.query('UPDATE todo_item SET List = @List WHERE ItemId = @ItemId')
+
+//         return NextResponse.json({
+//             success: 'Updated Successfully!'
+//         })
+//     }
+//     else {
+//         request.input("ItemId", body.ItemId)
+//         request.input('Status', body.Status)
+//         await request.query('UPDATE todo_item SET Status = @Status WHERE ItemId = @ItemId')
+
+//         return NextResponse.json({
+//         success: 'Updated Successfully!'
+//         })
+//     }
+// }
+
 export async function PUT(req) {
     const user = verifyToken(req)
     if (!user) {
@@ -77,7 +110,8 @@ export async function PUT(req) {
     if (body.Status == undefined) {
         request.input("ItemId", body.ItemId)
         request.input('List', body.List)
-        await request.query('UPDATE todo_item SET List = @List WHERE ItemId = @ItemId')
+        request.input('update_at', body.timeUpdated)
+        await request.query('UPDATE todo_item SET List = @List, update_at = GETDATE() WHERE ItemId = @ItemId')
 
         return NextResponse.json({
             success: 'Updated Successfully!'
@@ -86,7 +120,8 @@ export async function PUT(req) {
     else {
         request.input("ItemId", body.ItemId)
         request.input('Status', body.Status)
-        await request.query('UPDATE todo_item SET Status = @Status WHERE ItemId = @ItemId')
+        request.input('update_at', body.timeUpdated)
+        await request.query('UPDATE todo_item SET Status = @Status, update_at = GETDATE() WHERE ItemId = @ItemId')
 
         return NextResponse.json({
         success: 'Updated Successfully!'
@@ -111,3 +146,4 @@ function verifyToken(req) {
     }
         
 }
+
