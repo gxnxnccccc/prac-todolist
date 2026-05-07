@@ -24,7 +24,7 @@ export async function POST(req) { // request(req) is the data from frontend
     // request.input('Password', body.password)
     // const res = await request.query('SELECT UserId, Username, FROM todo_user WHERE Username=@Username and Password=@Password'); 
     
-    const res = await request.query('SELECT UserId, Username, Password, Profile_Image FROM todo_user WHERE Username=@Username'); // query only username(since username is unique)
+    const res = await request.query('SELECT UserId, Username, Password, Profile_Image, Roles FROM todo_user WHERE Username=@Username');
     console.log("Record: ", res.recordset.length)
     
 

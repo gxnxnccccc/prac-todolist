@@ -19,6 +19,7 @@ export async function POST(req) {
 
         const username = body.get('username')
         const password = body.get('password')
+        const role = body.get('role')
         const file = body.get('file')
 
         const hashedPassword = await bcrypt.hash(password, 10)
@@ -26,6 +27,7 @@ export async function POST(req) {
         const request = pool.request()
         request.input('Username', username)
         request.input('Password', hashedPassword)
+        request.input('Roles', role)
 
         let profileImagePath = null
         if (file && file.size > 0) {
@@ -40,7 +42,7 @@ export async function POST(req) {
         }
 
         request.input('Profile_Image', profileImagePath)
-        await request.query('INSERT INTO todo_user (Username, Password, Profile_Image) VALUES (@Username, @Password, @Profile_Image)');
+        await request.query('INSERT INTO todo_user (Username, Password, Profile_Image, Roles) VALUES (@Username, @Password, @Profile_Image, @Roles)');
 
         return NextResponse.json({ success: true })
     }

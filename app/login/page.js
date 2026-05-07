@@ -28,6 +28,7 @@ export default function LoginPage() {
                 localStorage.setItem('Username', JSON.stringify(res.user.Username))
                 localStorage.setItem('Profile_Image', JSON.stringify(res.user.Profile_Image))
                 localStorage.setItem('token', res.token)
+                localStorage.setItem('role', res.user.Roles)
                 // router.push('/')
                 window.location.href = '/'
                 
@@ -49,9 +50,12 @@ export default function LoginPage() {
 
 
     return (
-        <div>
-            <main>
-                <h1 className="text-center">Login Page</h1>
+        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)]">
+            <main className='mt-8 mx-auto'>
+                <div className="flex justify-center mt-3">
+                    <img src='/logos/newLogo.png' alt='Logo' width="200"/>
+                </div>
+                <h1 className="text-center text-4xl mt-3">— Login —</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="m-4">
                         <input
@@ -60,7 +64,7 @@ export default function LoginPage() {
                             type="text"
                             required
                             placeholder="Enter Username"
-                            className="border px-3 py-2 rounded w-full"
+                            className="border-2 px-3 py-2 rounded w-full"
                         />
                     </div>
 
@@ -71,14 +75,14 @@ export default function LoginPage() {
                             type="password"
                             required
                             placeholder="Enter Password"
-                            className="border px-3 py-2 rounded w-full"
+                            className="border-2 px-3 py-2 rounded w-full"
                         />
                     </div>
 
                     <div className="text-center m-4 ">
-                        <button type="submit" className="border rounded p-4 bg-red-200">Login</button>
+                        <button type="submit" className="border rounded-2xl p-2 px-18 bg-red-200">Login</button>
                         <br />
-                        <button onClick={handleBackToRegister} className="border rounded p-4 bg-red-200">Back to Register</button>
+                        <button onClick={handleBackToRegister} className="mt-4 border rounded-2xl p-2 bg-red-50">Back to Register</button>
                     </div>
                 </form>
             </main>
