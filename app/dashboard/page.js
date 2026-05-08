@@ -26,8 +26,8 @@ export default function Page() {
             setUser(JSON.parse(u))
         }
         getTotalList();
-        getDoneList();
-        getUndoneList();
+        // getDoneList();
+        // getUndoneList();
         getWeeklyReport();
         getTaskOverTime();
     }, [])
@@ -40,41 +40,43 @@ export default function Page() {
                         })
             const data = await res.json()
             console.log('total list: ', data)
-            setTotalList(data.result[0].total_list)
+            setTotalList(data.result_totalList[0].total_list)
+            setDoneList(data.result_doneList[0].done_list)
+            setUndoneList(data.result_undoneList[0].undone_list)
             }
         catch (error) {
             console.log(error)
         }
     }
     
-    const getDoneList = async () => {
-        try {
-            const userId = localStorage.getItem('UserId')
-            const res = await fetch(`/api/dashboards?userId=${userId}`, {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                        })
-            const data = await res.json()
-            console.log('done list: ', data)
-            setDoneList(data.result1[0].done_list)
-            }
-        catch (error) {
-            console.log(error)
-        }
-    }
-    const getUndoneList = async () => {
-        try {
-            const userId = localStorage.getItem('UserId')
-            const res = await fetch(`/api/dashboards?userId=${userId}`, {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                        })
-            const data = await res.json()
-            console.log('undone list: ', data)
-            setUndoneList(data.result2[0].undone_list)
-            }
-        catch (error) {
-            console.log(error)
-        }
-    }
+    // const getDoneList = async () => {
+    //     try {
+    //         const userId = localStorage.getItem('UserId')
+    //         const res = await fetch(`/api/dashboards?userId=${userId}`, {
+    //             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    //                     })
+    //         const data = await res.json()
+    //         console.log('done list: ', data)
+    //         setDoneList(data.result1[0].done_list)
+    //         }
+    //     catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+    // const getUndoneList = async () => {
+    //     try {
+    //         const userId = localStorage.getItem('UserId')
+    //         const res = await fetch(`/api/dashboards?userId=${userId}`, {
+    //             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    //                     })
+    //         const data = await res.json()
+    //         console.log('undone list: ', data)
+    //         setUndoneList(data.result2[0].undone_list)
+    //         }
+    //     catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
     const data = {
         labels: [
@@ -225,36 +227,39 @@ export default function Page() {
     // }
 
     return (
-        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)]">
+        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50">
         <div className='mt-10'>
             <h1 className='text-center text-4xl'>Dashboard</h1>
-            <div className='grid grid-cols-3 gap-5 mt-10 mx-auto px-15'>
-                <div className='bg-gray-50 rounded-xl h-50 pb-10 my-2 shadow-lg '>
+            <div className='grid grid-cols-2 grid-flow-col gap-5 mt-10 mx-auto px-15'>
+                <div className='col-span-2 bg-white rounded-xl pb-10 my-2 shadow-lg '>
                     <h3 className='text-center mt-5 text-xl uppercase'>Total</h3>
                     <h3 className='text-center'>To do list</h3>
                     <p className='text-center text-5xl mt-8'>{totalList ?? '-'}</p>
                 </div>
 
-                <div className='bg-gray-50 rounded-xl h-50 pb-10 my-2 shadow-lg '>
-                    <h3 className='text-center mt-5 text-xl uppercase'>Done</h3>
-                    <h3 className='text-center'>list</h3>
-                    <p className='text-center text-5xl mt-7'>{doneList ?? '-'}</p>
-                </div>
+                <div className='grid col-span-2'>
+                    <div className='grid grid-cols-2 gap-5'>
+                        <div className=' bg-white rounded-xl  pb-10 my-2 shadow-lg '>
+                            <h3 className='text-center mt-5 text-xl uppercase'>Done</h3>
+                            <h3 className='text-center'>list</h3>
+                            <p className='text-center text-5xl mt-7'>{doneList ?? '-'}</p>
+                        </div>
 
-                <div className='bg-gray-50 rounded-xl h-50 pb-10 my-2 shadow-lg '>
-                    <h3 className='text-center mt-5 text-xl uppercase'>Undone</h3>
-                    <h3 className='text-center'>list</h3>
-                    <p className='text-center text-5xl mt-7'>{undoneList ?? '-'}</p>
+                        <div className=' bg-white rounded-xl pb-10 my-2 shadow-lg '>
+                            <h3 className='text-center mt-5 text-xl uppercase'>Undone</h3>
+                            <h3 className='text-center'>list</h3>
+                            <p className='text-center text-5xl mt-7'>{undoneList ?? '-'}</p>
+                        </div>
+                    </div>
                 </div>
-
-                <div className='bg-gray-50 rounded-xl pb-10 my-2 shadow-lg col-span-3'>
+                {/* <div className='bg-gray-50 rounded-xl pb-10 my-2 shadow-lg col-span-3'>
                     <h3 className='text-center text-xl uppercase mt-5'>Weekly Report</h3>
                     <div className='px-6 mt-4'>
                         {taskOverTime ? <Bar data={taskOverTime} options={{ scales: { y: { ticks: { stepSize: 1 } } } }} /> : <p className='text-center mt-7'>-</p>}
                     </div>
-                </div>
+                </div> */}
 
-                <div className='bg-gray-50 rounded-xl pb-10 my-2 shadow-lg col-span-3'>
+                <div className='row-span-2 bg-white rounded-xl pb-10 my-2 shadow-lg '>
                     <h3 className='text-center text-xl uppercase mt-5'>Task Over Time</h3>
                     <div className='px-6 mt-4'>
                         {taskOverTime ? <Line data={taskOverTime} /> : <p className='text-center mt-7'>-</p>}

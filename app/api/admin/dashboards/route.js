@@ -17,17 +17,35 @@ export async function GET(req) {
     const pool = await getConnection();
     const request = pool.request();
     // request.input('UserId', userId);
-    const result = await request.query('SELECT COUNT(UserId) as total_user FROM todo_user')
-    const result1 = await request.query('SELECT COUNT(ItemId) AS done_list FROM todo_item WHERE Status = 1')
-    const result2 = await request.query('SELECT COUNT(ItemId) AS undone_list FROM todo_item WHERE Status = 0')
-    const result3 = await request.query('SELECT ItemId, List, Status, create_at FROM todo_item')
-    const result4 = await request.query('SELECT COUNT(ItemId) AS total_list FROM todo_item')
+
+    const { searchParams } = new URL(req.url)
+    const username = searchParams.get('username')
+    
+    let result_totalUser, result_doneList, result_undoneList, result3, result_totalList
+    if (!username) {
+        result_totalUser = await request.query("SELECT COUNT(UserId) as total_user FROM todo_user WHERE Roles = 'user'")
+        result_doneList = await request.query('SELECT COUNT(ItemId) AS done_list FROM todo_item WHERE Status = 1')
+        result_undoneList = await request.query('SELECT COUNT(ItemId) AS undone_list FROM todo_item WHERE Status = 0')
+        result3 = await request.query('SELECT ItemId, List, Status, create_at FROM todo_item')
+        result_totalList = await request.query('SELECT COUNT(ItemId) AS total_list FROM todo_item')
+    }
+    else {
+        request.input('Username', sql.NVarChar, username)
+        result_totalUser = await request.query("SELECT COUNT(UserId) as total_user FROM todo_user WHERE Username = @Username")
+        result_doneList = await request.query('SELECT COUNT(ItemId) AS done_list FROM todo_item WHERE Status = 1 AND UserId = (SELECT UserId FROM todo_user WHERE Username = @Username)')
+        result_undoneList = await request.query('SELECT COUNT(ItemId) AS undone_list FROM todo_item WHERE Status = 0 AND UserId = (SELECT UserId FROM todo_user WHERE Username = @Username)')
+        result3 = await request.query('SELECT ItemId, List, Status, create_at FROM todo_item WHERE UserId = (SELECT UserId FROM todo_user WHERE Username = @Username)')
+        result_totalList = await request.query('SELECT COUNT(ItemId) AS total_list FROM todo_item WHERE UserId = (SELECT UserId FROM todo_user WHERE Username = @Username)')
+    }
+    const result_allUsername = await request.query("SELECT Username as all_username FROM todo_user WHERE Roles = 'user'")
+
     return Response.json({
-        result: result.recordset,
-        result1: result1.recordset,
-        result2: result2.recordset,
+        result_totalUser: result_totalUser.recordset,
+        result_doneList: result_doneList.recordset,
+        result_undoneList: result_undoneList.recordset,
         result3: result3.recordset,
-        result4: result4.recordset
+        result_totalList: result_totalList.recordset,
+        result_allUsername: result_allUsername.recordset
     });
 }
 

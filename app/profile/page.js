@@ -16,6 +16,7 @@ export default function Profile() {
     const router = useRouter()
 
     const [ user, setUser ] = useState('')
+    const [ id, setId ] = useState('')
     const [ isOpen, setIsOpen ] = useState(false)
     const [ item, setItem ] = useState([])
 
@@ -23,6 +24,8 @@ export default function Profile() {
     const [ oldPassword, setOldPassword ] = useState('')
     const [ newPassword, setNewPassword ] = useState('')
     const [ confirmPassword, setConfirmPassword ] = useState('')
+    const [ saved, setSaved ] = useState(false)
+    const [ savedAlert, setSavedAlert ] = useState(false)
 
     useEffect(() => {
         if (!localStorage.getItem('Username')) {
@@ -30,7 +33,9 @@ export default function Profile() {
         }
         else {
             const u = localStorage.getItem('Username')
+            const v = localStorage.getItem('UserId')
             setUser(JSON.parse(u))
+            setId(JSON.parse(v))
         }
         getData();
         getProfile();
@@ -79,6 +84,9 @@ export default function Profile() {
             }
             const resImg = await res.json()
             setImageUrl(`/uploads/${resImg.filename}`)
+            setSaved(true)
+            setSavedAlert(true)
+            setTimeout(() => setSavedAlert(false), 2000) 
         } catch (error) {
             console.log(error)
         }
@@ -115,6 +123,11 @@ export default function Profile() {
                 return
             }
             setIsOpen(false)
+
+            setSaved(true)
+            setSavedAlert(true)
+            setTimeout(() => setSavedAlert(false), 2000) 
+
             setOldPassword('')
             setNewPassword('')
             setConfirmPassword('')
@@ -123,6 +136,11 @@ export default function Profile() {
             console.log(error)
         }
     }
+
+    // const handleSave = async (i) => {
+    //     setSaved(true)
+    //     setSavedAlert(true)
+    // }
 
 
     return (
@@ -156,18 +174,34 @@ export default function Profile() {
                             }}
                         />
                     </div>
-                    {previewUrl && <button type="submit" className="border px-3 py-2 rounded bg-blue-200">Save Photo</button>}
+                    {previewUrl && !saved &&
+                            <button type="submit" className="border px-3 py-2 rounded bg-blue-200">Save Photo</button>
+                    }
+                    {savedAlert && (
+                        <div className='fixed bottom-5 right-5 bg-black text-white px-4 py-2 rounded-xl shadow-lg'>
+                            saved
+                        </div>
+                    )}
                 </form>
-                <div className="text-center">Welcome Back!</div>
-                <div className="flex flex-col justify-between">
+                <div className="text-center">Welcome Back, {user}!</div>
+                <div className="flex flex-col my-4">
                     <div className="flex flex-row justify-center gap-2">
-                        <div className="text-center">Username : </div>
-                        <div className="text-center">{user}</div>
+                        <div className="flex justify-between w-56">
+                            <div className="text-center">User ID</div>
+                            <div className="text-center">{id}</div>
+                        </div>
                     </div>
-                    <div className="flex flex-row justify-center items-center gap-2">
-                        <div className="text-center">Password : </div>
-                        <div className="text-center">....</div>
-                        
+                    <div className="flex flex-row justify-center gap-2">
+                        <div className="flex justify-between w-56">
+                            <div className="text-center">Username</div>
+                            <div className="text-center">{user}</div>
+                        </div>
+                    </div>
+                    <div className="flex flex-row justify-center gap-2">
+                        <div className="flex justify-between w-56">
+                            <div className="text-center">Password</div>
+                            <div className="text-center">........</div>
+                        </div>
                     </div>
                 </div>
         
@@ -220,6 +254,11 @@ export default function Profile() {
 
                                 <div className="flex gap-2 self-end">
                                     <button onClick={handleChangePassword} className="border px-3 py-2 rounded bg-blue-200">Save</button>
+                                    {savedAlert && (
+                                        <div className='fixed bottom-5 right-5 bg-black text-white px-4 py-2 rounded-xl shadow-lg'>
+                                            saved
+                                        </div>
+                                    )}
                                     <button onClick={() => setIsOpen(false)} className="border px-3 py-2 rounded bg-gray-200">Cancel</button>
                                 </div>
                             </div>
