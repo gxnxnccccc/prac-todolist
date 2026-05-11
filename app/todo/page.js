@@ -35,7 +35,10 @@ export default function Home() {
       const data = await fetch(`/api/todos?userId=${userId}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       }).then((result) => result.json()).then((res) => setItem(res))
-    } catch(error) {}
+    } 
+    catch(error) {
+      console.log(error)
+    }
   }
 
 

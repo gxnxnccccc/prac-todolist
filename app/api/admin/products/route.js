@@ -1,5 +1,4 @@
 import { getConnection } from '@/lib/db';
-import sql from 'mssql';
 import { NextResponse } from 'next/server';
 import jsonwebtoken from 'jsonwebtoken';
 
@@ -14,9 +13,12 @@ export async function GET(req) {
 
     try {
         const pool = await getConnection();
-        const request = pool.request();
-        const result_allCategories = await request.query('SELECT category_id, category_name as all_category FROM categories');
-        return NextResponse.json(result_allCategories.recordset);
+        const result_categories = await pool.request().query('SELECT category_id, category_name as all_category FROM categories');
+        const result_products = await pool.request().query('SELECT product_id, product_name, description, quantity, price, add_at, update_at FROM products');
+        return NextResponse.json({
+            categories: result_categories.recordset,
+            products: result_products.recordset
+        });
     } catch (error) {
         console.error('GET /api/admin/products error:', error)
         return NextResponse.json({ error: error.message }, { status: 500 })
@@ -68,15 +70,35 @@ export async function DELETE(req) {
 
     const pool = await getConnection();
     const body = await req.json();
+    const transaction = pool.transaction()
     
-    const request = await pool.request()
-    request.input('ItemId', body.ItemId)
-    await request.query('DELETE FROM todo_item WHERE ItemID = @ItemId')
-    
+    try {
+        await transaction.begin()
 
-    return NextResponse.json({
+        const request = await transaction.request()
+        request.input('product_id', body.product_id)
+
+        await request.query('DELETE FROM product_images WHERE product_id = @product_id')
+        await request.query('DELETE FROM products WHERE product_id = @product_id')
+
+        await transaction.commit()
+
+        return NextResponse.json({
         success: 'Deleted!'
     })
+
+    }
+    catch (error) {
+        await transaction.rollback()
+        return NextResponse.json(
+            { error: error.message},
+            { statuscode: 500 }
+        )
+    }
+   
+    
+
+   
 }
 
 export async function PUT(req) {

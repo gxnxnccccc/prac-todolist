@@ -4,6 +4,7 @@ import React from 'react'
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from "next/navigation";
 import { FaFileImage } from "react-icons/fa6";
+import moment from 'moment';
 
 const adminProductPage = () => {
     const [ previewUrl, setPreviewUrl ] = useState(null)
@@ -14,6 +15,8 @@ const adminProductPage = () => {
     const [ saved, setSaved ] = useState(false)
     const [ allCategories, setAllCategories ] = useState(null)
     const [ text, setText ] = useState('')
+    const [ product, setProduct ] = useState([]) 
+    const [ isOpen, setIsOpen ] = useState(false)
 
     const [ productName, setProductName ] = useState('')
     const [ categoryId, setCategoryId ] = useState('')
@@ -68,8 +71,8 @@ const adminProductPage = () => {
                 throw new Error(err.error ?? `Request failed: ${res.status}`)
             }
             const data = await res.json()
-            console.log('All categories: ', data)
-            setAllCategories(data)
+            setAllCategories(data.categories)
+            setProduct(data.products)
         }
         catch (error) {
             console.log(error)
@@ -111,6 +114,25 @@ const adminProductPage = () => {
 
     const handleAddEditProductInfoo = () => {
 
+    }
+
+
+    async function handleDelete(p) {
+        try {
+            await fetch("/api/admin/products", {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json',
+                           'Authorization': `Bearer ${localStorage.getItem('token')}` },
+                body: JSON.stringify({ product_id: p.product_id })
+            })
+            getProductInfo()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    function handleEdit(p) {
+        console.log(p)
     }
 
     return (
@@ -229,6 +251,60 @@ const adminProductPage = () => {
 
                     <div className='p-3 bg-white rounded-2xl shadow-lg'>
                         <h1 className='text-center text-2xl pt-5'>Product List</h1>
+                        <table className='w-full justify-center mt-10 mb-20'>
+                            <thead>
+                                <tr className='text-md'>
+                                    <th className='text-center justify-center'>ID</th>
+                                    <th className='text-center justify-center border-l'>Name</th>
+                                    {/* <th className='text-center justify-center'>Edit</th> */}
+                                    <th className='text-center justify-center border-l'>Description</th>
+                                    <th className='text-center justify-center border-l'>Quantity</th>
+                                    <th className='text-center justify-center border-l'>Price</th>
+                                    <th className='text-center justify-center border-l'>Time Created</th>
+                                    <th className='text-center justify-center border-l'>Time Updated</th>
+                                    <th className='text-center justify-center border-l'>Actions</th>
+                                </tr>
+                                
+                            </thead>
+                
+                            <tbody>
+                                {product.map((p) => (
+                                <tr key={p.product_id}>
+                                    <td className='text-center justify-center border-t py-6'>{p.product_id}</td>
+                                    <td className='text-center justify-center border-t border-l'>{p.product_name}</td>
+                                    <td className='text-center justify-center border-t border-l'>{p.description}</td>
+                                    <td className='text-center justify-center border-t border-l'>{p.quantity}</td>
+                                    <td className='text-center justify-center border-t border-l'>{p.price}</td>
+                                    <td className='text-center justify-center border-t border-l'>{p.add_at 
+                                        ? moment.utc(p.add_at).format('DD/MM/YYYY, h:mm:ss')
+                                        : '-'}
+                                    </td>
+                                    <td className='text-center justify-center border-t border-l'>{p.update_at 
+                                        ? moment.utc(p.update_at).format('DD/MM/YYYY, h:mm:ss')
+                                        : '-'}
+                                    </td>
+                                    <td className='border-t border-l'>
+                                        <div className='flex justify-center gap-2 py-2'>
+                                            <button onClick={() => setIsOpen(p.product_id)} className="border px-3 py-2 rounded bg-gray-300 hover:bg-gray-400">Delete</button>
+                                            {isOpen === p.product_id && (
+                                                <div className='fixed inset-0 flex items-center justify-center z-50 bg-black/25'>
+                                                    <div className='flex flex-col bg-white rounded-xl px-12 py-8 shadow gap-4'>
+                                                        <h1 className='text-center text-2xl'>Confirm Delete</h1>
+                                                        <p>Are you sure to delete this product?</p>
+                                                        <div className='flex gap-2 self-end'>
+                                                            <button onClick={() => setIsOpen(false)} className="border px-3 py-2 rounded bg-gray-200 hover:bg-gray-300">Cancel</button>
+                                                            <button onClick={() => { handleDelete(p); setIsOpen(false) }} className="border px-3 py-2 rounded bg-red-200 hover:bg-red-300">Delete</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                            <button onClick={() => handleEdit(p)} className="border px-3 py-2 rounded bg-orange-200 hover:bg-orange-300">Edit</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
