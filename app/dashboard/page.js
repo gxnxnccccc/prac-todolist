@@ -28,7 +28,7 @@ export default function Page() {
         getTotalList();
         // getDoneList();
         // getUndoneList();
-        getWeeklyReport();
+        // getWeeklyReport();
         getTaskOverTime();
     }, [])
 
@@ -78,59 +78,59 @@ export default function Page() {
     //     }
     // }
 
-    const data = {
-        labels: [
-            'Red',
-            'Blue',
-            'Yellow'
-        ],
-        datasets: [{
-            label: 'My First Dataset',
-            data: [300, 50, 100],
-            backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)'
-            ],
-            hoverOffset: 4
-        }]
-    };
+    // const data = {
+    //     labels: [
+    //         'Red',
+    //         'Blue',
+    //         'Yellow'
+    //     ],
+    //     datasets: [{
+    //         label: 'My First Dataset',
+    //         data: [300, 50, 100],
+    //         backgroundColor: [
+    //         'rgb(255, 99, 132)',
+    //         'rgb(54, 162, 235)',
+    //         'rgb(255, 205, 86)'
+    //         ],
+    //         hoverOffset: 4
+    //     }]
+    // };
 
-    const getWeeklyReport = () => {
-        const allMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        const now = new Date();
-        const labels = Array.from({ length: 7 }, (_, i) => {
-            const d = new Date(now.getFullYear(), now.getMonth() - (6 - i), 1);
-            return allMonths[d.getMonth()];
-        });
-        const data = {
-            labels,
-            datasets: [{
-                label: 'Tasks Completed',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(255, 205, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(201, 203, 207, 0.2)'
-                ],
-                borderColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 159, 64)',
-                    'rgb(255, 205, 86)',
-                    'rgb(75, 192, 192)',
-                    'rgb(54, 162, 235)',
-                    'rgb(153, 102, 255)',
-                    'rgb(201, 203, 207)'
-                ],
-                borderWidth: 1
-            }]
-        };
-        setWeeklyReport(data);
-    }
+    // const getWeeklyReport = () => {
+    //     const allMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    //     const now = new Date();
+    //     const labels = Array.from({ length: 7 }, (_, i) => {
+    //         const d = new Date(now.getFullYear(), now.getMonth() - (6 - i), 1);
+    //         return allMonths[d.getMonth()];
+    //     });
+    //     const data = {
+    //         labels,
+    //         datasets: [{
+    //             label: 'Tasks Completed',
+    //             data: [65, 59, 80, 81, 56, 55, 40],
+    //             backgroundColor: [
+    //                 'rgba(255, 99, 132, 0.2)',
+    //                 'rgba(255, 159, 64, 0.2)',
+    //                 'rgba(255, 205, 86, 0.2)',
+    //                 'rgba(75, 192, 192, 0.2)',
+    //                 'rgba(54, 162, 235, 0.2)',
+    //                 'rgba(153, 102, 255, 0.2)',
+    //                 'rgba(201, 203, 207, 0.2)'
+    //             ],
+    //             borderColor: [
+    //                 'rgb(255, 99, 132)',
+    //                 'rgb(255, 159, 64)',
+    //                 'rgb(255, 205, 86)',
+    //                 'rgb(75, 192, 192)',
+    //                 'rgb(54, 162, 235)',
+    //                 'rgb(153, 102, 255)',
+    //                 'rgb(201, 203, 207)'
+    //             ],
+    //             borderWidth: 1
+    //         }]
+    //     };
+    //     setWeeklyReport(data);
+    // }
 
     const getTaskOverTime = async () => {
         try {
@@ -230,28 +230,16 @@ export default function Page() {
         <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50">
         <div className='mt-10'>
             <h1 className='text-center text-4xl'>Dashboard</h1>
-            <div className='grid grid-cols-2 grid-flow-col gap-5 mt-10 mx-auto px-15'>
-                <div className='col-span-2 bg-white rounded-xl pb-10 my-2 shadow-lg '>
-                    <h3 className='text-center mt-5 text-xl uppercase'>Total</h3>
-                    <h3 className='text-center'>To do list</h3>
-                    <p className='text-center text-5xl mt-8'>{totalList ?? '-'}</p>
-                </div>
-
-                <div className='grid col-span-2'>
-                    <div className='grid grid-cols-2 gap-5'>
-                        <div className=' bg-white rounded-xl  pb-10 my-2 shadow-lg '>
-                            <h3 className='text-center mt-5 text-xl uppercase'>Done</h3>
-                            <h3 className='text-center'>list</h3>
-                            <p className='text-center text-5xl mt-7'>{doneList ?? '-'}</p>
-                        </div>
-
-                        <div className=' bg-white rounded-xl pb-10 my-2 shadow-lg '>
-                            <h3 className='text-center mt-5 text-xl uppercase'>Undone</h3>
-                            <h3 className='text-center'>list</h3>
-                            <p className='text-center text-5xl mt-7'>{undoneList ?? '-'}</p>
-                        </div>
+            <div className='grid grid-cols-2 grid-rows-2 gap-5 mt-10 mx-auto px-15'>
+                {/* Total */}
+                <div className=' bg-white rounded-xl pb-10 my-2 shadow-lg '>
+                    <div className='bg-amber-300 rounded-xl'>
+                        <h3 className='text-center mt-5 text-xl'>Total List</h3>
                     </div>
+                    {/* <h3 className='text-center'>To do list</h3> */}
+                    <p className='text-center text-5xl mt-9'>{totalList ?? '-'}</p>
                 </div>
+
                 {/* <div className='bg-gray-50 rounded-xl pb-10 my-2 shadow-lg col-span-3'>
                     <h3 className='text-center text-xl uppercase mt-5'>Weekly Report</h3>
                     <div className='px-6 mt-4'>
@@ -260,11 +248,31 @@ export default function Page() {
                 </div> */}
 
                 <div className='row-span-2 bg-white rounded-xl pb-10 my-2 shadow-lg '>
-                    <h3 className='text-center text-xl uppercase mt-5'>Task Over Time</h3>
-                    <div className='px-6 mt-4'>
-                        {taskOverTime ? <Line data={taskOverTime} /> : <p className='text-center mt-7'>-</p>}
+                    <h3 className='text-center text-xl mt-5'>Task Over Time</h3>
+                    <div className='px-6 mt-4 relative h-80'>
+                        {taskOverTime ? <Line data={taskOverTime}
+                                              options={{
+                                                responsive: true,
+                                                maintainAspectRatio: false
+                                              }} /> 
+                                      : <p className='text-center mt-7'>-</p>}
                     </div>
                 </div>
+
+                <div className='grid grid-cols-2 gap-5'>
+                    <div className=' bg-white rounded-xl pb-10 my-2 shadow-lg '>
+                        <h3 className='text-center mt-5 text-xl text-green-600'>Done List</h3>
+                        {/* <h3 className='text-center'>list</h3> */}
+                        <p className='text-center text-5xl mt-9'>{doneList ?? '-'}</p>
+                    </div>
+
+                    <div className=' bg-white rounded-xl pb-10 my-2 shadow-lg '>
+                        <h3 className='text-center mt-5 text-xl text-red-600'>Undone List</h3>
+                        {/* <h3 className='text-center'>list</h3> */}
+                        <p className='text-center text-5xl mt-8'>{undoneList ?? '-'}</p>
+                    </div>
+                </div>
+                
             </div>
         </div>
         </div>

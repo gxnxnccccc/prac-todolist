@@ -31,8 +31,8 @@ export default function Page() {
         }
         getTotalUser();
         // getAllUsernames();
-        getWeeklyReport();
-        getTaskOverTime();
+        // getWeeklyReport();
+        // getTaskOverTime();
     }, [])
 
     const getTotalUser = async (username = null) => {
@@ -50,83 +50,20 @@ export default function Page() {
             const res = await fetch(`${path}`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                         })
-            const data = await res.json()
-            console.log('total user: ', data)
+            const data1 = await res.json()
+            
+            console.log('total user: ', data1)
 
-            setTotalList(data.result_totalList[0].total_list)
-            setTotalDoneList(data.result_doneList[0].done_list)
-            setTotalUndoneList(data.result_undoneList[0].undone_list)
-            setTotalUser(data.result_totalUser[0].total_user)
-            setAllUsername(data.result_allUsername)
-            }
-        catch (error) {
-            console.log(error)
-        }
-    }
+            setTotalList(data1.result_totalList[0].total_list)
+            setTotalDoneList(data1.result_doneList[0].done_list)
+            setTotalUndoneList(data1.result_undoneList[0].undone_list)
+            setTotalUser(data1.result_totalUser[0].total_user)
+            setAllUsername(data1.result_allUsername)
 
-
-    // const data = {
-    //     labels: [
-    //         'Red',
-    //         'Blue',
-    //         'Yellow'
-    //     ],
-    //     datasets: [{
-    //         label: 'My First Dataset',
-    //         data: [300, 50, 100],
-    //         backgroundColor: [
-    //         'rgb(255, 99, 132)',
-    //         'rgb(54, 162, 235)',
-    //         'rgb(255, 205, 86)'
-    //         ],
-    //         hoverOffset: 4
-    //     }]
-    // };
-
-    const getWeeklyReport = () => {
-        const allMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        const now = new Date();
-        const labels = Array.from({ length: 7 }, (_, i) => {
-            const d = new Date(now.getFullYear(), now.getMonth() - (6 - i), 1);
-            return allMonths[d.getMonth()];
-        });
-        const data = {
-            labels,
-            datasets: [{
-                label: 'Tasks Completed',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(255, 205, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(201, 203, 207, 0.2)'
-                ],
-                borderColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 159, 64)',
-                    'rgb(255, 205, 86)',
-                    'rgb(75, 192, 192)',
-                    'rgb(54, 162, 235)',
-                    'rgb(153, 102, 255)',
-                    'rgb(201, 203, 207)'
-                ],
-                borderWidth: 1
-            }]
-        };
-        setWeeklyReport(data);
-    }
-
-    const getTaskOverTime = async () => {
-        try {
-            const userId = localStorage.getItem('UserId')
-            const res = await fetch(`/api/admin/dashboards`, {
-                                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}`}
-                                    })
-            const { result3 } = await res.json();
-            const grouped = result3.reduce((acc, item) => {
+            // const data2 = await res.json()
+            console.log("data1: ", data1)
+            
+            const grouped = data1.result3.reduce((acc, item) => {
                 const date = item.create_at.split("T")[0];
                 if (!acc[date]) {
                     acc[date] = 0
@@ -135,10 +72,12 @@ export default function Page() {
                 return acc;
             }, {})
 
+            console.log("Grouped Data: ", grouped)
+
             const label = Object.keys(grouped).sort();
             const countData = label.map((i) => grouped[i])
 
-            const data = {
+            const graphData = {
                 labels: label,
                 datasets: [{
                     label: 'Tasks Completed',
@@ -164,12 +103,119 @@ export default function Page() {
                     borderWidth: 1
                 }]
             };
-            setTaskOverTime(data)
-        }
+
+            setTaskOverTime(graphData)
+            }
         catch (error) {
             console.log(error)
         }
     }
+
+
+    // const data = {
+    //     labels: [
+    //         'Red',
+    //         'Blue',
+    //         'Yellow'
+    //     ],
+    //     datasets: [{
+    //         label: 'My First Dataset',
+    //         data: [300, 50, 100],
+    //         backgroundColor: [
+    //         'rgb(255, 99, 132)',
+    //         'rgb(54, 162, 235)',
+    //         'rgb(255, 205, 86)'
+    //         ],
+    //         hoverOffset: 4
+    //     }]
+    // };
+
+    // const getWeeklyReport = () => {
+    //     const allMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    //     const now = new Date();
+    //     const labels = Array.from({ length: 7 }, (_, i) => {
+    //         const d = new Date(now.getFullYear(), now.getMonth() - (6 - i), 1);
+    //         return allMonths[d.getMonth()];
+    //     });
+    //     const data = {
+    //         labels,
+    //         datasets: [{
+    //             label: 'Tasks Completed',
+    //             data: [65, 59, 80, 81, 56, 55, 40],
+    //             backgroundColor: [
+    //                 'rgba(255, 99, 132, 0.2)',
+    //                 'rgba(255, 159, 64, 0.2)',
+    //                 'rgba(255, 205, 86, 0.2)',
+    //                 'rgba(75, 192, 192, 0.2)',
+    //                 'rgba(54, 162, 235, 0.2)',
+    //                 'rgba(153, 102, 255, 0.2)',
+    //                 'rgba(201, 203, 207, 0.2)'
+    //             ],
+    //             borderColor: [
+    //                 'rgb(255, 99, 132)',
+    //                 'rgb(255, 159, 64)',
+    //                 'rgb(255, 205, 86)',
+    //                 'rgb(75, 192, 192)',
+    //                 'rgb(54, 162, 235)',
+    //                 'rgb(153, 102, 255)',
+    //                 'rgb(201, 203, 207)'
+    //             ],
+    //             borderWidth: 1
+    //         }]
+    //     };
+    //     setWeeklyReport(data);
+    // }
+
+    // const getTaskOverTime = async () => {
+    //     try {
+    //         const res = await fetch(`/api/admin/dashboards`, {
+    //                                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}`}
+    //                                 })
+    //         const { result3 } = await res.json();
+    //         const grouped = result3.reduce((acc, item) => {
+    //             const date = item.create_at.split("T")[0];
+    //             if (!acc[date]) {
+    //                 acc[date] = 0
+    //             }
+    //             acc[date]++;
+    //             return acc;
+    //         }, {})
+
+    //         const label = Object.keys(grouped).sort();
+    //         const countData = label.map((i) => grouped[i])
+
+    //         const data = {
+    //             labels: label,
+    //             datasets: [{
+    //                 label: 'Tasks Completed',
+    //                 data: countData,
+    //                 backgroundColor: [
+    //                 'rgba(255, 99, 132, 0.2)',
+    //                 'rgba(255, 159, 64, 0.2)',
+    //                 'rgba(255, 205, 86, 0.2)',
+    //                 'rgba(75, 192, 192, 0.2)',
+    //                 'rgba(54, 162, 235, 0.2)',
+    //                 'rgba(153, 102, 255, 0.2)',
+    //                 'rgba(201, 203, 207, 0.2)'
+    //             ],
+    //                 borderColor: 
+    //                 [ 'rgb(255, 99, 132)',
+    //                 'rgb(255, 159, 64)',
+    //                 'rgb(255, 205, 86)',
+    //                 'rgb(75, 192, 192)',
+    //                 'rgb(54, 162, 235)',
+    //                 'rgb(153, 102, 255)',
+    //                 'rgb(201, 203, 207)'
+    //             ],
+    //                 borderWidth: 1
+    //             }]
+    //         };
+    //         setTaskOverTime(data)
+    //     }
+    //     catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
     return (
         <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50">
@@ -234,7 +280,13 @@ export default function Page() {
                     <div className='bg-white rounded-xl pb-10 my-2 shadow-lg col-span-4'>
                         <h3 className='text-center text-2xl  pt-5'>Task Over Time</h3>
                         <div className='px-6 mt-4 flex justify-center'>
-                            {taskOverTime ? <Line data={taskOverTime} options={{ scales: { y: { ticks: { stepSize: 1 } } } }} /> : <p className='text-center mt-7'>-</p>}
+                            {taskOverTime ? <Line data={taskOverTime} 
+                                                  options={{ 
+                                                    scales: { y: { ticks: { stepSize: 1 } } },
+                                                    responsive: true,
+                                                    maintainAspectRatio: false
+                                                    }} />
+                                         : <p className='text-center mt-7'>-</p>}
                         </div>
                     </div>
                 </div>

@@ -70,6 +70,7 @@ const NavBar = () => {
                         {role === 'admin' ? (
                             <>
                                 {/* <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/">Home</Link></li> */}
+                                <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/admin/product">Products</Link></li>
                                 <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/admin/dashboard">Dashboard</Link></li>
                                 {profileSection}
                             </>
