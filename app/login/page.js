@@ -29,8 +29,13 @@ export default function LoginPage() {
                 localStorage.setItem('Profile_Image', JSON.stringify(res.user.Profile_Image))
                 localStorage.setItem('token', res.token)
                 localStorage.setItem('role', res.user.Roles)
-                // router.push('/')
-                window.location.href = '/'
+                
+                if (res.user.Roles === 'admin'){
+                    router.push('/admin/dashboard')
+                }
+                else{
+                    router.push('/')
+                }
                 
             }
             else {

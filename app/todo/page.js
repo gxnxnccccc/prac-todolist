@@ -48,6 +48,7 @@ export default function Home() {
     console.log(localStorage.getItem('UserId'))
 
     console.log(edit)
+    
     if (edit==='') { 
       console.log("Typed", text)
       const id = item.length
@@ -113,8 +114,8 @@ export default function Home() {
                     },
                     body: JSON.stringify(data)
       })
-      // console.log("Deleted")
-      getData() // fetch data
+      setIsOpen(false)
+      getData()
     }
     catch (error) {
       console.log(error)
