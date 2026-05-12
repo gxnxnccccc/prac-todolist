@@ -77,6 +77,7 @@ const NavBar = () => {
                         ) : (
                             <>
                                 <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/">Home</Link></li>
+                                <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/product">Products</Link></li>
                                 <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/dashboard">Dashboard</Link></li>
                                 <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/todo">To do</Link></li>
                                 {profileSection}
