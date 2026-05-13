@@ -40,7 +40,7 @@ export async function GET(req) {
             all_images: result_allImageProducts.recordset
         });
     } catch (error) {
-        console.error('GET /api/admin/products error:', error)
+        console.error('GET /api/admin/inventories error:', error)
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
 }

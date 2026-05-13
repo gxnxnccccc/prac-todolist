@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { FaFileImage } from "react-icons/fa6";
 import moment from 'moment';
 import { CiImageOff } from "react-icons/ci";
+
 import { MdOutlineCancel } from "react-icons/md";
 
 const adminProductPage = () => {
