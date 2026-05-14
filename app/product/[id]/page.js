@@ -4,12 +4,15 @@ import React from 'react'
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from "next/navigation";
 import { FaStar } from "react-icons/fa";
+import { useRouter } from 'next/router';
 
 export default function ProductDetail() {
     const { id } = useParams()
     const [product, setProduct] = useState(null)
     const [qty, setQty] = useState(1)
     const [slideIndex, setSlideIndex] = useState(0)
+    // const [buyAmount, setBuyAmount] = useState(1)
+    const [addToCartAmount, setAddToCartAmount] = useState(0)
 
     useEffect(() => {
         if (!id) return
@@ -29,6 +32,34 @@ export default function ProductDetail() {
 
     const nextSlide = () => {
         setSlideIndex(i => i === product.images.length - 1 ? 0 : i + 1)
+    }
+
+    const addProductToCart = async () => {
+        try {
+            const res = await fetch(`/api/products/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({
+                    productId: product.product_id,
+                    quantity: qty
+                })
+            })
+            if (!res.ok) {
+                const err = await res.json()
+                throw new Error(err.error)
+            }
+
+            const data = await res.json()
+            console.log('Added to cart:', data)
+
+            setAddToCartAmount(qty)
+        }
+        catch (error) {
+            console.error('addProductToCart error:', error)
+        }
     }
 
     if (!product) return <div>Loading...</div>
@@ -63,8 +94,8 @@ export default function ProductDetail() {
                                     </div>
                                 </div>
                                 <div className='flex gap-2 mt-auto'>
-                                    <button className='bg-white w-full py-2 border-2 border-gray-300'>Add to Cart</button>
-                                    <button className='bg-gray-300 w-full py-2 '>Buy Now</button>
+                                    <button onClick={addProductToCart} className='bg-white w-full py-2 border-2 border-gray-300 hover:bg-gray-300'>Add to Cart</button>
+                                    <button className='bg-gray-300 text-black w-full py-2 hover:bg-gray-500 hover:text-gray-100'>Buy Now</button>
                                 </div>
                             </div>
                         </div>

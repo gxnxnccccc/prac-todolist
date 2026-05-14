@@ -4,8 +4,6 @@ import jsonwebtoken from 'jsonwebtoken';
 import { writeFile } from 'fs/promises';
 import { join } from 'path';
 
-
-
 // GET - Retrieve the Data
 export async function GET(req) {
     const user = verifyToken(req)
@@ -124,20 +122,21 @@ export async function DELETE(req) {
         const request = await transaction.request()
         request.input('product_id', body.product_id)
 
+        let result
         if (body.image_id) {
             request.input('image_id', body.image_id)
-            await request.query('DELETE FROM product_images WHERE product_id = @product_id AND image_id = @image_id')
+            result = await request.query('DELETE FROM product_images WHERE product_id = @product_id AND image_id = @image_id')
         } else {
             await request.query('DELETE FROM product_images WHERE product_id = @product_id')
-            await request.query('DELETE FROM products WHERE product_id = @product_id')
+            result = await request.query('DELETE FROM products WHERE product_id = @product_id')
         }
 
         await transaction.commit()
 
         return NextResponse.json({
-        success: 'Deleted!'
-    })
-
+            result: result,
+            success: 'Deleted!'
+        })
     }
     catch (error) {
         await transaction.rollback()
@@ -146,10 +145,6 @@ export async function DELETE(req) {
             { statuscode: 500 }
         )
     }
-   
-    
-
-   
 }
 
 export async function PUT(req) {

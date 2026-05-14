@@ -4,7 +4,15 @@ import sql from 'mssql';
 import jsonwebtoken from 'jsonwebtoken';
 
 export async function GET(req, ctx) {
-    const { id } = await ctx.params
+    // user_id
+    const user = verifyToken(req)
+    console.log("User: ",user)
+    if (!user) {
+        return NextResponse.json({ statusCode: 401 }, { status: 401 })
+    }
+
+    //product_id 
+    const { id } = await ctx.params 
     const numId = parseInt(id, 10);
 
     if (isNaN(numId)) {
@@ -14,30 +22,20 @@ export async function GET(req, ctx) {
     try {
         const pool = await getConnection();
 
-        const result_product = await pool.request()
-            .input('id', sql.Int, numId)
-            .query(`
-                SELECT p.product_id, p.product_name, p.description, p.quantity, p.price,
-                    p.add_at, p.update_at, p.category_id, c.category_name
-                FROM products p
-                LEFT JOIN categories c ON p.category_id = c.category_id
-                WHERE p.product_id = @id
-            `)
-
-        const result_images = await pool.request()
-            .input('id', sql.Int, numId)
-            .query(`
-                SELECT image_url FROM product_images
-                WHERE product_id = @id ORDER BY image_id
-            `)
-
-        if (result_product.recordset.length === 0) {
-            return NextResponse.json({ error: 'Product not found' }, { status: 404 })
-        }
-
+        const request = await pool.request()
+        request.input('id', sql.Int, numId)
+        request.input('user_id', sql.Int, user.UserId)
+        
+        const result_cart = await request.query(`
+                                                SELECT p.product_id, p.product_name, c.cart_id, c.buy_amount, cat.category_name, p.price,
+                                                (SELECT TOP 1 image_url FROM product_images WHERE product_id = p.product_id ORDER BY image_id) AS image_url
+                                                FROM products p
+                                                LEFT JOIN carts c ON p.product_id = c.product_id
+                                                LEFT JOIN categories cat ON p.category_id = cat.category_id
+                                                WHERE c.user_id = @user_id
+                                                    `)
         return NextResponse.json({
-            ...result_product.recordset[0],
-            images: result_images.recordset.map(r => r.image_url)
+            carts: result_cart.recordset
         })
 
     } catch (error) {
@@ -93,6 +91,49 @@ export async function POST(req, {params}){
     }
 }
 
+export async function PUT(req, {params}) {
+    const { id } =  await params
+    const numId = parseInt(id, 10)
+
+    if (isNaN(numId)){
+        return NextResponse.json(
+            { error: 'Invalid ID'},
+            { status: 400 }
+        )
+    }
+    try {
+        const decoded = verifyToken(req)
+
+        if (!decoded) {
+            return NextResponse.json(
+                { error: 'Unauthorized' },
+                { status: 401 }
+            )
+        }
+        const userId = decoded.UserId
+
+        const body = await req.json()
+        const pool = await getConnection();
+        const request = await pool.request()
+
+        request.input('cartId', sql.Int, body.cart_id)
+        request.input('buyAmount', sql.Int, body.buy_amount)
+        request.input('user_id', sql.Int, userId)
+
+        const result_updateCart = await request.query(`UPDATE carts
+                                                      SET buy_amount = @buyAmount
+                                                      WHERE user_id = @user_id AND cart_id = @cartId
+                                                    `)
+        return NextResponse.json({
+            updateCart: result_updateCart
+        })
+    }
+    catch(error) {
+        console.error('POST /api/products/[id] error:', error)
+        return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+}
+
 function verifyToken(req) {
     const auth = req.headers.get('Authorization')
     if (!auth) {
@@ -108,5 +149,4 @@ function verifyToken(req) {
         console.log(error)
         return null
     }
-        
 }

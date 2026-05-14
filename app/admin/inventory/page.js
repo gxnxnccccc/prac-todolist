@@ -9,7 +9,7 @@ import { CiImageOff } from "react-icons/ci";
 
 import { MdOutlineCancel } from "react-icons/md";
 
-const adminProductPage = () => {
+const AdminProductPage = () => {
     const [ previewUrl, setPreviewUrl ] = useState(null)
     const [ imageUrl, setImageUrl ] = useState([])
     const fileInputRef = useRef(null)
@@ -22,7 +22,7 @@ const adminProductPage = () => {
     const [ productAddedAlert, setProductAddedAlert ] = useState(false)
     const [ file, setFile ] = useState(null)
     const [ saved, setSaved ] = useState(false)
-    const [ allCategories, setAllCategories ] = useState(null)
+    const [ allCategories, setAllCategories ] = useState([]) // change from null
     // const [ text, setText ] = useState('')
     const [ product, setProduct ] = useState([])
     const [ allImages, setAllImages ] = useState([])
@@ -131,8 +131,10 @@ const adminProductPage = () => {
 
 
     const handleAddEditProductInfo = async (e) => {
-        e.preventDefault();
-        
+        if (e?.preventDefault) {
+            e.preventDefault()
+        }
+
         const data = {
             productName: productName,
             categoryId: categoryId,
@@ -267,7 +269,7 @@ const adminProductPage = () => {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json',
                            'Authorization': `Bearer ${localStorage.getItem('token')}` },
-                body: JSON.stringify({ product_id: p.product_id }, {image_id: p.image_id})
+                body: JSON.stringify({ product_id: p.product_id, image_id: p.image_id })
             })
             getProductInfo()
         } catch (error) {
@@ -660,4 +662,4 @@ const adminProductPage = () => {
     )
     }
 
-export default adminProductPage
+export default AdminProductPage

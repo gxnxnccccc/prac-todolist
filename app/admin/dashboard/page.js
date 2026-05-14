@@ -23,12 +23,10 @@ export default function Page() {
     useEffect(() => {
         if (!localStorage.getItem('Username')) {
             router.push('/login')
+            return
         }
-        else {
-            const u = localStorage.getItem('Username')
-            setUser(JSON.parse(u))
-
-        }
+        const u = localStorage.getItem('Username')
+        setUser(JSON.parse(u))
         getTotalUser();
         // getAllUsernames();
         // getWeeklyReport();
@@ -50,6 +48,7 @@ export default function Page() {
             const res = await fetch(`${path}`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                         })
+            if (!res.ok) throw new Error(`Request failed: ${res.status}`)
             const data1 = await res.json()
             
             console.log('total user: ', data1)
@@ -64,6 +63,7 @@ export default function Page() {
             console.log("data1: ", data1)
             
             const grouped = data1.result3.reduce((acc, item) => {
+                if (!item.create_at) return acc;
                 const date = item.create_at.split("T")[0];
                 if (!acc[date]) {
                     acc[date] = 0
