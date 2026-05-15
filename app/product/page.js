@@ -17,6 +17,8 @@ const productPage = () => {
   const [ allCategories, setAllCategories ] = useState(null)
   const [ product, setProduct ] = useState([])
   const [ allImage, setAllImages ] = useState([])
+  // const [ wishlist, setWishlist ] = useState(false)
+  const [ wishlist, setWishlist ] = useState(new Set())
 
   const router = useRouter()
 
@@ -29,6 +31,7 @@ const productPage = () => {
 
   const getProductInfo = async () => {
     try {
+      console.log("token: ", localStorage.getItem('token'))
       const res = await fetch(`/api/products`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}`}
       })
@@ -43,16 +46,30 @@ const productPage = () => {
       setAllCategories(data.categories)
       setProduct(data.products)
       setAllImages(data.all_images ?? [])
+      setWishlist(new Set(data.wishlists.map(w => w.product_id)))
     }
     catch(error){
       console.log("getProductInfo error: ",error)
     }
   }
+
   const goCartPage = ()=> {
       const userId = localStorage.getItem('UserId')
       router.push(`/cart/${userId}`)
   }
 
+  const toggleWishlist = (productId) => {
+    setWishlist(prev => {
+      const next = new Set(prev)
+      if (next.has(productId)) {
+        next.delete(productId)
+      }
+      else {
+        next.add(productId)
+      }
+      return next
+    })
+  }
   
 
   return (
@@ -84,7 +101,22 @@ const productPage = () => {
                           <div >
                             <div className='flex justify-between items-center'>
                               <div className='text-lg'>{p.product_name}</div>
-                              <div className=''><FaRegHeart /></div>
+
+                              {/* 1 */}
+                              {/* <div className=''><FaRegHeart /></div> */}
+
+                              {/* 2 */}
+                              {/* <button onClick={() => setWishlist(!wishlist)}>
+                                {wishlist ? <FaHeart/> : <FaRegHeart/>}
+                              </button> */}
+
+                              {/* 3 */}
+                              <button onClick={(e) => {
+                                e.preventDefault()
+                                toggleWishlist(p.product_id)
+                              }}>
+                                {wishlist.has(p.product_id) ? <FaHeart/> : <FaRegHeart/>}
+                              </button>
                             </div>
                             {/* <div className='flex justify-self-end'>
                               <div className='text-red-600'>{p.price}฿</div>

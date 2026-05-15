@@ -1,18 +1,15 @@
 import { getConnection } from '@/lib/db';
 import { NextResponse } from 'next/server';
 import jsonwebtoken from 'jsonwebtoken';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
-import { verify } from 'crypto';
 
 export async function GET(req) {
     const user = verifyToken(req)
-    // if (!user) {
-    //     return NextResponse.json(
-    //         { statusCode: 401 },
-    //         { status: 401}
-    //     )
-    // }
+    if (!user) {
+        return NextResponse.json(
+            { statusCode: 401 },
+            { status: 401}
+        )
+    }
 
     try {
         const pool = await getConnection();
@@ -30,10 +27,19 @@ export async function GET(req) {
                                                                     FROM product_images
                                                                     ORDER BY product_id, image_id
                                                                     `);
+                const result_wishlists = await pool.request()
+                                                            .input('userId', user.UserId)
+                                                            .query(`
+                                                                SELECT wishlist_id, user_id, product_id
+                                                                FROM wishlists
+                                                                WHERE user_id = @userId
+                                                            `)
+                
         return NextResponse.json({
             categories: result_categories.recordset,
             products: result_products.recordset,
-            all_images: result_allImageProducts.recordset
+            all_images: result_allImageProducts.recordset,
+            wishlists: result_wishlists.recordset
         });
     }
     catch (error) {
@@ -41,6 +47,70 @@ export async function GET(req) {
         return NextResponse.json(
             { error: error.message },
             { status: 500 }
+        )
+    }
+}
+
+export async function POST(req) {
+    const user = verifyToken(req)
+    if (!user) {
+        return NextResponse.json(
+            { statusCode: 401 },
+            { status: 401}
+        )
+    }
+    
+    try {
+        const body = await req.json()
+        const pool = await getConnection();
+        const result_addWishlists = await pool.request()
+            .input('userId', user.UserId)
+            .input('productId', body.product_id)
+            .query(`
+                    INSERT INTO wishlists (user_id, product_id)
+                    VALUES (@userId, @productId)
+                    `)
+        return NextResponse.json({ 
+            addWishlists: result_addWishlists 
+        })
+    }
+    catch (error) {
+        console.error('POST /api/products_wishlists error', error)
+        return NextResponse.json(
+            {error: error.message},
+            {status: 500}
+        )
+    }
+}
+
+export async function DELETE(req) {
+    const user = verifyToken(req)
+    if (!user) {
+        return NextResponse.json(
+            { statusCode: 401 },
+            { status: 401}
+        )
+    }
+    
+    try {
+        const body = await req.json()
+        const pool = await getConnection();
+        const result_removeWishlists = await pool.request()
+            .input('userId', user.UserId)
+            .input('productId', body.product_id)
+            .query(`
+                    DELETE FROM wishlists 
+                    VALUES (@userId, @productId)
+                    `)
+        return NextResponse.json({ 
+            removeWishlists: result_removeWishlists 
+        })
+    }
+    catch (error) {
+        console.error('DELETE /api/products_wishlists error', error)
+        return NextResponse.json(
+            {error: error.message},
+            {status: 500}
         )
     }
 }

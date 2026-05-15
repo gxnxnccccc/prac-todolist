@@ -40,8 +40,7 @@ export default function Home() {
       console.log(error)
     }
   }
-
-
+  
   async function handleClick(){
 
     // console.log(user[0]?.UserId)

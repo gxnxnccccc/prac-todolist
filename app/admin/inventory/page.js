@@ -11,17 +11,14 @@ import { MdOutlineCancel } from "react-icons/md";
 
 const AdminProductPage = () => {
     const [ previewUrl, setPreviewUrl ] = useState(null)
-    const [ imageUrl, setImageUrl ] = useState([])
     const fileInputRef = useRef(null)
     const editFileInputRef = useRef(null)
     const [ editFiles, setEditFiles ] = useState([])
     const [ editPreviewUrls, setEditPreviewUrls ] = useState([])
     const [ editImageUrl, setEditImageUrl ] = useState([])
     const [ editSaved, setEditSaved ] = useState(false)
-    const [ savedAlert, setSavedAlert ] = useState(false)
     const [ productAddedAlert, setProductAddedAlert ] = useState(false)
     const [ file, setFile ] = useState(null)
-    const [ saved, setSaved ] = useState(false)
     const [ allCategories, setAllCategories ] = useState([]) // change from null
     // const [ text, setText ] = useState('')
     const [ product, setProduct ] = useState([])
@@ -54,39 +51,30 @@ const AdminProductPage = () => {
         getProductInfo();
     }, [])
 
-    const onSubmit = async (e) => {
-        e.preventDefault()
-
-        if (files.length === 0) return
-
+    const uploadImages = async () => {
+        if (files.length === 0) return []
+        const uploadedUrls = []
         try {
-            const uploadedUrls = []
-
             for (const file of files) {
                 const data = new FormData()
                 data.set('file', file)
-
                 const res = await fetch('/api/admin/inventories', {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
                     body: data
                 })
                 if (!res.ok) throw new Error(await res.text())
-
                 const resImg = await res.json()
                 uploadedUrls.push(`/productUploads/${resImg.filename}`)
             }
-
-            setImageUrl(prev => [...prev, ...uploadedUrls])
-            setSaved(true)
-            setSavedAlert(true)
-            setTimeout(() => setSavedAlert(false), 2000)
         } catch (error) {
             console.log(error)
         }
+        return uploadedUrls
     }
 
     const onSubmitEditImage = async (e) => {
+        
         e.preventDefault()
         if (editFiles.length === 0) return
         try {
@@ -108,7 +96,9 @@ const AdminProductPage = () => {
         } catch (error) {
             console.log(error)
         }
+        
     }
+    
 
     const getProductInfo = async () => {
         try {
@@ -133,23 +123,23 @@ const AdminProductPage = () => {
     const handleAddEditProductInfo = async (e) => {
         if (e?.preventDefault) {
             e.preventDefault()
-        }
-
-        const data = {
-            productName: productName,
-            categoryId: categoryId,
-            description: description,
-            price: price,
-            quantity: quantity,
-            imageUrl: imageUrl
-        }
+        } 
         if (edit==='') {
             try {
-                // ADD PART
                 if (!productName || !categoryId || !price || !quantity) {
                     alert('Please fill in all required fields (name, category, price, quantity).')
                     return
                 }
+                const uploadedUrls = await uploadImages()
+                const data = {
+                    productName: productName,
+                    categoryId: categoryId,
+                    description: description,
+                    price: price,
+                    quantity: quantity,
+                    imageUrl: uploadedUrls
+                }
+                
                 const addProduct = await fetch(`/api/admin/inventories`, {
                                 method: 'POST', 
                                 headers: {'Content-Type': 'application/json',
@@ -172,11 +162,9 @@ const AdminProductPage = () => {
                 setQuantity('')
 
                 setPreviewUrl(null)
-                setImageUrl([])
                 setFile(null)
                 setFiles([])
                 setPreviewUrls([])
-                setSaved(false)
 
                 getProductInfo();
             }
@@ -277,6 +265,11 @@ const AdminProductPage = () => {
         }
     }
 
+    function handleRemovePreview(i){
+        setPreviewUrls(prev => prev.filter((_, idx) => idx !== i))
+        setFiles(prev => prev.filter((_, idx) => idx !== i))
+    }
+
     return (
         <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50">
             <div className='mt-5 px-15 '>
@@ -290,16 +283,15 @@ const AdminProductPage = () => {
                             <h3>Product Image</h3>
                             <div className='flex justify-center mx-auto mt-5'>
                                 {/* <p className='mx-auto'>Add photo</p> */}
-                                <form onSubmit={onSubmit} className="flex flex-col items-center gap-4">
+                                <div className="flex flex-col items-center gap-4">
                                     <div className="flex justify-center items-center">
-
-                                        {/* previewUrl - just picked image */}
-                                        {/* imageUrl   - saved image in db */}
-
                                         {previewUrls.length > 0
                                             ? <div className='flex flex-wrap justify-center gap-2 '>
                                                 {previewUrls.map((url, i) => (
-                                                    <img key={i} src={url} alt="preview" className="object-cover w-24 h-24 cursor-pointer" onClick={() => fileInputRef.current.click()} />
+                                                    <div key={i} >
+                                                        <img src={url} alt="preview" className="object-cover w-24 h-24 cursor-pointer" onClick={() => fileInputRef.current.click()} />
+                                                        <button onClick={() => handleRemovePreview(i)}>X</button>
+                                                    </div>
                                                 ))}
                                             </div>
                                             : <FaFileImage size={100} className="text-gray-400 cursor-pointer" onClick={() => fileInputRef.current.click()} />
@@ -316,15 +308,7 @@ const AdminProductPage = () => {
                                             }}
                                         />
                                     </div>
-                                    {previewUrls.length > 0 && !saved &&
-                                        <button type="submit" className="border px-3 py-2 rounded bg-blue-200">Add Photo</button>
-                                    }
-                                    {savedAlert && (
-                                        <div className='fixed bottom-5 right-5 bg-green-200 text-black px-4 py-2 rounded-xl shadow-lg'>
-                                            Added
-                                        </div>
-                                    )}
-                                </form>
+                                </div>
                             </div>
                         </div>
                         

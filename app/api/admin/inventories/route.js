@@ -52,6 +52,8 @@ export async function POST(req) { // request(req) is the data from frontend
 
     const contentType = req.headers.get('content-type') || ''
 
+    // const body = await req.json()
+    // console.log(body)
     // Image upload
     if (contentType.includes('multipart/form-data')) {
         try {
@@ -72,6 +74,7 @@ export async function POST(req) { // request(req) is the data from frontend
             console.error('POST /api/admin/inventories image error:', error)
             return NextResponse.json({ error: error.message }, { status: 500 })
         }
+
     }
 
     // Product creation
@@ -104,6 +107,9 @@ export async function POST(req) { // request(req) is the data from frontend
         console.error('POST /api/admin/inventories error:', error)
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
+    return NextResponse.json(
+        {status: 200}
+    )
 }
 
 export async function DELETE(req) {

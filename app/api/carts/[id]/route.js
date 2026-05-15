@@ -92,7 +92,7 @@ export async function POST(req, {params}){
 }
 
 export async function PUT(req, {params}) {
-    const { id } =  await params
+    const { id } =  await params // product_id
     const numId = parseInt(id, 10)
 
     if (isNaN(numId)){
@@ -130,6 +130,48 @@ export async function PUT(req, {params}) {
     }
     catch(error) {
         console.error('POST /api/products/[id] error:', error)
+        return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+}
+
+export async function DELETE(req, {params}) {
+    const { id } =  await params // product_id
+    const numId = parseInt(id, 10)
+
+    if (isNaN(numId)){
+        return NextResponse.json(
+            { error: 'Invalid ID'},
+            { status: 400 }
+        )
+    }
+    try {
+        const decoded = verifyToken(req)
+
+        if (!decoded) {
+            return NextResponse.json(
+                { error: 'Unauthorized' },
+                { status: 401 }
+            )
+        }
+        const userId = decoded.UserId
+
+        const body = await req.json()
+        const pool = await getConnection();
+        const request = await pool.request()
+
+        request.input('cartId', sql.Int, body.cart_id)
+        request.input('buyAmount', sql.Int, body.buy_amount)
+        request.input('user_id', sql.Int, userId)
+
+        const result_deleteCart = await request.query(`DELETE FROM carts
+                                                      WHERE cart_id = @cartId AND user_id = @user_id
+                                                    `)
+        return NextResponse.json({
+            deleteCart: result_deleteCart
+        })
+    }
+    catch(error) {
+        console.error('DELETE /api/products/[id] error:', error)
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
 }
