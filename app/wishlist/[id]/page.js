@@ -1,6 +1,6 @@
 'use client'
 
-import NavBar from '../../components/NavBar';
+import NavBar from '../../../components/NavBar';
 import { use, useState, useEffect } from 'react'; 
 import { useRouter } from 'next/navigation';
 import React from 'react'
@@ -88,7 +88,7 @@ const productPage = () => {
       })
     }
     catch (error) {
-
+      console.log("toggleWishlist error: ", error)
     }
   } 
   
@@ -96,21 +96,12 @@ const productPage = () => {
   return (
     <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50">
         <div className='mt-10 px-15'>
-          <div className='relative flex justify-center items-center'>
-            <h1 className='text-4xl'>Products</h1>
-            <div className='absolute right-0 flex gap-2'>
-              <button onClick={goWishlistPage} className='text-2xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white'>
-                <FaHeart className=''/>
-              </button>
-              <button onClick={goCartPage} className='text-2xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white'>
-                <FaCartShopping className=''/>
-              </button>
-            </div>
-          </div>
+          <h1 className='flex justify-center text-4xl'>Wishlists</h1>
+          
           <div className='gap-5 mt-10 mx-auto px-30 mb-10'>
               {/* <div className='p-3 bg-white rounded-2xl shadow-lg h-full'> */}
                 <div className='grid grid-cols-4 gap-10 px-10 '>
-                  {product.map((p) => (
+                  {product.filter(p => wishlist.has(p.product_id)).map((p) => (
                     <Link href={`/product/${p.product_id}`} key={p.product_id}>
                       <div key={p.product_id} className='mt-2 rounded-xl w-full h-70 px-4 bg-white shadow-lg'>
                         <div className='grid grid-rows-4 p-2 gap-2'>

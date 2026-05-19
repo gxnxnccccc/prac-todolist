@@ -7,12 +7,17 @@ import Logo from '../public/logos/newLogo.png';
 import { AiOutlineMenu, AiOutlineClose, AiOutlineInstagram, AiOutlineFacebook, AiOutlineX } from 'react-icons/ai';
 import { useState, useEffect } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
+
+import { FaCartShopping } from "react-icons/fa6"; // cart
+import { FaHeart } from "react-icons/fa6";   // full heart
 
 const NavBar = () => {
     const [menuOpen, setMenuOpen] = useState(false)
     const [imageUrl, setImageUrl] = useState(null)
     const [token, setToken] = useState(null)
     const [role, setRole] = useState(null)
+    const router = useRouter()
 
     useEffect(() => {
         const storedToken = localStorage.getItem('token')
@@ -59,8 +64,18 @@ const NavBar = () => {
         </li>
     )
 
+    const goCartPage = ()=> {
+        const userId = localStorage.getItem('UserId')
+        router.push(`/cart/${userId}`)
+    }
+
+    const goWishlistPage = () => {
+        const userId = localStorage.getItem('UserId')
+        router.push(`/wishlist/${userId}`)
+    }
+
     return (
-        <nav className='fixed w-full h-24 shadow-xl bg-white font-(family-name:--font-geologica)'>
+        <nav className='fixed w-full h-24 shadow-xl bg-white font-(family-name:--font-geologica) z-50'>
             <div className='flex justify-between items-center h-full w-full 2xl:px-16'>
                 <Link href="/">
                     <Image src={Logo} alt="Logo" width="150" className="cursor-pointer rounded-full" priority />
@@ -77,9 +92,19 @@ const NavBar = () => {
                         ) : (
                             <>
                                 <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/">Home</Link></li>
+                                <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/todo">To do</Link></li>
                                 <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/product">Products</Link></li>
                                 <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/dashboard">Dashboard</Link></li>
-                                <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/todo">To do</Link></li>
+                                <li className='ml-5 mr-8'>
+                                    <button onClick={goWishlistPage}  className='text-2xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white'>
+                                        <FaHeart className=''/>
+                                    </button>
+                                </li>
+                                <li className='mr-8'>
+                                    <button onClick={goCartPage} className='text-2xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white'>
+                                        <FaCartShopping className=''/>
+                                    </button>
+                                </li>
                                 {profileSection}
                             </>
                         )}

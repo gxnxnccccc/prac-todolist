@@ -184,7 +184,7 @@ export async function PUT(req) {
     if (body.imageUrl && body.imageUrl.length > 0) {
         const delReq = pool.request()
         delReq.input('product_id', body.product_id)
-        await delReq.query('DELETE FROM product_images WHERE product_id = @product_id')
+        // await delReq.query('DELETE FROM product_images WHERE product_id = @product_id')
 
         for (const url of body.imageUrl) {
             const insReq = pool.request()

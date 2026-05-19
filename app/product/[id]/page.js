@@ -4,7 +4,7 @@ import React from 'react'
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from "next/navigation";
 import { FaStar } from "react-icons/fa";
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export default function ProductDetail() {
     const { id } = useParams()
@@ -13,6 +13,8 @@ export default function ProductDetail() {
     const [slideIndex, setSlideIndex] = useState(0)
     // const [buyAmount, setBuyAmount] = useState(1)
     const [addToCartAmount, setAddToCartAmount] = useState(0)
+
+    const router = useRouter();
 
     useEffect(() => {
         if (!id) return
@@ -56,6 +58,7 @@ export default function ProductDetail() {
             console.log('Added to cart:', data)
 
             setAddToCartAmount(qty)
+            router.push('/product')
         }
         catch (error) {
             console.error('addProductToCart error:', error)

@@ -182,7 +182,6 @@ export default function Page() {
         catch (error) {
             console.log(error)
         }
-        
     }
 
     // const getTaskOverTime = async () => {
@@ -233,7 +232,7 @@ export default function Page() {
             <div className='grid grid-cols-2 grid-rows-2 gap-5 mt-10 mx-auto px-15'>
                 {/* Total */}
                 <div className=' bg-white rounded-xl pb-10 my-2 shadow-lg '>
-                    <div className='bg-amber-300 rounded-xl'>
+                    <div className=''>
                         <h3 className='text-center mt-5 text-xl'>Total List</h3>
                     </div>
                     {/* <h3 className='text-center'>To do list</h3> */}
