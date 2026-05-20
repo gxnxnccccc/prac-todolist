@@ -3,6 +3,30 @@ import { NextResponse } from 'next/server';
 import jsonwebtoken from 'jsonwebtoken';
 import sql from 'mssql';
 
+export async function GET(req) {
+    const user = verifyToken(req)
+    if (!user) {
+        return NextResponse.json({ statusCode: 401 }, { status: 401 })
+    }
+
+    try {
+        const pool = await getConnection()
+        const result = await pool.request()
+            .input('userId', sql.Int, user.UserId)
+            .query(`
+                SELECT order_id, order_date, total_price
+                FROM orders
+                WHERE user_id = @userId
+                ORDER BY order_date DESC --order from newest to oldest
+            `)
+
+        return NextResponse.json({ orders: result.recordset })
+    } catch (error) {
+        console.error('GET /api/orders error:', error)
+        return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+}
+
 export async function POST(req) {
     const user = verifyToken(req)
     if (!user) {

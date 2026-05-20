@@ -21,6 +21,7 @@ export async function GET(req) {
                     WHERE product_id = p.product_id ORDER BY image_id) AS image_url
             FROM products p
             LEFT JOIN categories c ON p.category_id = c.category_id
+            ORDER BY p.product_id DESC --order from newest to oldest
                                                             `);
         const result_allImageProducts = await pool.request().query(`
                                                                     SELECT image_id, product_id, image_url

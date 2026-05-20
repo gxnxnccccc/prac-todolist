@@ -11,6 +11,7 @@ import { FaRegHeart } from "react-icons/fa"; // blank heart
 import { FaHeart } from "react-icons/fa6";   // full heart
 import { FaStar } from "react-icons/fa";     // full star
 import { FaCartShopping } from "react-icons/fa6"; // cart
+import { RiFileList3Fill } from "react-icons/ri"; // history
 
 const productPage = () => {
 
@@ -63,6 +64,10 @@ const productPage = () => {
     router.push(`/wishlist/${userId}`)
   }
 
+  const goOrderPage = () => {
+    router.push(`/order`)
+  }
+
   const toggleWishlist = async (productId) => {
     const isWishlisted = wishlist.has(productId)
   
@@ -90,7 +95,9 @@ const productPage = () => {
     catch (error) {
 
     }
-  } 
+  }
+  
+
   
 
   return (
@@ -98,15 +105,29 @@ const productPage = () => {
         <div className='mt-10 px-15'>
           <div className='relative flex justify-center items-center'>
             <h1 className='text-4xl'>Products</h1>
-            <div className='absolute right-0 flex gap-2'>
+            {/* <div className='absolute right-0 flex gap-2'>
               <button onClick={goWishlistPage} className='text-2xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white'>
                 <FaHeart className=''/>
               </button>
               <button onClick={goCartPage} className='text-2xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white'>
                 <FaCartShopping className=''/>
               </button>
-            </div>
+              <button onClick={goOrderPage} className='text-2xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white'>
+                <RiFileList3Fill className=''/>
+              </button>
+            </div> */}
           </div>
+          <div className='flex justify-center mt-10 mx-60 gap-4'>
+              <button onClick={goWishlistPage} className='flex items-center justify-center gap-2 text-xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white w-full'>
+                <FaHeart /> Wishlist
+              </button>
+              <button onClick={goCartPage} className='flex items-center justify-center gap-2 text-xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white w-full'>
+                <FaCartShopping /> Cart
+              </button>
+              <button onClick={goOrderPage} className='flex items-center justify-center gap-2 text-xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white w-full'>
+                <RiFileList3Fill /> History
+              </button>
+            </div>
           <div className='gap-5 mt-10 mx-auto px-30 mb-10'>
               {/* <div className='p-3 bg-white rounded-2xl shadow-lg h-full'> */}
                 <div className='grid grid-cols-4 gap-10 px-10 '>
@@ -126,7 +147,7 @@ const productPage = () => {
                           </div>
                           <div >
                             <div className='flex justify-between items-center'>
-                              <div className='text-lg'>{p.product_name}</div>
+                              <div className='text-md'>{p.product_name}</div>
 
                               {/* 1 */}
                               {/* <div className=''><FaRegHeart /></div> */}

@@ -2,6 +2,7 @@ import { Geist, Geist_Mono, Geologica } from "next/font/google";
 import "./globals.css";
 // import NavBar from "@/components/NavBar";
 import ConditionalNavBar from "@/components/ConditionalNavBar";
+import { UserProvider } from "@/context/UserContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,11 +32,13 @@ export default function RootLayout({ children }) {
     >
       
       <body className="min-h-full flex flex-col">
-        {/* <NavBar /> */}
-        <ConditionalNavBar />
-        <div className="mt-24">
-          {children}
-        </div>
+        <UserProvider>
+          {/* <NavBar /> */}
+          <ConditionalNavBar />
+          <div className="mt-24">
+            {children}
+          </div>
+        </UserProvider>
       </body>
     </html>
   );

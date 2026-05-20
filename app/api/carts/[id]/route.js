@@ -34,6 +34,7 @@ export async function GET(req, ctx) {
                                                 LEFT JOIN categories cat ON p.category_id = cat.category_id
                                                 WHERE c.user_id = @user_id
                                                     `)
+        
         return NextResponse.json({
             carts: result_cart.recordset
         })

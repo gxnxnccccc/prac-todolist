@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams } from "next/navigation";
 import { FaStar } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
+import { useUser } from '@/context/UserContext';
 
 export default function ProductDetail() {
     const { id } = useParams()
@@ -13,6 +14,7 @@ export default function ProductDetail() {
     const [slideIndex, setSlideIndex] = useState(0)
     // const [buyAmount, setBuyAmount] = useState(1)
     const [addToCartAmount, setAddToCartAmount] = useState(0)
+    const { cartAmount, setCartAmount } = useUser()
 
     const router = useRouter();
 
@@ -58,6 +60,7 @@ export default function ProductDetail() {
             console.log('Added to cart:', data)
 
             setAddToCartAmount(qty)
+            setCartAmount(cartAmount+1)
             router.push('/product')
         }
         catch (error) {

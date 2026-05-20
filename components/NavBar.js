@@ -5,18 +5,26 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Logo from '../public/logos/newLogo.png';
 import { AiOutlineMenu, AiOutlineClose, AiOutlineInstagram, AiOutlineFacebook, AiOutlineX } from 'react-icons/ai';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@/context/UserContext';
 
 import { FaCartShopping } from "react-icons/fa6"; // cart
 import { FaHeart } from "react-icons/fa6";   // full heart
 
 const NavBar = () => {
+
+    const {
+            cartAmount,
+            setCartAmount
+        } = useUser();
+
     const [menuOpen, setMenuOpen] = useState(false)
     const [imageUrl, setImageUrl] = useState(null)
     const [token, setToken] = useState(null)
     const [role, setRole] = useState(null)
+    const [cart, setCart] = useState([])
     const router = useRouter()
 
     useEffect(() => {
@@ -27,6 +35,7 @@ const NavBar = () => {
         if (storedToken) {
             getProfileLogo(storedToken)
         }
+        fetchCart()
     }, [])
 
     const handleNav = () => {
@@ -74,6 +83,22 @@ const NavBar = () => {
         router.push(`/wishlist/${userId}`)
     }
 
+    async function fetchCart() {
+            const userId = localStorage.getItem('UserId')
+            if (!userId) return
+            const res = await fetch(`/api/carts/${userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            const data = await res.json()
+            console.log("data: ", data)
+            console.log("data.length: ", data.length)
+            setCartAmount(data.carts.length)
+        }
+    
+    console.log("cart amount: ", cart.length)
+    console.log("cart amount(useContext): ", cartAmount)
     return (
         <nav className='fixed w-full h-24 shadow-xl bg-white font-(family-name:--font-geologica) z-50'>
             <div className='flex justify-between items-center h-full w-full 2xl:px-16'>
@@ -101,8 +126,10 @@ const NavBar = () => {
                                     </button>
                                 </li>
                                 <li className='mr-8'>
-                                    <button onClick={goCartPage} className='text-2xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white'>
+                                    <button onClick={goCartPage} className='flex text-2xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white items-center'>
                                         <FaCartShopping className=''/>
+                                        ({cartAmount})
+                                        
                                     </button>
                                 </li>
                                 {profileSection}

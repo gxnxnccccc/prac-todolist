@@ -7,6 +7,10 @@ import { useRouter } from "next/navigation";
 import NavBar from '@/components/NavBar';
 import moment from 'moment';
 
+import { MdCheckBoxOutlineBlank } from "react-icons/md"; // not selected
+import { MdCheckBox } from "react-icons/md";             // selected
+import { FaPencilAlt } from "react-icons/fa";            // pencil
+
 
 export default function Home() {
   const [text, setText] = useState('')
@@ -165,7 +169,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)]">
+    <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] mb-10">
       <div>
         
       </div>
@@ -178,13 +182,16 @@ export default function Home() {
           {/* Fill Box */}
           <div className="flex flex-col items-center justify-center">
             <br />
-            <input 
-              type="text"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="type in here!"
-              className="border px-3 py-2 rounded w-64"
-              />
+            <div className="relative w-64">
+                <FaPencilAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  placeholder="type in here!"
+                  className="border pl-8 pr-3 py-2 rounded w-full"
+                />
+              </div>
             <br/>
             <button onClick={handleClick} className="border px-3 py-2 rounded w-64 hover:bg-gray-200 shadow-md">{edit == ''?"Add":"Save"}</button>
           </div>
@@ -220,17 +227,18 @@ export default function Home() {
             //   <button onClick={() => handleEdit(i)} className="border px-3 py-2 rounded">Edit</button>
             // </div>
           )} */}
-          <div className='px-4'>
+          <div className='px-10 border-2 border-gray-100 rounded-4xl mx-10 mt-10 my-auto shadow-2xl'>
             <table className='w-full justify-center mt-10 mb-20'>
 
               <thead>
                 <tr className='text-xl'>
+                  {/* <th className='text-center justify-center border-r'>Status</th> */}
                   <th className='text-center justify-center'>List</th>
                   <th className='text-center justify-center border-l'>Actions</th>
                   {/* <th className='text-center justify-center'>Edit</th> */}
                   <th className='text-center justify-center border-l'>Time Created</th>
                   <th className='text-center justify-center border-l'>Time Updated</th>
-                  <th className='text-center justify-center border-l'>Status</th>
+                  
                 </tr>
                 
               </thead>
@@ -240,11 +248,36 @@ export default function Home() {
                   <tr
                   key={item.ItemId}
                   >
-                    <td className='text-center justify-center border-t py-6'>{item.List}</td>
+                    {/* <td className='text-center justify-center border-r border-t'><button onClick={() => handleStatus(item)} className={`px-3 py-2 rounded border ${item?.Status==true ? "bg-green-200" : "bg-red-200"}`}>{item.Status==true?"Done":"Undone"}</button></td> */}
+                    {/* <td className='text-center justify-center border-r border-t'>
+                      <button onClick={() => handleStatus(item)} className={`px-3 py-2 text-2xl`}>
+                          {item.Status==true
+                          ? <MdCheckBox/>
+                          : <MdCheckBoxOutlineBlank/>
+                          }
+                      </button>
+                    </td> */}
+
+                    <td className='border-t py-6 text-xl'>
+                      <div className='flex items-center gap-2 my-auto'>
+                        <button onClick={() => handleStatus(item)} className={`px-3 py-2 text-2xl`}>
+                          {item.Status==true
+                          ? <MdCheckBox/>
+                          : <MdCheckBoxOutlineBlank/>
+                          }
+                        </button>
+                        {item?.Status == true
+                          ? <div className='line-through text-gray-400'>
+                              {item.List}
+                            </div>
+                          : <div>{item.List}</div>
+                        }
+                      </div>
+                    </td>
                     {/* <td className='text-center justify-center border-2 '><button onClick={() => setIsOpen(true)} className="border px-3 py-2 rounded">Delete</button> */}
                     <td className='border-t border-l border-r'>
                       <div className='flex justify-center gap-2'>
-                        <button onClick={() => setIsOpen(item.ItemId)} className="border px-3 py-2 rounded bg-gray-300 hover:bg-gray-400">Delete</button>
+                        <button onClick={() => setIsOpen(item.ItemId)} className="border px-3 py-2 rounded bg-red-200 hover:bg-red-300">Delete</button>
                         {isOpen && (
                           <div className='fixed inset-0 flex items-center justify-center z-50 bg-black/25'>
                             <div className='flex flex-col bg-white rounded-xl px-12 py-8 shadow gap-4'>
@@ -269,7 +302,6 @@ export default function Home() {
                       : "-"}</td>
                     {/* <td className='text-center justify-center border-2 '>{new Date(item.create_at).toLocaleString('en-GB', { timezone: 'Asia/Bangkok' })}</td>
                     <td className='text-center justify-center border-2 '>{new Date(item.update_at).toLocaleString('th-TH', { timezone: 'Asia/Bangkok' })}</td> */}
-                    <td className='text-center justify-center border-l border-t'><button onClick={() => handleStatus(item)} className={`px-3 py-2 rounded border ${item?.Status==true ? "bg-green-200" : "bg-red-200"}`}>{item.Status==true?"Done":"Undone"}</button></td>
                   </tr>
                 
                 ))}

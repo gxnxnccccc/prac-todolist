@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from "next/navigation"
 import { CiImageOff } from "react-icons/ci"
+import { useUser } from '@/context/UserContext';
 
 import { MdCheckBoxOutlineBlank } from "react-icons/md"; // not selected
 import { MdCheckBox } from "react-icons/md";             // selected
@@ -18,6 +19,7 @@ const CartPage = () => {
     const [selectedProduct, setSelectedProduct] = useState([])
     const [isCancelOpen, setIsCancelOpen] = useState(false)
     const [isBuyOpen, setIsBuyOpen] = useState(false)
+    const { cartAmount, setCartAmount } = useUser()
 
     useEffect(() => {
         fetchCart()
@@ -78,6 +80,7 @@ const CartPage = () => {
             }
             fetchCart()
             setIsCancelOpen(false)
+            setCartAmount(cartAmount-1)
             setItemToDelete(null) // clear state
         } catch (error) {
             console.log(error)
@@ -139,7 +142,7 @@ const CartPage = () => {
     }
 
     console.log("CART:", cart)
-    
+
     return (
         <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50">
             <div className='mt-10 px-15'>
@@ -161,10 +164,10 @@ const CartPage = () => {
                                         {selected.has(c.cart_id) ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
                                     </button>
                                     <div className='mx-auto'>
-                                        <div className='flex flex-row h-40 '>
+                                        <div className='flex flex-row h-40 w-40 '>
                                             {c.image_url
                                                 ? <img src={c.image_url} alt={c.product_name} className='object-cover  ' />
-                                                : <div className='flex justify-center items-center w-50 h-50 bg-gray-200'>
+                                                : <div className='flex justify-center items-center h-full w-full bg-gray-200'>
                                                     <CiImageOff />
                                                 </div>
                                             }

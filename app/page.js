@@ -1,11 +1,13 @@
 'use client'
 
 import NavBar from '../components/NavBar';
-import { use, useState, useEffect } from 'react'; 
+import { useState, useEffect } from 'react';
+import { useUser } from '@/context/UserContext';
 import { useRouter } from 'next/navigation';
 import { Playfair_Display } from 'next/font/google';
 import { AiOutlineSearch } from 'react-icons/ai'; 
 import SearchIcon from '@mui/icons-material/Search';
+
 
 // const playfairdisplay = playfair_Display({
 //     subsets: ['latin'],
@@ -20,6 +22,7 @@ export default function Home() {
     const [ tasks, setTasks ] = useState([])
     const [ selected, setSelected] = useState('all')
     const [ text, setText ] = useState('')
+    const { cartAmount, setCartAmount } = useUser()
     const router = useRouter()
 
     useEffect(() => {
@@ -99,8 +102,10 @@ export default function Home() {
    
 
 return (
-    <div>
-        <div className='mt-10 font-[family-name:var(--font-geologica)]'>
+    <div className='mt-10 font-[family-name:var(--font-geologica)]'>
+            <div className='flex justify-center'>
+                <img src="/gif/catReading.gif" alt="Cat Reading Book" className='w-50 h-50' ></img>
+            </div>
             <p className={`text-center m-auto`}>
                 " Your future depends on today."
             </p>
@@ -194,6 +199,5 @@ return (
                     </ul>
             </div> */}
         </div>
-    </div>
     )
 }
