@@ -145,9 +145,10 @@ export default function Profile() {
 
     return (
         <main>
-            <div className="flex flex-col gap-5 font-[family-name:var(--font-geologica)]">
-                <h1 className="text-center m-4 text-xl">Profile Page</h1>
-
+            <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] mb-10">
+                <div className='mt-10'>
+                    <h1 className="text-center  text-4xl">Profile Page</h1>
+                </div>
                 {/* <form onSubmit={onSubmit} className="flex flex-col items-center">
                     {imageUrl
                         ? <img src={imageUrl} alt="profile_img" className="rounded-full object-cover w-[150px] h-[150px] cursor-pointer" />

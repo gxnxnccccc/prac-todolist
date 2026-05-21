@@ -12,12 +12,15 @@ import { FaHeart } from "react-icons/fa6";   // full heart
 import { FaStar } from "react-icons/fa";     // full star
 import { FaCartShopping } from "react-icons/fa6"; // cart
 import { RiFileList3Fill } from "react-icons/ri"; // history
+import { AiOutlineSearch } from 'react-icons/ai'; // search
 
 const productPage = () => {
 
   const [ allCategories, setAllCategories ] = useState(null)
   const [ product, setProduct ] = useState([])
+  const [ allProduct, setAllProduct] = useState([])
   const [ allImage, setAllImages ] = useState([])
+  const [ selectedCategoryId, setSelectedCategoryId ] = useState('')
   // const [ wishlist, setWishlist ] = useState(false)
   const [ wishlist, setWishlist ] = useState(new Set())
 
@@ -27,10 +30,10 @@ const productPage = () => {
     if (!localStorage.getItem('Username')) {
       router.push('/login')
     }
-    getProductInfo()
+    getAllProductInfo()
   }, [])
 
-  const getProductInfo = async () => {
+  const getAllProductInfo = async () => {
     try {
       console.log("token: ", localStorage.getItem('token'))
       const res = await fetch(`/api/products`, {
@@ -39,18 +42,19 @@ const productPage = () => {
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}))
-        throw new Error(err.error ?? `getProductInfo Request failed: ${res.status}`)
+        throw new Error(err.error ?? `getAllProductInfo Request failed: ${res.status}`)
       }
 
       const data = await res.json()
       
       setAllCategories(data.categories)
+      setAllProduct(data.products)
       setProduct(data.products)
       setAllImages(data.all_images ?? [])
       setWishlist(new Set(data.wishlists.map(w => w.product_id)))
     }
     catch(error){
-      console.log("getProductInfo error: ",error)
+      console.log("getAllProductInfo error: ",error)
     }
   }
 
@@ -97,6 +101,28 @@ const productPage = () => {
     }
   }
   
+  const handleSearch = (e) => {
+    const value = e.target.value
+    if (value.length > 0) {
+      const search = allProduct.filter(({ product_name }) =>
+        product_name.toLowerCase().includes(value.toLowerCase())
+      )
+      setProduct(search)
+    } else {
+      setProduct(allProduct)
+    }
+  }
+
+  const handleCategoryFilter = (e) => {
+    const value = e.target.value
+    setSelectedCategoryId(value)
+    if (value) {
+      const filtered = allProduct.filter(p => String(p.category_id) === value)
+      setProduct(filtered)
+    } else {
+      setProduct(allProduct)
+    }
+  }
 
   
 
@@ -117,33 +143,62 @@ const productPage = () => {
               </button>
             </div> */}
           </div>
+          <form className='relative mt-3 w-1/3 mx-auto'>
+            <div className='relative'>
+                <input
+                    type="search"
+                    placeholder='Type here!'
+                    className='border-b w-full p-4 mt-5 outline-none'
+                    onChange={handleSearch}/>
+                    <button className='absolute right-2 top-1/2 -translate-y-1/2 p-4 mt-2.5 bg-gray-200 rounded-full'>
+                        <AiOutlineSearch/>
+                    </button>
+              </div>
+          </form>
           <div className='flex justify-center mt-10 mx-60 gap-4'>
-              <button onClick={goWishlistPage} className='flex items-center justify-center gap-2 text-xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white w-full'>
+              <button onClick={goWishlistPage} className='flex items-center justify-center gap-2 text-xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white w-full hover:bg-gray-300'>
                 <FaHeart /> Wishlist
               </button>
-              <button onClick={goCartPage} className='flex items-center justify-center gap-2 text-xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white w-full'>
+              <button onClick={goCartPage} className='flex items-center justify-center gap-2 text-xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white w-full hover:bg-gray-300'>
                 <FaCartShopping /> Cart
               </button>
-              <button onClick={goOrderPage} className='flex items-center justify-center gap-2 text-xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white w-full'>
+              <button onClick={goOrderPage} className='flex items-center justify-center gap-2 text-xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white w-full hover:bg-gray-300'>
                 <RiFileList3Fill /> History
               </button>
-            </div>
-          <div className='gap-5 mt-10 mx-auto px-30 mb-10'>
+          </div>
+          <form className='flex justify-center mt-10 mx-60 gap-4'>
+              {/* <div className='flex justify-center mx-auto mt-3 py-3 '> */}
+                  {/* <select name="role" className='mt-2 border-2 border-gray-200 p-2 rounded-xl bg-white' defaultValue="" value={categoryId} onChange={(e) => setCategoryId(e.target.value)}> */}
+                  <select name="role" className='mt-2 border-2 border-gray-200 p-2 rounded-xl bg-white w-full' value={selectedCategoryId} onChange={handleCategoryFilter}>
+                      <option value="">All Categories</option>
+                      {allCategories && allCategories.map((u, i) => (
+                          <option key={i} value={String(u.category_id)}>{u.all_category}</option>
+                      ))}
+                  </select>
+              {/* </div> */}
+          </form>
+          <div className='mt-10 mx-auto '>
               {/* <div className='p-3 bg-white rounded-2xl shadow-lg h-full'> */}
-                <div className='grid grid-cols-4 gap-10 px-10 '>
+                <div className='grid grid-cols-4 gap-10 '>
                   {product.map((p) => (
                     <Link href={`/product/${p.product_id}`} key={p.product_id}>
-                      <div key={p.product_id} className='mt-2 rounded-xl w-full h-70 px-4 bg-white shadow-lg'>
-                        <div className='grid grid-rows-4 p-2 gap-2'>
-                          <div>
+                      <div key={p.product_id} className='w-full h-90'>
+                        <div className='grid grid-rows-4 gap-2 '>
+                          <div className='relative'>
                             {p.image_url
-                              ? <div>
-                                  <img src={p.image_url} alt={p.product_name} className='w-full h-50 object-cover mx-auto' />
-                                </div>
-                              : <div className='flex justify-center items-center w-full h-50 bg-gray-200'>
+                              ? <img src={p.image_url} alt={p.product_name} className='rounded-xl w-full h-80 object-cover mx-auto' />
+                              : <div className='rounded-xl flex justify-center items-center w-full h-80 bg-gray-200'>
                                   <CiImageOff />
                                 </div>
                             }
+                            <div className='absolute top-4 right-4 bg-white rounded-full w-10 h-10 flex items-center justify-center'>
+                              <button onClick={(e) => {
+                                e.preventDefault()
+                                toggleWishlist(p.product_id)
+                              }}>
+                                {wishlist.has(p.product_id) ? <FaHeart /> : <FaRegHeart />}
+                              </button>
+                            </div>
                           </div>
                           <div >
                             <div className='flex justify-between items-center'>
@@ -158,12 +213,13 @@ const productPage = () => {
                               </button> */}
 
                               {/* 3 */}
-                              <button onClick={(e) => {
+                              {/* <button onClick={(e) => {
                                 e.preventDefault()
                                 toggleWishlist(p.product_id)
                               }}>
                                 {wishlist.has(p.product_id) ? <FaHeart/> : <FaRegHeart/>}
-                              </button>
+                              </button> */}
+                              <div className='text-lg '>{p.price}฿</div>
                             </div>
                             {/* <div className='flex justify-self-end'>
                               <div className='text-red-600'>{p.price}฿</div>
@@ -172,7 +228,7 @@ const productPage = () => {
                               <div className='inline-flex items-center gap-1'>
                                 <FaStar className='w-3 h-3 text-yellow-400'/>5(67)
                               </div>
-                              <div className='text-red-600'>{p.price}฿</div>
+                              {/* <div className='text-red-600'>{p.price}฿</div> */}
                             </div>
                           </div>
                         </div>

@@ -15,6 +15,7 @@ export default function ProductDetail() {
     // const [buyAmount, setBuyAmount] = useState(1)
     const [addToCartAmount, setAddToCartAmount] = useState(0)
     const { cartAmount, setCartAmount } = useUser()
+    const [cartAddedAlert, setCartAddedAlert] = useState(false)
 
     const router = useRouter();
 
@@ -61,14 +62,20 @@ export default function ProductDetail() {
 
             setAddToCartAmount(qty)
             setCartAmount(cartAmount+1)
-            router.push('/product')
+            setCartAddedAlert(true)
+            
+            setTimeout(() => {
+                router.push('/product')
+                setCartAddedAlert(false)
+                
+            }, 2000)
         }
         catch (error) {
             console.error('addProductToCart error:', error)
         }
     }
 
-    if (!product) return <div>Loading...</div>
+    if (!product) return <div className='flex justify-center font-[family-name:var(--font-geologica)]'>Loading...</div>
 
     return (
         <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 ">
@@ -101,6 +108,11 @@ export default function ProductDetail() {
                                 </div>
                                 <div className='flex gap-2 mt-auto'>
                                     <button onClick={addProductToCart} className='bg-white w-full py-2 border-2 border-gray-300 hover:bg-gray-300'>Add to Cart</button>
+                                    {cartAddedAlert && (
+                                        <div className='fixed bottom-5 right-5 bg-green-200 text-black px-4 py-2 rounded-xl shadow-lg'>
+                                            Added to Your Cart
+                                        </div>
+                                    )}
                                     <button className='bg-gray-300 text-black w-full py-2 hover:bg-gray-500 hover:text-gray-100'>Buy Now</button>
                                 </div>
                             </div>

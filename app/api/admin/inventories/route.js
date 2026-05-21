@@ -1,7 +1,7 @@
 import { getConnection } from '@/lib/db';
 import { NextResponse } from 'next/server';
 import jsonwebtoken from 'jsonwebtoken';
-import { writeFile } from 'fs/promises';
+import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 
 // GET - Retrieve the Data
@@ -59,14 +59,20 @@ export async function POST(req) { // request(req) is the data from frontend
         try {
             const formData = await req.formData()
             const file = formData.get('file')
-            if (!file) return NextResponse.json({ success: false })
+            if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 })
 
             const bytes = await file.arrayBuffer()
             const buffer = Buffer.from(bytes)
             const now = new Date()
             const time = `${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}`
-            const uniqueName = `${Date.now()}-${time}-${file.name}`
-            const filePath = join(process.cwd(), 'public', 'productUploads', uniqueName)
+
+            // Sanitize filename: replace any character that is not alphanumeric, dot, dash, or underscore with underscore
+            const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_')
+            const uniqueName = `${Date.now()}-${time}-${safeName}`
+
+            const uploadDir = join(process.cwd(), 'public', 'productUploads')
+            await mkdir(uploadDir, { recursive: true }) // ensure directory exists
+            const filePath = join(uploadDir, uniqueName)
             await writeFile(filePath, buffer)
 
             return NextResponse.json({ success: true, filename: uniqueName })

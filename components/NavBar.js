@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Logo from '../public/logos/newLogo.png';
+import MIMO_Logo from '../public/logos/icon.jpg';
 import { AiOutlineMenu, AiOutlineClose, AiOutlineInstagram, AiOutlineFacebook, AiOutlineX } from 'react-icons/ai';
 import { useState, useEffect, useContext } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
@@ -103,7 +103,7 @@ const NavBar = () => {
         <nav className='fixed w-full h-24 shadow-xl bg-white font-(family-name:--font-geologica) z-50'>
             <div className='flex justify-between items-center h-full w-full 2xl:px-16'>
                 <Link href="/">
-                    <Image src={Logo} alt="Logo" width="150" className="cursor-pointer rounded-full" priority />
+                    <Image src={MIMO_Logo} alt="Logo" width={80} height={80} className="cursor-pointer rounded-full" priority />
                 </Link>
                 <div className='hidden sm:flex'>
                     <ul className="hidden sm:flex items-center px-4">

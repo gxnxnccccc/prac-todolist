@@ -65,6 +65,7 @@ const AdminProductPage = () => {
                 })
                 if (!res.ok) throw new Error(await res.text())
                 const resImg = await res.json()
+                if (!resImg.success || !resImg.filename) throw new Error('Upload failed: no filename returned')
                 uploadedUrls.push(`/productUploads/${resImg.filename}`)
             }
         } catch (error) {
@@ -87,6 +88,7 @@ const AdminProductPage = () => {
                 })
                 if (!res.ok) throw new Error(await res.text())
                 const resImg = await res.json()
+                if (!resImg.success || !resImg.filename) throw new Error('Upload failed: no filename returned')
                 uploadedUrls.push(`/productUploads/${resImg.filename}`)
             }
         } catch (error) {
@@ -276,10 +278,19 @@ const AdminProductPage = () => {
     }
 
     function handleRemoveEditPreview(i){
-        console.log("i: ", i)
+        const removedItem = editPreviewUrls[i]
+
         setEditPreviewUrls(prev => prev.filter((_, idx) => idx !== i))
-        setEditFiles(prev => prev.filter((_, idx) => idx !== i))
-        setImageId(prev => [...prev, i])
+
+        if (removedItem && removedItem.image_id) {
+            // It's an existing DB image — mark it for deletion from DB
+            setImageId(prev => [...prev, removedItem])
+        } else {
+            // It's a newly-selected file (blob URL) — remove the corresponding File from editFiles
+            // editPreviewUrls = [...dbImages, ...newBlobImages]; count how many blob items precede index i
+            const newFileIndex = editPreviewUrls.slice(0, i).filter(item => !item.image_id).length
+            setEditFiles(prev => prev.filter((_, idx) => idx !== newFileIndex))
+        }
     }
 
     console.log("ImageId: ", imageId)

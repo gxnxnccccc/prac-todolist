@@ -175,25 +175,25 @@ export default function Home() {
       </div>
       <div className="">
         <div>
-          <div className="mt-5">
-            <h1 className="text-center text-4xl">To Do List</h1>
+          <div className="m-5">
+            <h1 className="text-center text-4xl">Your To Do</h1>
             {/* <div className="text-center">{user} is back!</div> */}
           </div>
           {/* Fill Box */}
-          <div className="flex flex-col items-center justify-center">
-            <br />
-            <div className="relative w-64">
+          <div className="flex flex-row gap-3 items-center justify-center">
+
+            <div className="relative w-64 flex-inline">
                 <FaPencilAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder="type in here!"
-                  className="border pl-8 pr-3 py-2 rounded w-full"
+                  className="border-b pl-8 pr-3 py-2 w-full outline-none"
                 />
-              </div>
-            <br/>
-            <button onClick={handleClick} className="border px-3 py-2 rounded w-64 hover:bg-gray-200 shadow-md">{edit == ''?"Add":"Save"}</button>
+            </div>
+            
+            <button onClick={handleClick} className="rounded-2xl w-12 h-12 bg-[#3d3d3d] hover:bg-[#6c6a68] shadow-md text-white">{edit == ''?"+":"Save"}</button>
           </div>
         </div>
         
@@ -266,31 +266,41 @@ export default function Home() {
                           : <MdCheckBoxOutlineBlank/>
                           }
                         </button>
-                        {item?.Status == true
-                          ? <div className='line-through text-gray-400'>
-                              {item.List}
-                            </div>
-                          : <div>{item.List}</div>
-                        }
+                        <div className={`relative transition-colors duration-300 ${item?.Status ? 'text-gray-400' : ''}`}>
+                          {item.List}
+                          <span style={{
+                            display: 'block',
+                            position: 'absolute',
+                            left: 0,
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '100%',
+                            height: '2px',
+                            backgroundColor: 'currentColor',
+                            clipPath: item?.Status ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)',
+                            transition: 'clip-path 0.35s ease',
+                            pointerEvents: 'none',
+                          }} />
+                        </div>
                       </div>
                     </td>
                     {/* <td className='text-center justify-center border-2 '><button onClick={() => setIsOpen(true)} className="border px-3 py-2 rounded">Delete</button> */}
                     <td className='border-t border-l border-r'>
                       <div className='flex justify-center gap-2'>
-                        <button onClick={() => setIsOpen(item.ItemId)} className="border px-3 py-2 rounded bg-red-200 hover:bg-red-300">Delete</button>
+                        <button onClick={() => setIsOpen(item.ItemId)} className="px-3 py-2 rounded bg-red-200 hover:bg-red-300">Delete</button>
                         {isOpen && (
                           <div className='fixed inset-0 flex items-center justify-center z-50 bg-black/25'>
                             <div className='flex flex-col bg-white rounded-xl px-12 py-8 shadow gap-4'>
                               <h1 className='text-center text-2xl'>Confirm Delete</h1>
                               <p>Are you sure to delete this list?</p>
                               <div className='flex gap-2 self-end'>
-                                <button onClick={() => setIsOpen(false)} className="border px-3 py-2 rounded bg-gray-200 hover:bg-gray-300">Cancel</button>
-                                <button onClick={() =>handleDelete(item)} className="border px-3 py-2 rounded bg-red-200 hover:bg-red-300">Delete</button>
+                                <button onClick={() => setIsOpen(false)} className="px-3 py-2 rounded bg-gray-200 hover:bg-gray-300">Cancel</button>
+                                <button onClick={() =>handleDelete(item)} className="px-3 py-2 rounded bg-red-200 hover:bg-red-300">Delete</button>
                               </div>
                             </div>
                           </div>
                         )}
-                        <button onClick={() => handleEdit(item)} className="border px-3 py-2 rounded bg-orange-200 hover:bg-orange-300">Edit</button>
+                        <button onClick={() => handleEdit(item)} className="px-3 py-2 rounded bg-orange-200 hover:bg-orange-300">Edit</button>
                       </div>
                     </td>
                     {/* <td className='text-center justify-center border '><button onClick={() => handleEdit(item)} className="border px-3 py-2 rounded">Edit</button></td> */}

@@ -132,14 +132,14 @@ return (
                     onChange={handleSearch}/>
             </div> */}
 
-            <form className='relative mt-3 w-1/2 mx-auto'>
+            <form className='relative mt-3 w-1/3 mx-auto'>
                 <div className='relative'>
                     <input
                         type="search"
-                        placeholder='Type here!'
-                        className='w-full p-4 rounded-full bg-gray-200'
+                        placeholder='Seach your To Do'
+                        className='border-b w-full p-4 outline-none'
                         onChange={handleSearch}/>
-                        <button className='absolute right-1 top-1/2 -translate-y-1/2 p-4 bg-gray-300 rounded-full'>
+                        <button className='absolute right-1 top-1/2 -translate-y-1/2 p-4 bg-gray-200 rounded-full '>
                             <AiOutlineSearch/>
                         </button>
                 </div>
