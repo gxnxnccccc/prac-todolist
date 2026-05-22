@@ -22,7 +22,7 @@ const OrdersPage = () => {
     }
 
     return (
-        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50">
+        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen">
             <div className='mt-10 px-15'>
                 <div className='relative flex justify-center items-center'>
                     <h1 className='text-4xl'>Order History</h1>
@@ -51,7 +51,7 @@ const OrdersPage = () => {
                                         </div> */}
                                     </div>
                                     <p className='text-xl'>Order ID: #{order.order_id}</p>
-                                    <div className='text-gray-500 text-md'>
+                                    <div className='text-[#9d9ca2]-500 text-md'>
                                         <p>Purchase Date: {order.order_date
                                             ? moment.utc(order.order_date).format('DD/MM/YYYY, h:mm:ss')
                                             : '-'}</p>

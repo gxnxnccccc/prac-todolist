@@ -235,36 +235,41 @@ export default function Page() {
                     </div>
                 </form>
 
-                <div className='mt-10 grid grid-cols-3 grid-flow-col gap-5 mx-auto'>
-                    <div className='row-span-1 bg-white rounded-xl pb-10 shadow-lg '>
-                        <div className='bg-blue-300 mx-15 rounded-xl'>
-                            <h3 className='text-center mt-5 text-xl'>Total User</h3>
-                        </div>
-                        <p className='text-center text-5xl mt-8'>{totalUser ?? '-'}</p>
-                    </div>
-
-                    <div className='row-span-1 bg-white rounded-xl  pb-10  shadow-lg '>
-                        <div className='bg-amber-300 mx-15 rounded-xl'>
-                            <h3 className='text-center mt-5 text-xl'>Total List</h3>
-                        </div>
-                        <p className='text-center text-5xl mt-7'>{totalList ?? '-'}</p>
-                    </div>
-
-                    <div className='grid col-span-2 gap-5   '>
-                        <div className='flex justify-between col-span-1 row-span-1 p-4 px-10 bg-white rounded-xl items-center shadow-lg '>
-                            <div className='text-center text-xl text-green-600'>Total Done</div>
-                            <div className='pl-3 text-center text-xl inline'>
-                                {totalDoneList ?? '-'}
-                            </div> 
-                            {/* <p className='text-center text-5xl mt-7'>{totalDoneList ?? '-'}</p> */}
-                        </div>
-
-                        <div className='flex justify-between col-span-1 row-span-1 p-4 px-10 bg-white rounded-xl items-center shadow-lg '>
-                            <div className='text-center text-xl text-red-600'>Total Undone</div>  
-                            <div className='pl-3 text-center text-xl inline'>
-                                {totalUndoneList ?? '-'}
+                <div className='mt-10 grid grid-cols-1 grid-rows-2 sm:grid-cols-3 sm:grid-rows-1  gap-5 mx-auto'>
+                    <div className="sm:col-span-2 flex flex-row gap-5 w-full">
+                        <div className='bg-white rounded-xl shadow-lg flex-1'>
+                            <div className='bg-blue-300 mx-16 rounded-xl'>
+                                <h3 className='text-center text-xl'>Total User</h3>
                             </div>
-                            {/* <p className='text-center text-5xl mt-7'>{totalUndoneList ?? '-'}</p> */}
+                            <p className='text-center text-5xl mt-8'>{totalUser ?? '-'}</p>
+                        </div>
+
+                        <div className='bg-white rounded-xl shadow-lg flex-1'>
+                            <div className='bg-amber-300 mx-16 rounded-xl'>
+                                <h3 className='text-center text-xl'>Total List</h3>
+                            </div>
+                            <p className='text-center text-5xl mt-7'>{totalList ?? '-'}</p>
+                        </div>
+                    </div>
+                    
+                    
+                    <div>
+                        <div className='sm:grid col-span-2 gap-5 w-full'>
+                            <div className='flex justify-between col-span-1 row-span-1 p-4 px-10 bg-white rounded-xl items-center shadow-lg '>
+                                <div className='text-center text-xl text-green-600'>Total Done</div>
+                                <div className='pl-3 text-center text-xl inline'>
+                                    {totalDoneList ?? '-'}
+                                </div> 
+                                {/* <p className='text-center text-5xl mt-7'>{totalDoneList ?? '-'}</p> */}
+                            </div>
+
+                            <div className='flex justify-between col-span-1 row-span-1 p-4 px-10 bg-white rounded-xl items-center shadow-lg mt-5 sm:mt-0'>
+                                <div className='text-center text-xl text-red-600'>Total Undone</div>  
+                                <div className='pl-3 text-center text-xl inline'>
+                                    {totalUndoneList ?? '-'}
+                                </div>
+                                {/* <p className='text-center text-5xl mt-7'>{totalUndoneList ?? '-'}</p> */}
+                            </div>
                         </div>
                     </div>
                 </div>

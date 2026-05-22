@@ -226,17 +226,35 @@ export default function Page() {
     // }
 
     return (
-        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50">
-        <div className='mt-10'>
-            <h1 className='text-center text-4xl'>Dashboard</h1>
-            <div className='grid grid-cols-2 grid-rows-2 gap-5 mt-10 mx-auto px-15'>
-                {/* Total */}
-                <div className=' bg-white rounded-xl pb-10 my-2 shadow-lg '>
-                    <div className=''>
-                        <h3 className='text-center mt-5 text-xl'>Total List</h3>
+        <div className="font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen ">
+        <div className='px-8 md:px-15 '>
+            <h1 className='mt-10 text-center text-4xl'>Dashboard</h1>
+            <div className='grid grid-cols-1 sm:grid-col-2 gap-5 mt-10 mx-auto w-full sm:w-2/3 my-2'>
+                <div className='grid grid-rows-2  gap-5'>
+                    {/* Total */}
+                    <div className=' bg-white rounded-xl pb-10  shadow-md '>
+                        <div className=''>
+                            <h3 className='text-center mt-5 text-xl'>Total List</h3>
+
+                        </div>
+                        {/* <h3 className='text-center'>To do list</h3> */}
+                        <p className='text-center text-5xl mt-9'>{totalList ?? '-'}</p>
+
                     </div>
-                    {/* <h3 className='text-center'>To do list</h3> */}
-                    <p className='text-center text-5xl mt-9'>{totalList ?? '-'}</p>
+
+                    <div className='grid grid-cols-2 gap-5 '>
+                        <div className=' bg-white rounded-xl pb-10 shadow-md '>
+                            <h3 className='text-center mt-5 text-xl text-green-600'>Done List</h3>
+                            {/* <h3 className='text-center'>list</h3> */}
+                            <p className='text-center text-5xl mt-9'>{doneList ?? '-'}</p>
+                        </div>
+
+                        <div className=' bg-white rounded-xl pb-10  shadow-md '>
+                            <h3 className='text-center mt-5 text-xl text-red-600'>Undone List</h3>
+                            {/* <h3 className='text-center'>list</h3> */}
+                            <p className='text-center text-5xl mt-8'>{undoneList ?? '-'}</p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* <div className='bg-gray-50 rounded-xl pb-10 my-2 shadow-lg col-span-3'>
@@ -246,7 +264,7 @@ export default function Page() {
                     </div>
                 </div> */}
 
-                <div className='row-span-2 bg-white rounded-xl pb-10 my-2 shadow-lg '>
+                <div className='bg-white rounded-xl  shadow-md '>
                     <h3 className='text-center text-xl mt-5'>Task Over Time</h3>
                     <div className='px-6 mt-4 relative h-80'>
                         {taskOverTime ? <Line data={taskOverTime}
@@ -258,19 +276,7 @@ export default function Page() {
                     </div>
                 </div>
 
-                <div className='grid grid-cols-2 gap-5'>
-                    <div className=' bg-white rounded-xl pb-10 my-2 shadow-lg '>
-                        <h3 className='text-center mt-5 text-xl text-green-600'>Done List</h3>
-                        {/* <h3 className='text-center'>list</h3> */}
-                        <p className='text-center text-5xl mt-9'>{doneList ?? '-'}</p>
-                    </div>
-
-                    <div className=' bg-white rounded-xl pb-10 my-2 shadow-lg '>
-                        <h3 className='text-center mt-5 text-xl text-red-600'>Undone List</h3>
-                        {/* <h3 className='text-center'>list</h3> */}
-                        <p className='text-center text-5xl mt-8'>{undoneList ?? '-'}</p>
-                    </div>
-                </div>
+                
                 
             </div>
         </div>

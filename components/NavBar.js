@@ -24,6 +24,7 @@ const NavBar = () => {
     const [imageUrl, setImageUrl] = useState(null)
     const [token, setToken] = useState(null)
     const [role, setRole] = useState(null)
+    const [mounted, setMounted] = useState(false)
     const [cart, setCart] = useState([])
     const router = useRouter()
 
@@ -36,6 +37,7 @@ const NavBar = () => {
             getProfileLogo(storedToken)
         }
         fetchCart()
+        setMounted(true)
     }, [])
 
     const handleNav = () => {
@@ -58,7 +60,7 @@ const NavBar = () => {
         }
     }
 
-    const profileSection = token ? (
+    const profileSection = !mounted ? null : token ? (
         <li>
             <Link href="/profile">
                 {imageUrl
@@ -103,7 +105,7 @@ const NavBar = () => {
         <nav className='fixed w-full h-24 shadow-xl bg-white font-(family-name:--font-geologica) z-50'>
             <div className='flex justify-between items-center h-full w-full 2xl:px-16'>
                 <Link href="/">
-                    <Image src={MIMO_Logo} alt="Logo" width={80} height={80} className="cursor-pointer rounded-full" priority />
+                    <Image src={MIMO_Logo} alt="Logo" width={80} height={80} className="cursor-pointer rounded-full ml-5" priority />
                 </Link>
                 <div className='hidden sm:flex'>
                     <ul className="hidden sm:flex items-center px-4">
@@ -117,16 +119,16 @@ const NavBar = () => {
                         ) : (
                             <>
                                 <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/">Home</Link></li>
-                                <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/todo">To do</Link></li>
+                                <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/todo/newTodo">To do</Link></li>
                                 <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/product">Products</Link></li>
                                 <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/dashboard">Dashboard</Link></li>
                                 <li className='ml-5 mr-8'>
-                                    <button onClick={goWishlistPage}  className='text-2xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white'>
+                                    <button onClick={goWishlistPage}  className='text-2xl cursor-pointer border-2 border-[#4f4f4f] py-1.5 px-3 rounded-xl bg-white'>
                                         <FaHeart className=''/>
                                     </button>
                                 </li>
                                 <li className='mr-8'>
-                                    <button onClick={goCartPage} className='flex text-2xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white items-center'>
+                                    <button onClick={goCartPage} className='flex text-2xl cursor-pointer border-2 border-[#4f4f4f] py-1.5 px-3 rounded-xl bg-white items-center'>
                                         <FaCartShopping className=''/>
                                         ({cartAmount})
                                         
@@ -137,7 +139,7 @@ const NavBar = () => {
                         )}
                     </ul>
                 </div>
-                <div onClick={handleNav} className='sm:hidden cursor-pointer pl-24'>
+                <div onClick={handleNav} className='sm:hidden cursor-pointer pl-24 mr-5'>
                     <AiOutlineMenu size={25} />
                 </div>
             </div>
@@ -145,8 +147,8 @@ const NavBar = () => {
             {/* Mobile menu */}
             <div className={
                 menuOpen
-                    ? "fixed left-0 top-0 w-[65%] sm:hidden h-screen bg-[#ecf0f3] p-10 ease-in duration-300 shadow-xl"
-                    : "fixed -left-full top-0 p-10 ease-in duration-300"
+                    ? "fixed left-0 top-0 w-[65%] sm:hidden h-screen bg-[#ecf0f3] p-10 transition-all ease-in duration-300 shadow-xl"
+                    : "fixed -left-full top-0 w-[65%] h-screen p-10 transition-all ease-in duration-300 pointer-events-none"
             }>
                 <div className='flex w-full items-center justify-end'>
                     <div onClick={handleNav} className='cursor-pointer'>
@@ -154,19 +156,46 @@ const NavBar = () => {
                     </div>
                 </div>
                 <div className='flex justify-around pt-10 items-center'>
-                    {imageUrl
-                        ? <div className='p-4'><img src={imageUrl} alt="profile_img" className="rounded-full object-cover w-20 h-20 cursor-pointer" /></div>
-                        : <div className='p-4'><FaUserCircle size={80} className="text-gray-400 cursor-pointer" /></div>
-                    }
+                    <Link href={mounted && token ? "/profile" : "/login"} onClick={() => setMenuOpen(false)}>
+                        {imageUrl
+                            ? <div className='p-4'><img src={imageUrl} alt="profile_img" className="rounded-full object-cover w-20 h-20 cursor-pointer" /></div>
+                            : <div className='p-4'><FaUserCircle size={80} className="text-gray-400 cursor-pointer" /></div>
+                        }
+                    </Link>
                 </div>
                 <div className='flex-col py-4'>
                     <ul>
                         <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
-                            <Link href="/todo">To do</Link>
+                            <Link href="/">Home</Link>
                         </li>
                         <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
-                            <Link href="/profile">Profile</Link>
+                            <Link href="/todo/newTodo">To do</Link>
                         </li>
+                        <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
+                            <Link href="/product">Products</Link>
+                        </li>
+
+                        <li className='mr-8'>
+                            <button onClick={goCartPage} className='flex text-lg cursor-pointer px-1.5 py-0.5 w-full items-center'>
+                                <FaCartShopping className='mr-2'/> Cart ({cartAmount}) 
+                            </button>
+                        </li>
+
+                        <li className='mt-1 mr-8'>
+                            <button onClick={goWishlistPage}  className='flex text-lg cursor-pointer px-1.5 py-0.5 w-full items-center'>
+                                <FaHeart className='mr-2'/> Wishlists
+                            </button>
+                        </li>
+
+
+
+                        <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
+                            <Link href="/dashboard">Dashboard</Link>
+                        </li>
+
+                        {/* <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
+                            <Link href="/profile">Profile</Link>
+                        </li> */}
                     </ul>
                 </div>
                 <div className='flex flex-row justify-evenly pt-10 items-center'>

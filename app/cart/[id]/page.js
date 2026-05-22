@@ -144,7 +144,7 @@ const CartPage = () => {
     console.log("CART:", cart)
 
     return (
-        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50">
+        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen">
             <div className='mt-10 px-15'>
                 <div className='relative flex justify-center items-center'>
                     <h1 className='text-4xl'>My Cart</h1>
@@ -177,7 +177,7 @@ const CartPage = () => {
                                 <div className='col-span-4 grid grid-rows-2'>
                                     <div className='h-full'>
                                         <h3 className='text-3xl text-bold'>{c.product_name}</h3>
-                                        <div className='text-gray-400'>Type: {c.category_name}</div>
+                                        <div className='text-[#9d9ca2]-400'>Type: {c.category_name}</div>
                                     </div>
                                     <div className='h-full grid grid-cols-5 gap-2'>
                                         <div className='text-right col-span-4 my-auto'>
@@ -194,7 +194,7 @@ const CartPage = () => {
                                             <div className='absolute bottom-0 right-4 flex flex-col gap-2'>
                                                 <button onClick={() => {setIsCancelOpen(true); setItemToDelete(c)}} className='px-7 rounded-lg bg-red-500 text-white'>Cancel</button>
                                                 {isCancelOpen && (
-                                                    <div className='fixed inset-0 flex items-center justify-center z-50 bg-black/25'>
+                                                    <div className='fixed inset-0 flex items-center justify-center z-50 bg-[#4f4f4f]/25'>
                                                         <div className='flex flex-col bg-white rounded-xl px-12 py-8 shadow gap-4'>
                                                         <h1 className='text-center text-2xl'>Confirm Delete</h1>
                                                         <p>Are you sure to delete this order?</p>
@@ -207,7 +207,7 @@ const CartPage = () => {
                                                 )}
                                                 <button onClick={() => {setIsBuyOpen(true)}} className='px-7 py-2 rounded-lg bg-orange-300 text-white'>Buy Now</button>
                                                 {isBuyOpen && (
-                                                    <div className='fixed inset-0 flex items-center justify-center z-50 bg-black/25'>
+                                                    <div className='fixed inset-0 flex items-center justify-center z-50 bg-[#4f4f4f]/25'>
                                                         <div className='flex flex-col bg-white rounded-xl px-12 py-8 shadow gap-4'>
                                                         <h1 className='text-center text-2xl'>Confirm Purchase</h1>
                                                         <p>Are you sure to purchase this item?</p>

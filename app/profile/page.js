@@ -179,7 +179,7 @@ export default function Profile() {
                             <button type="submit" className="border px-3 py-2 rounded bg-blue-200">Save Photo</button>
                     }
                     {savedAlert && (
-                        <div className='fixed bottom-5 right-5 bg-black text-white px-4 py-2 rounded-xl shadow-lg'>
+                        <div className='fixed bottom-5 right-5 bg-[#4f4f4f] text-white px-4 py-2 rounded-xl shadow-lg'>
                             saved
                         </div>
                     )}
@@ -216,7 +216,7 @@ export default function Profile() {
                         className="border border-gray-400 py-1 px-3 rounded shadow-md"
                     >Change password</button>
                     {isOpen && (
-                        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                        <div className="fixed inset-0 bg-[#4f4f4f]/50 flex items-center justify-center z-50">
                             <div className="flex flex-col bg-white rounded-xl px-12 py-8 shadow gap-4">
                                 <h1 className="text-center text-2xl">Change Password</h1>
 
@@ -256,7 +256,7 @@ export default function Profile() {
                                 <div className="flex gap-2 self-end">
                                     <button onClick={handleChangePassword} className="border px-3 py-2 rounded bg-blue-200">Save</button>
                                     {savedAlert && (
-                                        <div className='fixed bottom-5 right-5 bg-black text-white px-4 py-2 rounded-xl shadow-lg'>
+                                        <div className='fixed bottom-5 right-5 bg-[#4f4f4f] text-white px-4 py-2 rounded-xl shadow-lg'>
                                             saved
                                         </div>
                                     )}

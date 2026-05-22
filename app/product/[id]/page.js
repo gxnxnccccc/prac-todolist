@@ -78,7 +78,7 @@ export default function ProductDetail() {
     if (!product) return <div className='flex justify-center font-[family-name:var(--font-geologica)]'>Loading...</div>
 
     return (
-        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 ">
+        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen ">
             {/* <div>Product ID: {id}</div>
                 <div>Product Name: {product.product_name}</div> */}
             <div className='bg-gray-200 h-full w-full'>
@@ -92,7 +92,7 @@ export default function ProductDetail() {
                                     <FaStar className='w-6 h-6 text-yellow-400'/>5.0
                                 </div>
                                 <div className='mt-3'>Description 
-                                    <div className='text-gray-500'>{product.description}</div>
+                                    <div className='text-[#9d9ca2]-500'>{product.description}</div>
                                 </div>
                             </div>
                             <div className='p-6 rounded flex flex-col gap-3'>
@@ -109,11 +109,11 @@ export default function ProductDetail() {
                                 <div className='flex gap-2 mt-auto'>
                                     <button onClick={addProductToCart} className='bg-white w-full py-2 border-2 border-gray-300 hover:bg-gray-300'>Add to Cart</button>
                                     {cartAddedAlert && (
-                                        <div className='fixed bottom-5 right-5 bg-green-200 text-black px-4 py-2 rounded-xl shadow-lg'>
+                                        <div className='fixed bottom-5 right-5 bg-green-200 text-[#4f4f4f] px-4 py-2 rounded-xl shadow-lg'>
                                             Added to Your Cart
                                         </div>
                                     )}
-                                    <button className='bg-gray-300 text-black w-full py-2 hover:bg-gray-500 hover:text-gray-100'>Buy Now</button>
+                                    <button className='bg-gray-300 text-[#4f4f4f] w-full py-2 hover:bg-gray-500 hover:text-gray-100'>Buy Now</button>
                                 </div>
                             </div>
                         </div>

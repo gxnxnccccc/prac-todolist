@@ -127,8 +127,8 @@ const productPage = () => {
   
 
   return (
-    <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50">
-        <div className='mt-10 px-15'>
+    <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen">
+        <div className='px-8 mt-10 md:px-15 '>
           <div className='relative flex justify-center items-center'>
             <h1 className='text-4xl'>Products</h1>
             {/* <div className='absolute right-0 flex gap-2'>
@@ -143,7 +143,7 @@ const productPage = () => {
               </button>
             </div> */}
           </div>
-          <form className='relative mt-3 w-1/3 mx-auto'>
+          <form className='relative mt-3  sm:w-1/3 mx-auto'>
             <div className='relative'>
                 <input
                     type="search"
@@ -155,21 +155,21 @@ const productPage = () => {
                     </button>
               </div>
           </form>
-          <div className='flex justify-center mt-10 mx-60 gap-4'>
-              <button onClick={goWishlistPage} className='flex items-center justify-center gap-2 text-xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white w-full hover:bg-gray-300'>
+          <div className='flex justify-center mt-10 sm:mx-60 gap-4'>
+              <button onClick={goWishlistPage} className='flex items-center justify-center gap-2 text-lg cursor-pointer border border-[#4f4f4f] py-1.5 px-3 rounded-xl bg-white w-full hover:bg-gray-300 shadow-md'>
                 <FaHeart /> Wishlist
               </button>
-              <button onClick={goCartPage} className='flex items-center justify-center gap-2 text-xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white w-full hover:bg-gray-300'>
+              <button onClick={goCartPage} className='flex items-center justify-center gap-2 text-lg cursor-pointer border border-[#4f4f4f] py-1.5 px-3 rounded-xl bg-white w-full hover:bg-gray-300 shadow-md'>
                 <FaCartShopping /> Cart
               </button>
-              <button onClick={goOrderPage} className='flex items-center justify-center gap-2 text-xl cursor-pointer border-2 border-gray-300 py-1.5 px-3 rounded-xl bg-white w-full hover:bg-gray-300'>
+              <button onClick={goOrderPage} className='flex items-center justify-center gap-2 text-lg cursor-pointer border border-[#4f4f4f] py-1.5 px-3 rounded-xl bg-white w-full hover:bg-gray-300 shadow-md'>
                 <RiFileList3Fill /> History
               </button>
           </div>
-          <form className='flex justify-center mt-10 mx-60 gap-4'>
+          <form className='flex justify-center mt-10 mx-3 sm:mx-60 gap-4'>
               {/* <div className='flex justify-center mx-auto mt-3 py-3 '> */}
                   {/* <select name="role" className='mt-2 border-2 border-gray-200 p-2 rounded-xl bg-white' defaultValue="" value={categoryId} onChange={(e) => setCategoryId(e.target.value)}> */}
-                  <select name="role" className='mt-2 border-2 border-gray-200 p-2 rounded-xl bg-white w-full' value={selectedCategoryId} onChange={handleCategoryFilter}>
+                  <select name="role" className='mt-2 border border-[#4f4f4f] shadow-md p-2 rounded-xl bg-white w-full' value={selectedCategoryId} onChange={handleCategoryFilter}>
                       <option value="">All Categories</option>
                       {allCategories && allCategories.map((u, i) => (
                           <option key={i} value={String(u.category_id)}>{u.all_category}</option>
@@ -179,57 +179,56 @@ const productPage = () => {
           </form>
           <div className='mt-10 mx-auto '>
               {/* <div className='p-3 bg-white rounded-2xl shadow-lg h-full'> */}
-                <div className='grid grid-cols-4 gap-10 '>
+                <div className='grid grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-4'>
                   {product.map((p) => (
                     <Link href={`/product/${p.product_id}`} key={p.product_id}>
-                      <div key={p.product_id} className='w-full h-90'>
-                        <div className='grid grid-rows-4 gap-2 '>
-                          <div className='relative'>
-                            {p.image_url
-                              ? <img src={p.image_url} alt={p.product_name} className='rounded-xl w-full h-80 object-cover mx-auto' />
-                              : <div className='rounded-xl flex justify-center items-center w-full h-80 bg-gray-200'>
-                                  <CiImageOff />
-                                </div>
-                            }
-                            <div className='absolute top-4 right-4 bg-white rounded-full w-10 h-10 flex items-center justify-center'>
-                              <button onClick={(e) => {
-                                e.preventDefault()
-                                toggleWishlist(p.product_id)
-                              }}>
-                                {wishlist.has(p.product_id) ? <FaHeart /> : <FaRegHeart />}
-                              </button>
-                            </div>
-                          </div>
-                          <div >
-                            <div className='flex justify-between items-center'>
-                              <div className='text-md'>{p.product_name}</div>
-
-                              {/* 1 */}
-                              {/* <div className=''><FaRegHeart /></div> */}
-
-                              {/* 2 */}
-                              {/* <button onClick={() => setWishlist(!wishlist)}>
-                                {wishlist ? <FaHeart/> : <FaRegHeart/>}
-                              </button> */}
-
-                              {/* 3 */}
-                              {/* <button onClick={(e) => {
-                                e.preventDefault()
-                                toggleWishlist(p.product_id)
-                              }}>
-                                {wishlist.has(p.product_id) ? <FaHeart/> : <FaRegHeart/>}
-                              </button> */}
-                              <div className='text-lg '>{p.price}฿</div>
-                            </div>
-                            {/* <div className='flex justify-self-end'>
-                              <div className='text-red-600'>{p.price}฿</div>
-                            </div> */}
-                            <div className='flex justify-between items-center'>
-                              <div className='inline-flex items-center gap-1'>
-                                <FaStar className='w-3 h-3 text-yellow-400'/>5(67)
+                      <div key={p.product_id} className='mb-5'>
+                        <div className='relative'>
+                          {p.image_url
+                            ? <img src={p.image_url} alt={p.product_name} className='rounded-xl w-full h-100 object-cover mx-auto' />
+                            : <div className='rounded-xl flex justify-center items-center w-full h-80 bg-gray-200'>
+                                <CiImageOff />
                               </div>
-                              {/* <div className='text-red-600'>{p.price}฿</div> */}
+                          }
+                          <div className='absolute top-4 right-4 bg-white rounded-full w-10 h-10 flex items-center justify-center'>
+                            <button onClick={(e) => {
+                              e.preventDefault()
+                              toggleWishlist(p.product_id)
+                            }}>
+                              {wishlist.has(p.product_id) ? <FaHeart /> : <FaRegHeart />}
+                            </button>
+                          </div>
+                        </div>
+
+                        <div >
+                          <div className='flex justify-between items-center'>
+                            <div className='text-md'>{p.product_name}</div>
+
+                            {/* 1 */}
+                            {/* <div className=''><FaRegHeart /></div> */}
+
+                            {/* 2 */}
+                            {/* <button onClick={() => setWishlist(!wishlist)}>
+                              {wishlist ? <FaHeart/> : <FaRegHeart/>}
+                            </button> */}
+
+                            {/* 3 */}
+                            {/* <button onClick={(e) => {
+                              e.preventDefault()
+                              toggleWishlist(p.product_id)
+                            }}>
+                              {wishlist.has(p.product_id) ? <FaHeart/> : <FaRegHeart/>}
+                            </button> */}
+                            <div className='text-lg '>{p.price}฿</div>
+                          </div>
+                          {/* <div className='flex justify-self-end'>
+                            <div className='text-red-600'>{p.price}฿</div>
+                          </div> */}
+                          <div className='flex justify-between items-center'>
+                            <div className='inline-flex items-center gap-1'>
+                              <FaStar className='w-3 h-3 text-yellow-400'/>5(67)
                             </div>
+                            {/* <div className='text-red-600'>{p.price}฿</div> */}
                           </div>
                         </div>
                       </div>

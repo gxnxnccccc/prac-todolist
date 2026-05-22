@@ -296,7 +296,7 @@ const AdminProductPage = () => {
     console.log("ImageId: ", imageId)
     console.log('editPreviewUrls: ', editPreviewUrls)
     return (
-        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50">
+        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen">
             <div className='mt-5 px-15 '>
                 <h1 className='text-center mt-10 text-4xl'>Inventory</h1>
                 <div className='flex flex-col gap-5 mt-10 mx-auto px-15 mb-10'>
@@ -416,7 +416,7 @@ const AdminProductPage = () => {
                                     Add Product
                             </button>
                             {productAddedAlert && (
-                                        <div className='fixed bottom-5 right-5 bg-green-200 text-black px-4 py-2 rounded-xl shadow-lg'>
+                                        <div className='fixed bottom-5 right-5 bg-green-200 text-[#4f4f4f] px-4 py-2 rounded-xl shadow-lg'>
                                             Product Added
                                         </div>
                             )}
@@ -458,7 +458,7 @@ const AdminProductPage = () => {
                                         <div className='flex justify-center gap-2 py-2'>
                                             <button onClick={() => setIsOpen(p.product_id)} className="border px-3 py-2 rounded bg-gray-300 hover:bg-gray-400">Delete</button>
                                             {isOpen === p.product_id && (
-                                                <div className='fixed inset-0 flex items-center justify-center z-50 bg-black/25'>
+                                                <div className='fixed inset-0 flex items-center justify-center z-50 bg-[#4f4f4f]/25'>
                                                     <div className='flex flex-col bg-white rounded-xl px-12 py-8 shadow gap-4'>
                                                         <h1 className='text-center text-2xl'>Confirm Delete</h1>
                                                         <p>Are you sure to delete this product?</p>
@@ -496,12 +496,12 @@ const AdminProductPage = () => {
                                     <div className='col-span-2 '>
                                         <h1 className='text-xl font-bold'>{p.product_name}</h1>
                                         <div className='flex gap-1'>ID: 
-                                            <p className='text-gray-400'>{p.product_id}</p>
+                                            <p className='text-[#9d9ca2]-400'>{p.product_id}</p>
                                         </div>
                                         <div className='grid grid-rows-1 grid-cols-3 text-xs gap-3'>
                                             <div className='col-span-2'>
                                                 <div className='flex gap-1'>Description: 
-                                                    <p className='text-gray-400'>{p.description}</p>
+                                                    <p className='text-[#9d9ca2]-400'>{p.description}</p>
                                                 </div>
                                                 <div className='flex gap-1'>Type: 
                                                     <p className='text-gray-400'>{p.category_name}</p>
@@ -530,7 +530,7 @@ const AdminProductPage = () => {
                                                 <div className='flex gap-2 py-2'>
                                                     <button onClick={() => setIsOpen(p.product_id)} className="border px-3 py-2 rounded bg-red-200 hover:bg-red-400">Delete</button>
                                                     {isOpen === p.product_id && (
-                                                        <div className='fixed inset-0 flex items-center justify-center z-50 bg-black/25'>
+                                                        <div className='fixed inset-0 flex items-center justify-center z-50 bg-[#4f4f4f]/25'>
                                                             <div className='flex flex-col bg-white rounded-xl px-12 py-8 shadow gap-4'>
                                                                 <h1 className='text-center text-2xl'>Confirm Delete</h1>
                                                                 <p>Are you sure to delete this product?</p>
@@ -543,7 +543,7 @@ const AdminProductPage = () => {
                                                     )}
                                                     <button onClick={() => { handleEdit(p); setIsOpen('edit') }} className="border px-3 py-2 rounded bg-orange-200 hover:bg-orange-300">Edit</button>
                                                     {isOpen === 'edit' && edit === p.product_id && (
-                                                        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                                                        <div className="fixed inset-0 bg-[#4f4f4f]/50 flex items-center justify-center z-50">
                                                             <div className="flex flex-col bg-white rounded-xl px-12 py-8 shadow gap-4">
                                                                 <h1 className="text-center text-2xl">Change Product Information</h1>
 
@@ -677,7 +677,7 @@ const AdminProductPage = () => {
                                                                 <div className="flex gap-2 self-end">
                                                                     <button onClick={handleAddEditProductInfo} className="border px-3 py-2 rounded bg-blue-200">Save</button>
                                                                     {/* {savedAlert && (
-                                                                        <div className='fixed bottom-5 right-5 bg-black text-white px-4 py-2 rounded-xl shadow-lg'>
+                                                                        <div className='fixed bottom-5 right-5 bg-[#4f4f4f] text-white px-4 py-2 rounded-xl shadow-lg'>
                                                                             saved
                                                                         </div>
                                                                     )} */}

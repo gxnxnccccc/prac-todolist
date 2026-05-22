@@ -11,7 +11,7 @@ export default function ItemCard(props) {
     return (
         <div className='justify-center m-auto font-[family-name:var(--font-geologica)]'>
           <div
-            className="bg-gray-100 text-black
+            className="bg-gray-100 text-[#4f4f4f]
                         p-4 rounded-xl items-center
                         flex flex-col shadow-lg gap-4 m-auto">
             
@@ -35,7 +35,7 @@ export default function ItemCard(props) {
                 >Delete
               </button>
               {isOpen && (
-                <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
+                <div className='fixed inset-0 bg-[#4f4f4f]/50 flex items-center justify-center z-50'>
                   <div className='flex flex-col bg-white rounded-xl px-12 py-8 shadow gap-4'>
                     <h1 className='text-center text-2xl'>Confirm Delete</h1>
                     <p>Are you sure to delete this list?</p>

@@ -94,7 +94,7 @@ const productPage = () => {
   
 
   return (
-    <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50">
+    <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen">
         <div className='mt-10 px-15'>
           <h1 className='flex justify-center text-4xl'>Wishlists</h1>
           

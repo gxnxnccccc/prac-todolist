@@ -20,6 +20,9 @@ export default function Home() {
   const [timeCreated, setTimeCreated] = useState('')
   const [timeUpdated, setTimeUpdated] = useState('')
   const [ isOpen, setIsOpen ] = useState(false)
+
+  const [menu, setMenu] = useState({ visible: false, x:0, y:0, itemId: null })
+
   const router = useRouter()
 
   useEffect(() => {
@@ -167,6 +170,13 @@ export default function Home() {
   // setItem(updated)
       
   }
+  
+  const handleContextMenu = (e, itemId) => {
+    e.preventDefault();
+    setMenu({ visible: true, x: e.clientX, y: e.clientY, itemId });
+  }
+
+  const handleClose = () => setMenu({ visible: false, x: 0, y: 0, itemId: null });
 
   return (
     <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] mb-10">
@@ -193,7 +203,7 @@ export default function Home() {
                 />
             </div>
             
-            <button onClick={handleClick} className="rounded-2xl w-12 h-12 bg-[#3d3d3d] hover:bg-[#6c6a68] shadow-md text-white">{edit == ''?"+":"Save"}</button>
+            <button onClick={handleClick} className="rounded-2xl w-12 h-12 bg-[#3d3d3d] hover:bg-[#4f4f4f] shadow-md text-white">{edit == ''?"+":"Save"}</button>
           </div>
         </div>
         
@@ -266,7 +276,11 @@ export default function Home() {
                           : <MdCheckBoxOutlineBlank/>
                           }
                         </button>
-                        <div className={`relative transition-colors duration-300 ${item?.Status ? 'text-gray-400' : ''}`}>
+                        <div
+                          className={`relative transition-colors duration-300 ${item?.Status ? 'text-gray-400' : ''}`}
+                          onContextMenu={(e) => handleContextMenu(e, item.ItemId)}
+                          onClick={handleClose}
+                          >
                           {item.List}
                           <span style={{
                             display: 'block',
@@ -282,14 +296,40 @@ export default function Home() {
                             pointerEvents: 'none',
                           }} />
                         </div>
+                        {menu.visible && menu.itemId === item.ItemId && (
+                          <ul className="fixed bg-white shadow-lg rounded-md py-1 z-50 min-w-45 text-sm" style={{ top: menu.y, left: menu.x }}>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-md text-gray-400 italic">Time Created: {item.create_at
+                              ? moment.utc(item.create_at).format('DD/MM/YYYY, h:mm:ss')
+                              : "-"}
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-md text-gray-400 italic">Updated at: {item.update_at
+                              ? moment.utc(item.create_at).format('DD/MM/YYYY, h:mm:ss')
+                              : "-"}
+                            </li>
+                            <li onClick={() => { handleEdit(item); handleClose(); }} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Edit</li>
+                            <li onClick={() => { setIsOpen(item.ItemId); handleClose(); }} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Delete</li>
+                            {isOpen === item.ItemId && (
+                              <div className='fixed inset-0 flex items-center justify-center z-50 bg-[#4f4f4f]/25'>
+                                <div className='flex flex-col bg-white rounded-xl px-12 py-8 shadow gap-4'>
+                                  <h1 className='text-center text-2xl'>Confirm Delete</h1>
+                                  <p>Are you sure to delete this list?</p>
+                                  <div className='flex gap-2 self-end'>
+                                    <button onClick={() => setIsOpen(false)} className="px-3 py-2 rounded bg-gray-200 hover:bg-gray-300">Cancel</button>
+                                    <button onClick={() =>handleDelete(item)} className="px-3 py-2 rounded bg-red-200 hover:bg-red-300">Delete</button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </ul>
+                        )}
                       </div>
                     </td>
                     {/* <td className='text-center justify-center border-2 '><button onClick={() => setIsOpen(true)} className="border px-3 py-2 rounded">Delete</button> */}
                     <td className='border-t border-l border-r'>
                       <div className='flex justify-center gap-2'>
                         <button onClick={() => setIsOpen(item.ItemId)} className="px-3 py-2 rounded bg-red-200 hover:bg-red-300">Delete</button>
-                        {isOpen && (
-                          <div className='fixed inset-0 flex items-center justify-center z-50 bg-black/25'>
+                        {isOpen === item.ItemId && (
+                          <div className='fixed inset-0 flex items-center justify-center z-50 bg-[#4f4f4f]/25'>
                             <div className='flex flex-col bg-white rounded-xl px-12 py-8 shadow gap-4'>
                               <h1 className='text-center text-2xl'>Confirm Delete</h1>
                               <p>Are you sure to delete this list?</p>

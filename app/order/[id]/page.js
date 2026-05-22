@@ -22,7 +22,7 @@ const OrderDetailPage = () => {
     }
 
     return (
-        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50">
+        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen">
             <div className='mt-10 px-15'>
                 <div className='relative flex justify-center items-center'>
                     <h1 className='text-4xl'>Order #{id}</h1>
@@ -46,7 +46,7 @@ const OrderDetailPage = () => {
                                 </div>
                                 <div className='col-span-3'>
                                     <p className='text-2xl'>{item.product_name}</p>
-                                    <p className='text-sm text-gray-400'>Description: {item.description}</p>
+                                    <p className='text-sm text-[#9d9ca2]-400'>Description: {item.description}</p>
                                 </div>
                                 <div className='grid grid-rows-2'>
                                     <div className='text-xl'>
