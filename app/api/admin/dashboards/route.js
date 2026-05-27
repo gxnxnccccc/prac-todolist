@@ -12,41 +12,107 @@ export async function GET(req) {
             {status: 401}
         )
     }
-    // const {searchParams} = new URL(req.url);
-    // const userId = searchParams.get('userId');
-    const pool = await getConnection();
-    const request = pool.request();
-    // request.input('UserId', userId);
 
     const { searchParams } = new URL(req.url)
-    const username = searchParams.get('username')
-    
-    let result_totalUser, result_doneList, result_undoneList, result3, result_totalList
-    if (!username) {
-        result_totalUser = await request.query("SELECT COUNT(UserId) as total_user FROM todo_user WHERE Roles = 'user'")
-        result_doneList = await request.query('SELECT COUNT(ItemId) AS done_list FROM todo_item WHERE Status = 1')
-        result_undoneList = await request.query('SELECT COUNT(ItemId) AS undone_list FROM todo_item WHERE Status = 0')
-        result3 = await request.query('SELECT ItemId, List, Status, create_at FROM todo_item')
-        result_totalList = await request.query('SELECT COUNT(ItemId) AS total_list FROM todo_item')
-    }
-    else {
-        request.input('Username', sql.NVarChar, username)
-        result_totalUser = await request.query("SELECT COUNT(UserId) as total_user FROM todo_user WHERE Username = @Username")
-        result_doneList = await request.query('SELECT COUNT(ItemId) AS done_list FROM todo_item WHERE Status = 1 AND UserId = (SELECT UserId FROM todo_user WHERE Username = @Username)')
-        result_undoneList = await request.query('SELECT COUNT(ItemId) AS undone_list FROM todo_item WHERE Status = 0 AND UserId = (SELECT UserId FROM todo_user WHERE Username = @Username)')
-        result3 = await request.query('SELECT ItemId, List, Status, create_at FROM todo_item WHERE UserId = (SELECT UserId FROM todo_user WHERE Username = @Username)')
-        result_totalList = await request.query('SELECT COUNT(ItemId) AS total_list FROM todo_item WHERE UserId = (SELECT UserId FROM todo_user WHERE Username = @Username)')
-    }
-    const result_allUsername = await request.query("SELECT Username as all_username FROM todo_user WHERE Roles = 'user'")
+    const userId     = searchParams.get('user_id')
+    const categoryId = searchParams.get('category_id')
+    const productId  = searchParams.get('product_id')
+    const day        = searchParams.get('day')
 
-    return Response.json({
-        result_totalUser: result_totalUser.recordset,
-        result_doneList: result_doneList.recordset,
-        result_undoneList: result_undoneList.recordset,
-        result3: result3.recordset,
-        result_totalList: result_totalList.recordset,
-        result_allUsername: result_allUsername.recordset
-    });
+    try {
+        const pool = await getConnection();
+
+        let result_totalUser, result_doneList, result_undoneList, result3, result_totalList,
+            result_totalProduct, result_totalCategory, result_totalOrderByDate
+
+        if (!userId) { // query all (todo-item stats unfiltered)
+            result_totalUser      = await pool.request().query("SELECT COUNT(UserId) as total_user FROM todo_user WHERE Roles = 'user'")
+            result_doneList       = await pool.request().query('SELECT COUNT(ItemId) AS done_list FROM todo_item WHERE Status = 1')
+            result_undoneList     = await pool.request().query('SELECT COUNT(ItemId) AS undone_list FROM todo_item WHERE Status = 0')
+            result3               = await pool.request().query('SELECT ItemId, List, Status, create_at FROM todo_item')
+            result_totalList      = await pool.request().query('SELECT COUNT(ItemId) AS total_list FROM todo_item')
+            result_totalProduct   = await pool.request().query('SELECT COUNT(product_id) AS total_product FROM products')
+            result_totalCategory  = await pool.request().query('SELECT COUNT(category_id) AS total_category FROM categories')
+            result_totalOrderByDate = await pool.request().query('SELECT COUNT(order_id) AS total_order FROM orders WHERE CAST(order_date AS DATE) = CAST(GETDATE() AS DATE)')
+        }
+        else { // query todo-item stats filtered by user
+            result_totalUser  = await pool.request()
+                .input('UserId', sql.Int, userId)
+                .query("SELECT COUNT(UserId) as total_user FROM todo_user WHERE UserId = @UserId")
+            result_doneList   = await pool.request()
+                .input('UserId', sql.Int, userId)
+                .query('SELECT COUNT(ItemId) AS done_list FROM todo_item WHERE Status = 1 AND UserId = @UserId')
+            result_undoneList = await pool.request()
+                .input('UserId', sql.Int, userId)
+                .query('SELECT COUNT(ItemId) AS undone_list FROM todo_item WHERE Status = 0 AND UserId = @UserId')
+            result3 = await pool.request()
+                .input('UserId', sql.Int, userId)
+                .query('SELECT ItemId, List, Status, create_at FROM todo_item WHERE UserId = @UserId')
+            result_totalList  = await pool.request()
+                .input('UserId', sql.Int, userId)
+                .query('SELECT COUNT(ItemId) AS total_list FROM todo_item WHERE UserId = @UserId')
+        }
+
+        // Always fetch category list so the dropdown is never emptied by filters
+        const result_totalCategoryProduct = await pool.request()
+            .query('SELECT category_id, category_name FROM categories')
+
+        // Always fetch dropdown lists
+        const result_allUsername = await pool.request()
+            .query("SELECT UserId AS user_id, Username AS username FROM todo_user WHERE Roles = 'user'")
+        const result_allProducts = await pool.request()
+            .query('SELECT product_id, product_name FROM products ORDER BY product_name')
+
+        // Dynamic total-order query — applies every active filter
+        const orderReq   = pool.request()
+        const conditions = []
+        const joins      = []
+
+        if (userId) {
+            orderReq.input('UserId', sql.Int, userId)
+            conditions.push('o.UserId = @UserId')
+        }
+        if (day) {
+            orderReq.input('Day', sql.NVarChar, day)
+            conditions.push('CAST(o.order_date AS DATE) = CAST(@Day AS DATE)')
+        }
+        if (productId || categoryId) {
+            joins.push('JOIN order_products op ON o.order_id = op.order_id')
+        }
+        if (productId) {
+            orderReq.input('ProductId', sql.Int, productId)
+            conditions.push('op.product_id = @ProductId')
+        }
+        if (categoryId) {
+            orderReq.input('CategoryId', sql.Int, categoryId)
+            joins.push('JOIN products p ON op.product_id = p.product_id')
+            conditions.push('p.category_id = @CategoryId')
+        }
+
+        let orderSql = 'SELECT COUNT(DISTINCT o.order_id) AS total_order FROM orders o'
+        if (joins.length)      orderSql += ' ' + joins.join(' ')
+        if (conditions.length) orderSql += ' WHERE ' + conditions.join(' AND ')
+
+        const result_totalOrder = await orderReq.query(orderSql)
+
+        return NextResponse.json({
+            result_totalUser:          result_totalUser.recordset,
+            result_doneList:           result_doneList.recordset,
+            result_undoneList:         result_undoneList.recordset,
+            result3:                   result3.recordset,
+            result_totalList:          result_totalList.recordset,
+            result_allUsername:        result_allUsername.recordset,
+            result_allProducts:        result_allProducts.recordset,
+            result_totalCategoryProduct: result_totalCategoryProduct.recordset,
+            result_totalOrder:         result_totalOrder.recordset,
+            result_totalProduct:       result_totalProduct?.recordset,
+            result_totalCategory:      result_totalCategory?.recordset,
+            result_totalOrderByDate:   result_totalOrderByDate?.recordset,
+        });
+    } catch (error) {
+        console.error('Dashboard API error:', error)
+        return NextResponse.json({ error: 'Internal Server Error', detail: error.message }, { status: 500 })
+    }
 }
 
 function verifyToken(req) {

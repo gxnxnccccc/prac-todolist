@@ -15,14 +15,14 @@ export async function GET(req) {
         const pool = await getConnection();
         const result_categories = await pool.request().query('SELECT category_id, category_name as all_category FROM categories');
         // const result_products = await pool.request().query(`
-        //     SELECT p.product_id, p.product_name, p.description, p.quantity, p.price,
+        //     SELECT p.product_id, p.product_name, p.description, p.stock_quantity, p.unit_price,
         //            p.add_at, p.update_at, pi.image_url, c.category_name
         //     FROM products p
         //     LEFT JOIN product_images pi ON p.product_id = pi.product_id
         //     LEFT JOIN categories c ON p.category_id = c.category_id
         // `);
         const result_products = await pool.request().query(`
-            SELECT p.product_id, p.product_name, p.description, p.quantity, p.price,
+            SELECT p.product_id, p.product_name, p.description, p.stock_quantity, p.unit_price,
                 p.add_at, p.update_at, p.category_id, c.category_name,
                 (SELECT TOP 1 image_url FROM product_images 
                     WHERE product_id = p.product_id ORDER BY image_id) AS image_url
@@ -95,7 +95,7 @@ export async function POST(req) { // request(req) is the data from frontend
         request.input('description', body.description)
         request.input('price', body.price)
         request.input('quantity', body.quantity)
-        const result_products = await request.query("INSERT INTO products (product_name, category_id, description, price, quantity, add_at, update_at) OUTPUT INSERTED.product_id VALUES (@product_name, @category_id, @description, @price, @quantity, GETDATE(), GETDATE())");
+        const result_products = await request.query("INSERT INTO products (product_name, category_id, description, unit_price, stock_quantity, add_at, update_at) OUTPUT INSERTED.product_id VALUES (@product_name, @category_id, @description, @price, @quantity, GETDATE(), GETDATE())");
 
         const newProductId = result_products.recordset[0].product_id
 
@@ -181,8 +181,8 @@ export async function PUT(req) {
         SET product_name = @product_name,
             category_id  = @category_id,
             description  = @description,
-            price        = @price,
-            quantity     = @quantity,
+            unit_price   = @price,
+            stock_quantity = @quantity,
             update_at    = GETDATE()
         WHERE product_id = @product_id
     `)

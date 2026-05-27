@@ -168,7 +168,7 @@ export default function Profile() {
 
     return (
         <>
-            <div className="text-3xl">Personal Infomation</div>
+            <div className="text-3xl">Businesses</div>
             <hr className="border-t border-black mt-5" />
 
             <form onSubmit={onSubmit} className="flex flex-col gap-4 px-3">
@@ -278,7 +278,7 @@ export default function Profile() {
                 {/* Change Password button */}
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="bg-gray-50 py-1 px-3 rounded shadow-md mt-5 w-full"
+                    className="bg-white py-1 px-3 rounded shadow-md mt-5 w-full"
                 >
                     Change password
                 </button>
@@ -345,12 +345,12 @@ export default function Profile() {
                 )}
 
                 {/* Log out button */}
-                {/* <button
+                <button
                     onClick={handleLogOut}
                     className="px-3 py-1 rounded bg-red-200 shadow-md w-full"
                 >
                     LogOut
-                </button> */}
+                </button>
             </div>
         </>
     )

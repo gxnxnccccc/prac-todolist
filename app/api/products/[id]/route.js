@@ -17,7 +17,7 @@ export async function GET(req, ctx) {
         const result_product = await pool.request()
             .input('id', sql.Int, numId)
             .query(`
-                SELECT p.product_id, p.product_name, p.description, p.quantity, p.price,
+                SELECT p.product_id, p.product_name, p.description, p.stock_quantity, p.unit_price,
                     p.add_at, p.update_at, p.category_id, c.category_name
                 FROM products p
                 LEFT JOIN categories c ON p.category_id = c.category_id
@@ -69,17 +69,17 @@ export async function POST(req, {params}){
         request.input('buyAmount', sql.Int, body.quantity)
         request.input('user_id', sql.Int, userId)
 
-        // const result_addToCart = await request.query("INSERT INTO carts (user_id, product_id, buy_amount) VALUES (@user_id, @productId, @buyAmount)")
+        // const result_addToCart = await request.query("INSERT INTO carts (user_id, product_id, buy_quantity) VALUES (@user_id, @productId, @buyAmount)")
         const result_addToCart = await request.query(`
                                                         IF EXISTS (
-                                                            SELECT 1 FROM carts 
+                                                            SELECT 1 FROM carts
                                                             WHERE user_id = @user_id AND product_id = @productId
                                                         )
-                                                            UPDATE carts 
-                                                            SET buy_amount = buy_amount + @buyAmount
+                                                            UPDATE carts
+                                                            SET buy_quantity = buy_quantity + @buyAmount
                                                             WHERE user_id = @user_id AND product_id = @productId
                                                         ELSE
-                                                            INSERT INTO carts (user_id, product_id, buy_amount) 
+                                                            INSERT INTO carts (user_id, product_id, buy_quantity)
                                                             VALUES (@user_id, @productId, @buyAmount)
                                                     `)
 

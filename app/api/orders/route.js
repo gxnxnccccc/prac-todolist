@@ -47,10 +47,10 @@ export async function POST(req) {
         for (const item of body.items) {
             const result = await pool.request()
                 .input('productId', item.product_id)
-                .query(`SELECT price FROM products WHERE product_id = @productId`)
-            
-            const price = result.recordset[0].price
-            total += price * item.buy_amount
+                .query(`SELECT unit_price FROM products WHERE product_id = @productId`)
+
+            const price = result.recordset[0].unit_price
+            total += price * item.buy_quantity
             orderItem.push({...item, price})
         }
 
@@ -70,10 +70,10 @@ export async function POST(req) {
             await pool.request()
                 .input('orderId', orderId)
                 .input('productId', item.product_id)
-                .input('buyAmount', item.buy_amount)
+                .input('buyAmount', item.buy_quantity)
                 .input('price', item.price)
                 .query(`
-                        INSERT INTO order_products (order_id, product_id, buy_amount, unit_price)
+                        INSERT INTO order_products (order_id, product_id, buy_quantity, unit_price)
                         VALUES (@orderId, @productId, @buyAmount, @price)
                         `)
 

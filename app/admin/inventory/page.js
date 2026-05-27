@@ -190,8 +190,8 @@ const AdminProductPage = () => {
                     editProductName === originalProduct?.product_name &&
                     editCategoryId  === String(originalProduct?.category_id) &&
                     editDescription === originalProduct?.description &&
-                    String(editPrice)    === String(originalProduct?.price) &&
-                    String(editQuantity) === String(originalProduct?.quantity) &&
+                    String(editPrice)    === String(originalProduct?.unit_price) &&
+                    String(editQuantity) === String(originalProduct?.stock_quantity) &&
                     uploadedUrls.length === 0 && editFiles.length === 0
                 if (unchanged) {
                     alert('No changes detected. Please edit at least one field.')
@@ -234,8 +234,8 @@ const AdminProductPage = () => {
         setEditProductName(p.product_name)
         setEditCategoryId(String(p.category_id))
         setEditDescription(p.description)
-        setEditPrice(p.price)
-        setEditQuantity(p.quantity)
+        setEditPrice(p.unit_price)
+        setEditQuantity(p.stock_quantity)
         setEdit(p.product_id)
         setOriginalProduct(p)
     }
@@ -297,13 +297,13 @@ const AdminProductPage = () => {
     console.log('editPreviewUrls: ', editPreviewUrls)
     return (
         <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen">
-            <div className='mt-5 px-15 '>
+            <div className='mt-5 mx-2 sm:mx-5 '>
                 <h1 className='text-center mt-10 text-4xl'>Inventory</h1>
-                <div className='flex flex-col gap-5 mt-10 mx-auto px-15 mb-10'>
+                <div className='flex flex-col gap-5 mt-10 mx-auto mb-10'>
                     <div className='p-3 bg-white rounded-2xl shadow-lg'>
 
                         <h1 className='text-center text-2xl pt-5 font-bold mb-5'>Add Product</h1>
-                        <div className='grid grid-cols-3'>
+                        <div className='grid grid-cols-1 grid-rows-3 sm:grid-cols-3 sm:grid-rows-1'>
                             <div> 
                                 <div className='p-3'>
                                     <h3>Product Name</h3>
@@ -375,42 +375,39 @@ const AdminProductPage = () => {
 
                             <div className='p-3'>
                                 <h3>Product Image</h3>
-                                <div className='flex justify-center mx-auto mt-5'>
-                                    {/* <p className='mx-auto'>Add photo</p> */}
-                                    <div className="flex flex-col items-center gap-4">
-                                        <div className="flex justify-center items-center">
-                                            {previewUrls.length > 0
-                                                ? <div className='flex flex-wrap justify-center gap-2 '>
-                                                    {previewUrls.map(({image_url}, i) => (
-                                                        <div key={i} >
-                                                            <img src={image_url} alt="preview" className="object-cover w-24 h-24 cursor-pointer" onClick={() => fileInputRef.current.click()} />
-                                                            <button onClick={() => handleRemovePreview(i)}>X</button>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                                : <FaFileImage size={100} className="text-gray-400 cursor-pointer" onClick={() => fileInputRef.current.click()} />
-                                            }
-                                            <input
-                                                type="file"
-                                                multiple
-                                                ref={fileInputRef}
-                                                className="hidden"
-                                                onChange={(e) => {
-                                                    const imgs = Array.from(e.target.files).map(f => ({ image_url: URL.createObjectURL(f) }))
-                                                    const selected = Array.from(e.target.files)
-                                                    setFiles(prev => [...prev, ...selected])
-                                                    setPreviewUrls(prev => [...prev, ...imgs])
-                                                }}
-                                            />
-                                        </div>
+                                <div className='flex justify-center mx-auto mt-5 h-full'>
+                                    <div className="flex flex-col justify-center items-center gap-4">
+                                        {previewUrls.length > 0
+                                            ? <div className='flex flex-wrap justify-center gap-2 '>
+                                                {previewUrls.map(({image_url}, i) => (
+                                                    <div key={i} >
+                                                        <img src={image_url} alt="preview" className="object-cover w-24 h-24 cursor-pointer" onClick={() => fileInputRef.current.click()} />
+                                                        <button onClick={() => handleRemovePreview(i)}>X</button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            : <FaFileImage size={100} className="text-gray-400 cursor-pointer" onClick={() => fileInputRef.current.click()} />
+                                        }
+                                        <input
+                                            type="file"
+                                            multiple
+                                            ref={fileInputRef}
+                                            className="hidden"
+                                            onChange={(e) => {
+                                                const imgs = Array.from(e.target.files).map(f => ({ image_url: URL.createObjectURL(f) }))
+                                                const selected = Array.from(e.target.files)
+                                                setFiles(prev => [...prev, ...selected])
+                                                setPreviewUrls(prev => [...prev, ...imgs])
+                                            }}
+                                        />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className='p-3'>
+                        <div className='p-3 mt-2'>
                             <button 
-                                    className='flex justify-center mx-auto p-3 bg-gray-200 rounded w-1/2 py-4 text-center'
+                                    className='flex justify-center mx-auto p-3 bg-gray-200 rounded w-full py-2 text-center'
                                     onClick={handleAddEditProductInfo}
                                     >
                                     Add Product
@@ -444,8 +441,8 @@ const AdminProductPage = () => {
                                     <td className='text-center justify-center border-t py-6'>{p.product_id}</td>
                                     <td className='text-center justify-center border-t border-l'>{p.product_name}</td>
                                     <td className='text-center justify-center border-t border-l'>{p.description}</td>
-                                    <td className='text-center justify-center border-t border-l'>{p.quantity}</td>
-                                    <td className='text-center justify-center border-t border-l'>{p.price}</td>
+                                    <td className='text-center justify-center border-t border-l'>{p.stock_quantity}</td>
+                                    <td className='text-center justify-center border-t border-l'>{p.unit_price}</td>
                                     <td className='text-center justify-center border-t border-l'>{p.add_at
                                         ? moment.utc(p.add_at).format('DD/MM/YYYY, h:mm:ss')
                                         : '-'}
@@ -477,13 +474,13 @@ const AdminProductPage = () => {
                             </tbody>
                         </table> */}
 
-                        <div className='overflow-y-auto max-h-[800px] mt-4'>
+                        <div className='overflow-y-auto mt-4'>
                         {product.map((p) => (
-                            <div key={p.product_id} className='mt-2 border-2 border-gray-200 rounded w-full  px-2'>
+                            <div key={p.product_id} className='mt-2 border-2 border-gray-200 rounded mx-4'>
                                 <div className='grid grid-rows-1 grid-cols-3 p-2 gap-2'>
 
                                     {/* Image Box 1 */}
-                                    <div >
+                                    <div className='my-auto'>
                                         {p.image_url 
                                             ? <img src={p.image_url} alt={p.product_name} className='w-50 h-50 object-cover mx-auto' />
                                             : <div className='flex justify-center items-center w-50 h-50 bg-gray-200 mx-auto'>
@@ -498,8 +495,8 @@ const AdminProductPage = () => {
                                         <div className='flex gap-1'>ID: 
                                             <p className='text-[#9d9ca2]-400'>{p.product_id}</p>
                                         </div>
-                                        <div className='grid grid-rows-1 grid-cols-3 text-xs gap-3'>
-                                            <div className='col-span-2'>
+                                        <div className='grid grid-rows-2 grid-cols-1 sm:grid-rows-1 sm:grid-cols-3 text-xs '>
+                                            <div className='sm:col-span-2'>
                                                 <div className='flex gap-1'>Description: 
                                                     <p className='text-[#9d9ca2]-400'>{p.description}</p>
                                                 </div>
@@ -521,11 +518,11 @@ const AdminProductPage = () => {
                                             </div>
                                         
                                             <div>
-                                                <div className='flex gap-1'>Price: 
-                                                    <p className='text-gray-400'>{p.price}</p>
+                                                <div className='flex gap-1'>Price:
+                                                    <p className='text-gray-400'>{p.unit_price}</p>
                                                 </div>
-                                                <div className='flex gap-1'>Quantity: 
-                                                    <p className='text-gray-400'>{p.quantity}</p>
+                                                <div className='flex gap-1'>Quantity:
+                                                    <p className='text-gray-400'>{p.stock_quantity}</p>
                                                 </div>
                                                 <div className='flex gap-2 py-2'>
                                                     <button onClick={() => setIsOpen(p.product_id)} className="border px-3 py-2 rounded bg-red-200 hover:bg-red-400">Delete</button>

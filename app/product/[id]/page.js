@@ -14,7 +14,7 @@ export default function ProductDetail() {
     const [slideIndex, setSlideIndex] = useState(0)
     // const [buyAmount, setBuyAmount] = useState(1)
     const [addToCartAmount, setAddToCartAmount] = useState(0)
-    const { cartAmount, setCartAmount } = useUser()
+    const { refreshCart } = useUser()
     const [cartAddedAlert, setCartAddedAlert] = useState(false)
 
     const router = useRouter();
@@ -61,7 +61,7 @@ export default function ProductDetail() {
             console.log('Added to cart:', data)
 
             setAddToCartAmount(qty)
-            setCartAmount(cartAmount+1)
+            await refreshCart()   // re-fetch the real count from the server
             setCartAddedAlert(true)
             
             setTimeout(() => {
@@ -98,7 +98,7 @@ export default function ProductDetail() {
                             <div className='p-6 rounded flex flex-col gap-3'>
                                 <div className='grid grid-cols-2 gap-y-3 items-center'>
                                     <div>Remaining</div>
-                                    <div>{product.quantity} pieces</div>
+                                    <div>{product.stock_quantity} pieces</div>
                                     <div>Amount</div>
                                     <div className='inline-flex items-center border rounded bg-white w-fit'>
                                         <button onClick={() => setQty(q => Math.max(1, q - 1))} className='px-3 py-1'>-</button>

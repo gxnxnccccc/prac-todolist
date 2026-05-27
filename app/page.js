@@ -102,7 +102,7 @@ export default function Home() {
    
 
 return (
-    <div className='mt-10 font-[family-name:var(--font-geologica)]'>
+    <div className='mt-10 font-[family-name:var(--font-geologica)] bg-gray-50'>
             <div className='flex justify-center'>
                 <img src="/gif/catReading.gif" alt="Cat Reading Book" className='w-50 h-50' ></img>
             </div>
@@ -132,7 +132,7 @@ return (
                     onChange={handleSearch}/>
             </div> */}
 
-            <form className='relative mt-3 w-1/3 mx-auto'>
+            <form className='relative mt-3 w-70 sm:w-110 mx-auto'>
                 <div className='relative'>
                     <input
                         type="search"
@@ -145,28 +145,27 @@ return (
                 </div>
             </form>
 
-            <div className='flex flex-row justify-center w-1/3 bg-gray-100 mt-5 mx-auto rounded-xl overflow-hidden'>
+            <div className='flex flex-row justify-centern w-70 sm:w-110 bg-gray-100 mt-5 mx-auto rounded-xl overflow-hidden'>
                     <button className={`${selected=='all'
                             ? 'bg-gray-300 shadow-lg'
-                            : 'bg-gray-100'} basis-1/3 text-center p-2.5 hover:bg-gray-400 transition ease-in-out duration-100`} onClick={handleChange} value='all'>All</button>
+                            : 'bg-white'} basis-1/3 text-center p-2.5 hover:bg-gray-300 transition ease-in-out duration-100`} onClick={handleChange} value='all'>All</button>
 
                     <button className={`${selected=='undone'
                             ? 'bg-gray-300 shadow-lg'
-                            : 'bg-gray-100'} basis-1/3 text-center p-2.5 hover:bg-gray-400 transition ease-in-out duration-100`} onClick={handleChange} value='undone'>Undone</button>
+                            : 'bg-white'} basis-1/3 text-center p-2.5 hover:bg-gray-300 transition ease-in-out duration-100`} onClick={handleChange} value='undone'>Undone</button>
 
                     <button className={`${selected=='done'
                             ? 'bg-gray-300 shadow-lg'
-                            : 'bg-gray-100'} basis-1/3 text-center p-2.5 hover:bg-gray-400 transition ease-in-out duration-100`} onClick={handleChange} value='done'>Done</button>
+                            : 'bg-white'} basis-1/3 text-center p-2.5 hover:bg-gray-300 transition ease-in-out duration-100`} onClick={handleChange} value='done'>Done</button>
             </div>
 
-            <div className='bg-gray-100 rounded-3xl w-1/2 mx-auto pb-10 m-10 shadow-md'>
+            <div className='bg-white rounded-3xl w-70 sm:w-110 mx-auto pb-10 m-10 shadow-md'>
                     <h1 className='mx-3 text-xl text-center p-3'>{}</h1>
                     <ul className="flex flex-col gap-3 mt-3 ml-15 list-disc">
                         {tasks.map((task) => (
                                 <li
                                 className=""
                                 key={task.ItemId}>
-                                    
                                     {task.List}
                                 </li>
                         ))}

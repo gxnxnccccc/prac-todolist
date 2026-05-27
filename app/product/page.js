@@ -177,7 +177,7 @@ const productPage = () => {
                   </select>
               {/* </div> */}
           </form>
-          <div className='mt-10 mx-auto '>
+          <div className='mt-10 mx-auto'>
               {/* <div className='p-3 bg-white rounded-2xl shadow-lg h-full'> */}
                 <div className='grid grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-4'>
                   {product.map((p) => (
@@ -219,16 +219,16 @@ const productPage = () => {
                             }}>
                               {wishlist.has(p.product_id) ? <FaHeart/> : <FaRegHeart/>}
                             </button> */}
-                            <div className='text-lg '>{p.price}฿</div>
+                            <div className='text-lg '>{p.unit_price}฿</div>
                           </div>
                           {/* <div className='flex justify-self-end'>
-                            <div className='text-red-600'>{p.price}฿</div>
+                            <div className='text-red-600'>{p.unit_price}฿</div>
                           </div> */}
                           <div className='flex justify-between items-center'>
                             <div className='inline-flex items-center gap-1'>
                               <FaStar className='w-3 h-3 text-yellow-400'/>5(67)
                             </div>
-                            {/* <div className='text-red-600'>{p.price}฿</div> */}
+                            {/* <div className='text-red-600'>{p.unit_price}฿</div> */}
                           </div>
                         </div>
                       </div>

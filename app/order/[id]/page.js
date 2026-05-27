@@ -50,7 +50,7 @@ const OrderDetailPage = () => {
                                 </div>
                                 <div className='grid grid-rows-2'>
                                     <div className='text-xl'>
-                                        <p>Quantity: {item.buy_amount}</p>
+                                        <p>Quantity: {item.buy_quantity}</p>
                                         <p>Price per Unit: {item.unit_price} ฿</p>
                                     </div>
                                     <div className=''>

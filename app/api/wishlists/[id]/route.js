@@ -15,7 +15,7 @@ export async function GET(req) {
         const pool = await getConnection();
         const result_categories = await pool.request().query('SELECT category_id, category_name as all_category FROM categories')
         const result_products = await pool.request().query(`
-                SELECT p.product_id, p.product_name, p.description, p.quantity, p.price,
+                SELECT p.product_id, p.product_name, p.description, p.stock_quantity, p.unit_price,
                 p.add_at, p.update_at, p.category_id, c.category_name,
                 (SELECT TOP 1 image_url FROM product_images 
                     WHERE product_id = p.product_id ORDER BY image_id) AS image_url

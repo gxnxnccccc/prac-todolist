@@ -23,7 +23,7 @@ export async function GET(req, ctx) {
             .input('orderId', sql.Int, numId)
             .query(`
                 SELECT o.order_id, o.order_date, o.total_price,
-                       op.order_product_id, op.buy_amount, op.unit_price,
+                       op.order_product_id, op.buy_quantity, op.unit_price,
                        p.product_name, p.description,
                        (SELECT TOP 1 image_url FROM product_images WHERE product_id = p.product_id ORDER BY image_id) AS image_url
                 FROM orders o

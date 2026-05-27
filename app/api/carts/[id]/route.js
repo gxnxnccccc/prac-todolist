@@ -27,7 +27,7 @@ export async function GET(req, ctx) {
         request.input('user_id', sql.Int, user.UserId)
         
         const result_cart = await request.query(`
-                                                SELECT p.product_id, p.product_name, c.cart_id, c.buy_amount, cat.category_name, p.price,
+                                                SELECT p.product_id, p.product_name, c.cart_id, c.buy_quantity, cat.category_name, p.unit_price,
                                                 (SELECT TOP 1 image_url FROM product_images WHERE product_id = p.product_id ORDER BY image_id) AS image_url
                                                 FROM products p
                                                 LEFT JOIN carts c ON p.product_id = c.product_id
@@ -68,17 +68,17 @@ export async function POST(req, {params}){
         request.input('buyAmount', sql.Int, body.quantity)
         request.input('user_id', sql.Int, userId)
 
-        // const result_addToCart = await request.query("INSERT INTO carts (user_id, product_id, buy_amount) VALUES (@user_id, @productId, @buyAmount)")
+        // const result_addToCart = await request.query("INSERT INTO carts (user_id, product_id, buy_quantity) VALUES (@user_id, @productId, @buyAmount)")
         const result_addToCart = await request.query(`
                                                         IF EXISTS (
-                                                            SELECT 1 FROM carts 
+                                                            SELECT 1 FROM carts
                                                             WHERE user_id = @user_id AND product_id = @productId
                                                         )
-                                                            UPDATE carts 
-                                                            SET buy_amount = buy_amount + @buyAmount
+                                                            UPDATE carts
+                                                            SET buy_quantity = buy_quantity + @buyAmount
                                                             WHERE user_id = @user_id AND product_id = @productId
                                                         ELSE
-                                                            INSERT INTO carts (user_id, product_id, buy_amount) 
+                                                            INSERT INTO carts (user_id, product_id, buy_quantity)
                                                             VALUES (@user_id, @productId, @buyAmount)
                                                     `)
 
@@ -118,11 +118,11 @@ export async function PUT(req, {params}) {
         const request = await pool.request()
 
         request.input('cartId', sql.Int, body.cart_id)
-        request.input('buyAmount', sql.Int, body.buy_amount)
+        request.input('buyAmount', sql.Int, body.buy_quantity)
         request.input('user_id', sql.Int, userId)
 
         const result_updateCart = await request.query(`UPDATE carts
-                                                      SET buy_amount = @buyAmount
+                                                      SET buy_quantity = @buyAmount
                                                       WHERE user_id = @user_id AND cart_id = @cartId
                                                     `)
         return NextResponse.json({
@@ -161,7 +161,7 @@ export async function DELETE(req, {params}) {
         const request = await pool.request()
 
         request.input('cartId', sql.Int, body.cart_id)
-        request.input('buyAmount', sql.Int, body.buy_amount)
+        request.input('buyAmount', sql.Int, body.buy_quantity)
         request.input('user_id', sql.Int, userId)
 
         const result_deleteCart = await request.query(`DELETE FROM carts

@@ -15,6 +15,7 @@ export default function Page() {
     const [totalUndoneList, setTotalUndoneList] = useState(null)
     const [totalList, setTotalList] = useState(null)
     const [allUsername, setAllUsername] = useState(null)
+    const [allId, setAllId] = useState(null)
     const [weeklyReport, setWeeklyReport] = useState(null)
     const [taskOverTime, setTaskOverTime] = useState(null)
     const [text, setText] = useState('')
@@ -58,6 +59,7 @@ export default function Page() {
             setTotalUndoneList(data1.result_undoneList[0].undone_list)
             setTotalUser(data1.result_totalUser[0].total_user)
             setAllUsername(data1.result_allUsername)
+
 
             // const data2 = await res.json()
             console.log("data1: ", data1)
@@ -103,15 +105,13 @@ export default function Page() {
                     borderWidth: 1
                 }]
             };
-
             setTaskOverTime(graphData)
             }
         catch (error) {
             console.log(error)
         }
     }
-
-
+    
     // const data = {
     //     labels: [
     //         'Red',
@@ -218,44 +218,45 @@ export default function Page() {
     // }
 
     return (
-        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50">
-            <div className='mt-5 px-15 '>
-                <h1 className='text-center mt-10 text-4xl'>Dashboard</h1>
+        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)]">
+            <div className='mt-5 px-1 sm:px-15'>
+                <h1 className='text-center  text-4xl'>
+                    TO DO LIST
+                    <span className='block mt-2 text-xl'>Dashboard</span>
+                </h1>
+                <hr className="border-t border-black mt-5" />
 
                 {/* Select Options */}
-                <form>
-                    <div className='flex justify-center mx-auto mt-3 py-3 '>
-                        <select name="role" className='border-2 p-3 rounded-xl bg-white' defaultValue="" onChange={(e) => getTotalUser(e.target.value)}>
+                <div>
+                    <div className='flex justify-center mx-auto mt-10 py-3 '>
+                        <select name="role" className='border p-3 rounded-xl bg-gray-50 w-full' defaultValue="" onChange={(e) => getTotalUser(e.target.value)}>
                             {/* <option value="" disabled>Select User Mode</option> */}
                             <option value="" >All</option>
                             {allUsername && allUsername.map((u, i) => (
-                                <option key={i} value={u.all_username}>{u.all_username}</option>
+                                <option key={i} value={u.Username}>User ID {u.UserId}: {u.Username}</option>
                             ))}
                         </select>
                     </div>
-                </form>
+                </div>
 
-                <div className='mt-10 grid grid-cols-1 grid-rows-2 sm:grid-cols-3 sm:grid-rows-1  gap-5 mx-auto'>
-                    <div className="sm:col-span-2 flex flex-row gap-5 w-full">
-                        <div className='bg-white rounded-xl shadow-lg flex-1'>
-                            <div className='bg-blue-300 mx-16 rounded-xl'>
-                                <h3 className='text-center text-xl'>Total User</h3>
-                            </div>
-                            <p className='text-center text-5xl mt-8'>{totalUser ?? '-'}</p>
+                <div className='mt-10 grid grid-cols-1 sm:grid-cols-3 sm:grid-rows-1 gap-5 mx-auto'>
+                    <div className='bg-gray-50 rounded-xl shadow-lg flex-1'>
+                        <div className='mx-auto rounded-xl pt-5'>
+                            <h3 className='text-center text-xl bg-gray-200 mx-2 rounded-2xl'>Total User</h3>
                         </div>
-
-                        <div className='bg-white rounded-xl shadow-lg flex-1'>
-                            <div className='bg-amber-300 mx-16 rounded-xl'>
-                                <h3 className='text-center text-xl'>Total List</h3>
-                            </div>
-                            <p className='text-center text-5xl mt-7'>{totalList ?? '-'}</p>
-                        </div>
+                        <p className='text-center text-5xl mt-7 pb-5'>{totalUser ?? '-'}</p>
                     </div>
-                    
-                    
+
+                    <div className='bg-gray-50 rounded-xl shadow-lg flex-1'>
+                        <div className='mx-auto rounded-xl pt-5'>
+                            <h3 className='text-center text-xl bg-gray-200 mx-2 rounded-2xl'>Total List</h3>
+                        </div>
+                        <p className='text-center text-5xl mt-7 pb-5'>{totalList ?? '-'}</p>
+                    </div>
+
                     <div>
                         <div className='sm:grid col-span-2 gap-5 w-full'>
-                            <div className='flex justify-between col-span-1 row-span-1 p-4 px-10 bg-white rounded-xl items-center shadow-lg '>
+                            <div className='flex justify-between col-span-1 row-span-1 p-4 px-5 sm:px-10 bg-gray-50 rounded-xl items-center shadow-lg '>
                                 <div className='text-center text-xl text-green-600'>Total Done</div>
                                 <div className='pl-3 text-center text-xl inline'>
                                     {totalDoneList ?? '-'}
@@ -263,7 +264,7 @@ export default function Page() {
                                 {/* <p className='text-center text-5xl mt-7'>{totalDoneList ?? '-'}</p> */}
                             </div>
 
-                            <div className='flex justify-between col-span-1 row-span-1 p-4 px-10 bg-white rounded-xl items-center shadow-lg mt-5 sm:mt-0'>
+                            <div className='flex justify-between col-span-1 row-span-1 p-4 px-5 sm:px-10 bg-gray-50 rounded-xl items-center shadow-lg mt-5 sm:mt-0'>
                                 <div className='text-center text-xl text-red-600'>Total Undone</div>  
                                 <div className='pl-3 text-center text-xl inline'>
                                     {totalUndoneList ?? '-'}
@@ -284,7 +285,7 @@ export default function Page() {
 
                     <div className='bg-white rounded-xl pb-10 my-2 shadow-lg col-span-4'>
                         <h3 className='text-center text-2xl  pt-5'>Task Over Time</h3>
-                        <div className='px-6 mt-4 flex justify-center'>
+                        <div className='px-2 sm:px-6 mt-4 flex justify-center'>
                             {taskOverTime ? <Line data={taskOverTime} 
                                                   options={{ 
                                                     scales: { y: { ticks: { stepSize: 1 } } },

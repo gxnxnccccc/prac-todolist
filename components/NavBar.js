@@ -17,7 +17,7 @@ const NavBar = () => {
 
     const {
             cartAmount,
-            setCartAmount
+            refreshCart
         } = useUser();
 
     const [menuOpen, setMenuOpen] = useState(false)
@@ -36,9 +36,9 @@ const NavBar = () => {
         if (storedToken) {
             getProfileLogo(storedToken)
         }
-        fetchCart()
+        refreshCart()
         setMounted(true)
-    }, [])
+    }, [refreshCart])
 
     const handleNav = () => {
         setMenuOpen(!menuOpen)
@@ -85,22 +85,6 @@ const NavBar = () => {
         router.push(`/wishlist/${userId}`)
     }
 
-    async function fetchCart() {
-            const userId = localStorage.getItem('UserId')
-            if (!userId) return
-            const res = await fetch(`/api/carts/${userId}`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            })
-            const data = await res.json()
-            console.log("data: ", data)
-            console.log("data.length: ", data.length)
-            setCartAmount(data.carts.length)
-        }
-    
-    console.log("cart amount: ", cart.length)
-    console.log("cart amount(useContext): ", cartAmount)
     return (
         <nav className='fixed w-full h-24 shadow-xl bg-white font-(family-name:--font-geologica) z-50'>
             <div className='flex justify-between items-center h-full w-full 2xl:px-16'>
@@ -123,12 +107,12 @@ const NavBar = () => {
                                 <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/product">Products</Link></li>
                                 <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/dashboard">Dashboard</Link></li>
                                 <li className='ml-5 mr-8'>
-                                    <button onClick={goWishlistPage}  className='text-2xl cursor-pointer border-2 border-[#4f4f4f] py-1.5 px-3 rounded-xl bg-white'>
+                                    <button onClick={goWishlistPage}  className=' cursor-pointer border border-[#4f4f4f] py-1.5 px-3 rounded-xl bg-white text-lg'>
                                         <FaHeart className=''/>
                                     </button>
                                 </li>
                                 <li className='mr-8'>
-                                    <button onClick={goCartPage} className='flex text-2xl cursor-pointer border-2 border-[#4f4f4f] py-1.5 px-3 rounded-xl bg-white items-center'>
+                                    <button onClick={goCartPage} className='flex cursor-pointer border border-[#4f4f4f] py-0.5 px-3 rounded-xl bg-white items-center text-lg'>
                                         <FaCartShopping className=''/>
                                         ({cartAmount})
                                         
@@ -150,6 +134,7 @@ const NavBar = () => {
                     ? "fixed left-0 top-0 w-[65%] sm:hidden h-screen bg-[#ecf0f3] p-10 transition-all ease-in duration-300 shadow-xl"
                     : "fixed -left-full top-0 w-[65%] h-screen p-10 transition-all ease-in duration-300 pointer-events-none"
             }>
+                
                 <div className='flex w-full items-center justify-end'>
                     <div onClick={handleNav} className='cursor-pointer'>
                         <AiOutlineClose size={25} />
@@ -165,33 +150,45 @@ const NavBar = () => {
                 </div>
                 <div className='flex-col py-4'>
                     <ul>
-                        <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
-                            <Link href="/">Home</Link>
-                        </li>
-                        <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
-                            <Link href="/todo/newTodo">To do</Link>
-                        </li>
-                        <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
-                            <Link href="/product">Products</Link>
-                        </li>
+                        {role === 'admin' ? (
+                            <>
+                                <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
+                                    <Link href="/admin/inventory">Inventory</Link>
+                                </li>
 
-                        <li className='mr-8'>
-                            <button onClick={goCartPage} className='flex text-lg cursor-pointer px-1.5 py-0.5 w-full items-center'>
-                                <FaCartShopping className='mr-2'/> Cart ({cartAmount}) 
-                            </button>
-                        </li>
+                                <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
+                                    <Link href="/admin/dashboard">Dashboard</Link>
+                                </li>
+                            </>
+                        ) : (
+                            <>
+                                <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
+                                    <Link href="/">Home</Link>
+                                </li>
+                                <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
+                                    <Link href="/todo/newTodo">To do</Link>
+                                </li>
+                                <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
+                                    <Link href="/product">Products</Link>
+                                </li>
 
-                        <li className='mt-1 mr-8'>
-                            <button onClick={goWishlistPage}  className='flex text-lg cursor-pointer px-1.5 py-0.5 w-full items-center'>
-                                <FaHeart className='mr-2'/> Wishlists
-                            </button>
-                        </li>
+                                <li className='mr-8'>
+                                    <button onClick={goCartPage} className='flex text-lg cursor-pointer px-1.5 py-0.5 w-full items-center'>
+                                        <FaCartShopping className='mr-2'/> Cart ({cartAmount}) 
+                                    </button>
+                                </li>
 
+                                <li className='mt-1 mr-8'>
+                                    <button onClick={goWishlistPage}  className='flex text-lg cursor-pointer px-1.5 py-0.5 w-full items-center'>
+                                        <FaHeart className='mr-2'/> Wishlists
+                                    </button>
+                                </li>
 
-
-                        <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
-                            <Link href="/dashboard">Dashboard</Link>
-                        </li>
+                                <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
+                                    <Link href="/dashboard">Dashboard</Link>
+                                </li>
+                            </>
+                        )}
 
                         {/* <li onClick={() => setMenuOpen(false)} className='py-4 cursor-pointer'>
                             <Link href="/profile">Profile</Link>

@@ -156,19 +156,11 @@ export default function Profile() {
     //     setSavedAlert(true)
     // }
 
-    const handleChangePage = (e) => {
-        const value = e.target.value
-        const validPages = ['profile', 'email/password', 'notification', 'business', 'integration', 'dashboard']
-        if (validPages.includes(value)) {
-            const filterPage = allPage.filter(p => p.status === true)
-            setPage(filterPage)
-            setSelectedPage(value)
-        }
-    }
+
 
     return (
         <>
-            <div className="text-3xl">Personal Infomation</div>
+            <div className="text-3xl">Email & Password</div>
             <hr className="border-t border-black mt-5" />
 
             <form onSubmit={onSubmit} className="flex flex-col gap-4 px-3">
@@ -257,16 +249,6 @@ export default function Profile() {
                     <h3 className="text-lg">Phone Number</h3>
                     <div className="mt-3 w-full h-8 border px-2 rounded-2xl flex items-center"></div>
                 </div>
-
-                <div>
-                    <h3 className="text-lg">User ID</h3>
-                    <div className="mt-3 w-full h-8 border px-2 rounded-2xl flex items-center"></div>
-                </div>
-
-                <div>
-                    <h3 className="text-lg">User ID</h3>
-                    <div className="mt-3 w-full h-8 border px-2 rounded-2xl flex items-center"></div>
-                </div>
             </div>
 
             <hr className="border-t border-black mt-7" />
@@ -345,12 +327,12 @@ export default function Profile() {
                 )}
 
                 {/* Log out button */}
-                {/* <button
+                <button
                     onClick={handleLogOut}
                     className="px-3 py-1 rounded bg-red-200 shadow-md w-full"
                 >
                     LogOut
-                </button> */}
+                </button>
             </div>
         </>
     )

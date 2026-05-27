@@ -95,29 +95,38 @@ const productPage = () => {
 
   return (
     <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen">
-        <div className='mt-10 px-15'>
-          <h1 className='flex justify-center text-4xl'>Wishlists</h1>
+        <div className='px-8 mt-10 md:px-15 '>
+          <div className='relative flex justify-center items-center'>
+            <h1 className='flex justify-center text-4xl'>Wishlists</h1>
+          </div>
           
-          <div className='gap-5 mt-10 mx-auto px-30 mb-10'>
+          <div className='gap-5 mt-10 mx-auto mb-10'>
               {/* <div className='p-3 bg-white rounded-2xl shadow-lg h-full'> */}
-                <div className='grid grid-cols-4 gap-10 px-10 '>
+                <div className='grid grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-4'>
                   {product.filter(p => wishlist.has(p.product_id)).map((p) => (
-                    <Link href={`/product/${p.product_id}`} key={p.product_id}>
-                      <div key={p.product_id} className='mt-2 rounded-xl w-full h-70 px-4 bg-white shadow-lg'>
-                        <div className='grid grid-rows-4 p-2 gap-2'>
-                          <div>
+                    <Link href={`/product/${p.product_id}`} key={p.product_id} className='mb-5'>
+                          <div className='relative'>
                             {p.image_url
                               ? <div>
-                                  <img src={p.image_url} alt={p.product_name} className='w-full h-50 object-cover mx-auto' />
+                                  <img src={p.image_url} alt={p.product_name} className='rounded-xl w-full h-100 object-cover mx-auto' />
                                 </div>
-                              : <div className='flex justify-center items-center w-full h-50 bg-gray-200'>
+                              : <div className='rounded-xl flex justify-center items-center w-full h-80 bg-gray-200'>
                                   <CiImageOff />
                                 </div>
                             }
+                            <div className='absolute top-4 right-4 bg-white rounded-full w-10 h-10 flex items-center justify-center'>
+                              <button onClick={(e) => {
+                                e.preventDefault()
+                                toggleWishlist(p.product_id)
+                              }}>
+                                {wishlist.has(p.product_id) ? <FaHeart /> : <FaRegHeart />}
+                              </button>
+                            </div>
                           </div>
+
                           <div >
                             <div className='flex justify-between items-center'>
-                              <div className='text-lg'>{p.product_name}</div>
+                              <div className='text-md'>{p.product_name}</div>
 
                               {/* 1 */}
                               {/* <div className=''><FaRegHeart /></div> */}
@@ -128,25 +137,26 @@ const productPage = () => {
                               </button> */}
 
                               {/* 3 */}
-                              <button onClick={(e) => {
+                              {/* <button onClick={(e) => {
                                 e.preventDefault()
                                 toggleWishlist(p.product_id)
                               }}>
                                 {wishlist.has(p.product_id) ? <FaHeart/> : <FaRegHeart/>}
-                              </button>
+                              </button> */}
+                              <div className='text-lg '>{p.unit_price}฿</div>
                             </div>
                             {/* <div className='flex justify-self-end'>
-                              <div className='text-red-600'>{p.price}฿</div>
+                              <div className='text-red-600'>{p.unit_price}฿</div>
                             </div> */}
                             <div className='flex justify-between items-center'>
                               <div className='inline-flex items-center gap-1'>
                                 <FaStar className='w-3 h-3 text-yellow-400'/>5(67)
                               </div>
-                              <div className='text-red-600'>{p.price}฿</div>
+                              {/* <div className='text-red-600'>{p.unit_price}฿</div> */}
                             </div>
                           </div>
-                        </div>
-                      </div>
+                        
+                      
                     </Link> 
                   ))}
                 </div>

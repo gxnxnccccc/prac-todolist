@@ -232,7 +232,7 @@ export default function Page() {
             <div className='grid grid-cols-1 sm:grid-col-2 gap-5 mt-10 mx-auto w-full sm:w-2/3 my-2'>
                 <div className='grid grid-rows-2  gap-5'>
                     {/* Total */}
-                    <div className=' bg-white rounded-xl pb-10  shadow-md '>
+                    <div className=' bg-white border border-[#3d3d3d] rounded-xl pb-10  shadow-md '>
                         <div className=''>
                             <h3 className='text-center mt-5 text-xl'>Total List</h3>
 
@@ -243,13 +243,13 @@ export default function Page() {
                     </div>
 
                     <div className='grid grid-cols-2 gap-5 '>
-                        <div className=' bg-white rounded-xl pb-10 shadow-md '>
+                        <div className=' bg-white rounded-xl pb-10 shadow-md border border-[#3d3d3d]'>
                             <h3 className='text-center mt-5 text-xl text-green-600'>Done List</h3>
                             {/* <h3 className='text-center'>list</h3> */}
                             <p className='text-center text-5xl mt-9'>{doneList ?? '-'}</p>
                         </div>
 
-                        <div className=' bg-white rounded-xl pb-10  shadow-md '>
+                        <div className=' bg-white rounded-xl pb-10  shadow-md border border-[#3d3d3d]'>
                             <h3 className='text-center mt-5 text-xl text-red-600'>Undone List</h3>
                             {/* <h3 className='text-center'>list</h3> */}
                             <p className='text-center text-5xl mt-8'>{undoneList ?? '-'}</p>
@@ -264,9 +264,9 @@ export default function Page() {
                     </div>
                 </div> */}
 
-                <div className='bg-white rounded-xl  shadow-md '>
+                <div className='bg-white rounded-xl  shadow-md border border-[#3d3d3d]'>
                     <h3 className='text-center text-xl mt-5'>Task Over Time</h3>
-                    <div className='px-6 mt-4 relative h-80'>
+                    <div className='px-6 mt-4 relative h-80 mb-3'>
                         {taskOverTime ? <Line data={taskOverTime}
                                               options={{
                                                 responsive: true,

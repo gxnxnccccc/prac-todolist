@@ -9,6 +9,7 @@ export default function LoginPage() {
     const [ password, setPassword ] = useState('')
     const router = useRouter()
 
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         console.log(e.target)
@@ -61,35 +62,39 @@ export default function LoginPage() {
                     <img src='/logos/newLogo.png' alt='Logo' width="200"/>
                 </div>
                 <h1 className="text-center text-4xl mt-3">— Login —</h1>
-                <form onSubmit={handleSubmit}>
-                    <div className="m-4">
-                        <input
-                            id='username'
-                            name='username'
-                            type="text"
-                            required
-                            placeholder="Enter Username"
-                            className="border-2 px-3 py-2 rounded w-full"
-                        />
-                    </div>
+                <h5 className="text-center text-xl mt-3">Use your username and password to continue.</h5>
+                <div>
+                    <form onSubmit={handleSubmit}>
+                        <div className="m-4 text-center">
+                            <input
+                                id='username'
+                                name='username'
+                                type="text"
+                                required
+                                placeholder="Enter Username"
+                                className="border border-gray-300 px-3 py-4 rounded-lg w-90"
+                            />
+                        </div>
 
-                    <div className="m-4">
-                        <input
-                            id='password'
-                            name='password'
-                            type="password"
-                            required
-                            placeholder="Enter Password"
-                            className="border-2 px-3 py-2 rounded w-full"
-                        />
-                    </div>
+                        <div className="m-4 text-center">
+                            <input
+                                id='password'
+                                name='password'
+                                type="password"
+                                required
+                                placeholder="Enter Password"
+                                className="border border-gray-300 px-3 py-4 rounded-lg w-90"
+                            />
+                        </div>
 
-                    <div className="text-center m-4 ">
-                        <button type="submit" className="border rounded-2xl p-2 px-18 bg-red-200">Login</button>
-                        <br />
-                        <button onClick={handleBackToRegister} className="mt-4 border rounded-2xl p-2 bg-red-50">Back to Register</button>
-                    </div>
-                </form>
+                        <div className="text-center m-4 ">
+                            <button type="submit" className="border rounded-lg p-2 w-90 bg-black text-white">Login</button>
+                        </div>
+                        <div className='mx-auto'>
+                            <a href='/register' className="border-b">Back to Register</a>
+                        </div>
+                    </form>
+                </div>
             </main>
         </div>
           
