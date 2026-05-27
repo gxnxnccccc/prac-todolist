@@ -7,6 +7,121 @@ import { FaStar } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/context/UserContext';
 
+// Known section headers to detect inside flat-text descriptions
+const SECTION_HEADERS = ['Features:', 'Perfect for:', 'Designed to remind you:']
+
+function renderStructuredLines(lines) {
+    const elements = []
+    let bulletBuffer = []
+
+    const flushBullets = (key) => {
+        if (bulletBuffer.length === 0) return
+        elements.push(
+            <ul key={`ul-${key}`} className="list-disc ml-5 text-sm text-gray-500 mb-2 space-y-0.5">
+                {bulletBuffer.map((item, idx) => <li key={idx}>{item}</li>)}
+            </ul>
+        )
+        bulletBuffer = []
+    }
+
+    lines.forEach((line, i) => {
+        const trimmed = line.trim()
+        if (!trimmed) { flushBullets(i); return }
+
+        if (/^[•\-·]\s*/.test(trimmed)) {
+            bulletBuffer.push(trimmed.replace(/^[•\-·]\s*/, ''))
+            return
+        }
+
+        flushBullets(i)
+
+        if (trimmed.endsWith(':') && trimmed.split(' ').length <= 6) {
+            elements.push(<p key={i} className="font-semibold text-sm text-gray-700 mt-3 mb-1">{trimmed}</p>)
+            return
+        }
+        if (trimmed.startsWith('**') && trimmed.endsWith('**')) {
+            elements.push(<p key={i} className="font-bold text-sm text-gray-700 mt-2">{trimmed.slice(2, -2)}</p>)
+            return
+        }
+        elements.push(<p key={i} className="text-sm text-gray-500 mb-1.5">{trimmed}</p>)
+    })
+
+    flushBullets('end')
+    return elements
+}
+
+function renderFlatText(text) {
+    // Build a regex that captures the known section headers as split delimiters
+    const escapedHeaders = SECTION_HEADERS.map(h => h.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    const headerRegex = new RegExp(`(${escapedHeaders.join('|')})`)
+    const parts = text.split(headerRegex).filter(Boolean)
+
+    const elements = []
+    let partIndex = 0
+
+    // Everything before the first header → split into sentences as separate paragraphs
+    if (parts.length > 0 && !SECTION_HEADERS.includes(parts[0])) {
+        const sentences = parts[0].match(/[^.!?]*[.!?]+(?:\s|$)/g) || [parts[0]]
+        sentences.forEach((s, idx) => {
+            const t = s.trim()
+            if (t) elements.push(<p key={`intro-${idx}`} className="text-sm text-gray-500 mb-2">{t}</p>)
+        })
+        partIndex++
+    }
+
+    // Alternating pairs: header, content
+    while (partIndex < parts.length) {
+        const header = parts[partIndex]
+        const content = (parts[partIndex + 1] || '').trim()
+        partIndex += 2
+
+        elements.push(
+            <p key={`h-${partIndex}`} className="font-semibold text-sm text-gray-700 mt-3 mb-1">{header}</p>
+        )
+
+        if (!content) continue
+
+        // Split items: split where a lowercase/comma char is followed by space + Uppercase
+        // then merge back any orphaned single-word fragments into the previous item
+        const rawItems = content.split(/(?<=[a-z,s])\s+(?=[A-Z])/).filter(Boolean)
+        const items = rawItems.reduce((acc, item) => {
+            const wordCount = item.trim().split(/\s+/).length
+            if (wordCount <= 1 && acc.length > 0) {
+                acc[acc.length - 1] = acc[acc.length - 1] + ' ' + item.trim()
+            } else {
+                acc.push(item.trim())
+            }
+            return acc
+        }, [])
+
+        if (items.length > 1) {
+            elements.push(
+                <ul key={`ul-${partIndex}`} className="list-disc ml-5 text-sm text-gray-500 mb-2 space-y-0.5">
+                    {items.map((item, idx) => <li key={idx}>{item}</li>)}
+                </ul>
+            )
+        } else {
+            elements.push(<p key={`c-${partIndex}`} className="text-sm text-gray-500 mb-2">{content}</p>)
+        }
+    }
+
+    return elements
+}
+
+function renderDescription(text) {
+    if (!text) return <span className="text-gray-400">No description available</span>
+
+    const lines = text.split(/\n/)
+
+    // Has proper newlines — use structured line renderer
+    if (lines.length > 1) {
+        return <>{renderStructuredLines(lines)}</>
+    }
+
+    // Flat text — use smart section/sentence parser
+    return <>{renderFlatText(text)}</>
+}
+
 export default function ProductDetail() {
     const { id } = useParams()
     const [product, setProduct] = useState(null)
@@ -83,19 +198,31 @@ export default function ProductDetail() {
                 <div>Product Name: {product.product_name}</div> */}
             <div className='bg-gray-200 h-full w-full'>
                 <div className='mt-10 mb-10  mx-10 bg-white rounded-4xl shadow-2xl'>
-                    <div className='grid grid-cols-2  gap-2 '>
+                    <div className=' flex flex-col sm:flex-row  gap-2 '>
+
+                        {/* ขวา: รูป */}
+                        <div className='m-6 rounded text-center text-gray-500 '>
+                            Product Preview
+                            <div className='relative w-full h-96 mt-2 slider flex justify-center'>
+                                <img className='w-100 h-100 object-cover' src={product.images[slideIndex]} alt={`slide-${slideIndex}`} />
+                                <button onClick={prevSlide} className='absolute left-2 top-1/2 -translate-y-1/2 rounded-xl bg-gray-200 opacity-60 px-2 py-1'>&#10094;</button>
+                                <button onClick={nextSlide} className='absolute right-2 top-1/2 -translate-y-1/2 rounded-xl bg-gray-200 opacity-60 px-2 py-1'>&#10095;</button>
+                            </div>
+                        </div>
+
                         {/* ซ้าย: name + stepper */}
-                        <div className='grid grid-rows-3 gap-2'>
+                        <div className='gap-2'>
                             <div className='rounded row-span-2 p-6'>
                                 <div className='text-3xl font-bold'>{product.product_name}</div>
                                 <div className='text-xl inline-flex items-center gap-1'>
                                     <FaStar className='w-6 h-6 text-yellow-400'/>5.0
                                 </div>
-                                <div className='mt-3'>Description 
-                                    <div className='text-[#9d9ca2]-500'>{product.description}</div>
+                                <div className='mt-3'>
+                                    <p className='font-semibold text-sm text-gray-700 mb-1'>Description</p>
+                                    <div>{renderDescription(product.description)}</div>
                                 </div>
                             </div>
-                            <div className='p-6 rounded flex flex-col gap-3'>
+                            <div className='p-6 gap-3'>
                                 <div className='grid grid-cols-2 gap-y-3 items-center'>
                                     <div>Remaining</div>
                                     <div>{product.stock_quantity} pieces</div>
@@ -106,7 +233,7 @@ export default function ProductDetail() {
                                         <button onClick={() => setQty(q => q + 1)} className='px-3 py-1'>+</button>
                                     </div>
                                 </div>
-                                <div className='flex gap-2 mt-auto'>
+                                <div className='mt-5 flex gap-2'>
                                     <button onClick={addProductToCart} className='bg-white w-full py-2 border-2 border-gray-300 hover:bg-gray-300'>Add to Cart</button>
                                     {cartAddedAlert && (
                                         <div className='fixed bottom-5 right-5 bg-green-200 text-[#4f4f4f] px-4 py-2 rounded-xl shadow-lg'>
@@ -118,15 +245,7 @@ export default function ProductDetail() {
                             </div>
                         </div>
 
-                        {/* ขวา: รูป */}
-                        <div className='p-6 rounded text-center text-gray-500'>
-                            Product Preview
-                            <div className='relative w-full h-96 mt-2 slider flex justify-center'>
-                                <img className='w-100 h-100 object-cover' src={product.images[slideIndex]} alt={`slide-${slideIndex}`} />
-                                <button onClick={prevSlide} className='absolute left-2 top-1/2 -translate-y-1/2 rounded-xl bg-gray-200 opacity-60 px-2 py-1'>&#10094;</button>
-                                <button onClick={nextSlide} className='absolute right-2 top-1/2 -translate-y-1/2 rounded-xl bg-gray-200 opacity-60 px-2 py-1'>&#10095;</button>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>

@@ -624,12 +624,12 @@ const AdminProductPage = () => {
 
                                                                 <div className="flex flex-col gap-2">
                                                                     <h3>Description</h3>
-                                                                    <input
-                                                                        type="text"
+                                                                    <p className="text-xs text-gray-400">Press Enter for a new line. Start a line with • for a bullet point.</p>
+                                                                    <textarea
                                                                         value={editDescription}
                                                                         onChange={(e) => setEditDescription(e.target.value)}
-                                                                        // placeholder="Enter new password"
-                                                                        className="border-2 border-gray-200 px-3 py-2 rounded w-full"
+                                                                        rows={6}
+                                                                        className="border-2 border-gray-200 px-3 py-2 rounded w-full resize-y"
                                                                     />
                                                                 </div>
 

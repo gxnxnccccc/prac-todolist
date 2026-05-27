@@ -12,6 +12,7 @@ import { useUser } from '@/context/UserContext';
 
 import { FaCartShopping } from "react-icons/fa6"; // cart
 import { FaHeart } from "react-icons/fa6";   // full heart
+import { RiFileList3Fill } from "react-icons/ri"; // history
 
 const NavBar = () => {
 
@@ -83,6 +84,11 @@ const NavBar = () => {
     const goWishlistPage = () => {
         const userId = localStorage.getItem('UserId')
         router.push(`/wishlist/${userId}`)
+    }
+
+    const goOrderPage = () => {
+        const userId = localStorage.getItem('UserId')
+        router.push(`/order`)
     }
 
     return (
@@ -174,13 +180,22 @@ const NavBar = () => {
 
                                 <li className='mr-8'>
                                     <button onClick={goCartPage} className='flex text-lg cursor-pointer px-1.5 py-0.5 w-full items-center'>
-                                        <FaCartShopping className='mr-2'/> Cart ({cartAmount}) 
+                                        <FaCartShopping className='mr-2'/> 
+                                        <p className='text-sm'>Cart ({cartAmount}) </p>
                                     </button>
                                 </li>
 
-                                <li className='mt-1 mr-8'>
+                                <li className='mt-2 mr-8'>
                                     <button onClick={goWishlistPage}  className='flex text-lg cursor-pointer px-1.5 py-0.5 w-full items-center'>
-                                        <FaHeart className='mr-2'/> Wishlists
+                                        <FaHeart className='mr-2'/> 
+                                        <p className='text-sm'>Wishlists</p>
+                                    </button>
+                                </li>
+
+                                <li className='mt-2 mr-8'>
+                                    <button onClick={goOrderPage}  className='flex text-lg cursor-pointer px-1.5 py-0.5 w-full items-center'>
+                                        <RiFileList3Fill className='mr-2'/> 
+                                        <p className='text-sm'>Order History</p>
                                     </button>
                                 </li>
 

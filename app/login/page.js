@@ -62,8 +62,8 @@ export default function LoginPage() {
                     <img src='/logos/newLogo.png' alt='Logo' width="200"/>
                 </div>
                 <h1 className="text-center text-4xl mt-3">— Login —</h1>
-                <h5 className="text-center text-xl mt-3">Use your username and password to continue.</h5>
-                <div>
+                <h5 className="text-center text-lg mt-3">Use your username and password to continue.</h5>
+                <div className=''>
                     <form onSubmit={handleSubmit}>
                         <div className="m-4 text-center">
                             <input
@@ -90,10 +90,11 @@ export default function LoginPage() {
                         <div className="text-center m-4 ">
                             <button type="submit" className="border rounded-lg p-2 w-90 bg-black text-white">Login</button>
                         </div>
-                        <div className='mx-auto'>
-                            <a href='/register' className="border-b">Back to Register</a>
-                        </div>
                     </form>
+
+                    <div className='text-center'>
+                        <a href='/register' className="border-b">Back to Register</a>
+                    </div>
                 </div>
             </main>
         </div>

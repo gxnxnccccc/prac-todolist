@@ -33,6 +33,7 @@ export async function GET(req, ctx) {
                                                 LEFT JOIN carts c ON p.product_id = c.product_id
                                                 LEFT JOIN categories cat ON p.category_id = cat.category_id
                                                 WHERE c.user_id = @user_id
+                                                ORDER BY c.cart_id DESC
                                                     `)
         
         return NextResponse.json({
