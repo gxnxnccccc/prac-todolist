@@ -31,21 +31,18 @@ export default function TodoItemCard(props) {
                   : <MdCheckBoxOutlineBlank/>
                   }
                 </button>
-                <p onContextMenu={handleContextMenu} onClick={handleClose} className='relative text-lg'>
+                <p
+                  onContextMenu={handleContextMenu}
+                  onClick={handleClose}
+                  className='text-lg'
+                  style={{
+                    textDecoration: 'line-through',
+                    textDecorationColor: data?.Status ? 'currentColor' : 'transparent',
+                    textDecorationThickness: '2px',
+                    transition: 'text-decoration-color 0.35s ease',
+                  }}
+                >
                   {data?.List}
-                  <span style={{
-                        display: 'block',
-                        position: 'absolute',
-                        left: 0,
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        width: '100%',
-                        height: '2px',
-                        backgroundColor: 'currentColor',
-                        clipPath: data?.Status ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)',
-                        transition: 'clip-path 0.35s ease',
-                        pointerEvents: 'none',
-                  }} />
                 </p>
 
                 {/* Context menu (right-click) */}

@@ -79,13 +79,13 @@ export default function LoginPage() {
 
 
     return (
-        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)]">
+        <div className="flex flex-col gap-6 font-(family-name:--font-geologica) min-h-screen">
             <main className='mt-8 mx-auto'>
                 <h1 className="text-center text-4xl">— Register —</h1>
-                
+                <h5 className="text-center text-lg mt-3">A few details and you're in. No credit card.</h5>
                 <div className="flex justify-center items-center mt-5">
                     {previewUrl
-                        ? <img src={previewUrl} className="rounded-full object-cover w-[150px] h-[150px] cursor-pointer" onClick={() => fileInputRef.current.click()} />
+                        ? <img src={previewUrl} className="rounded-full object-cover w-37.5 h-37.5 cursor-pointer" onClick={() => fileInputRef.current.click()} />
                         : <FaUserCircle size={100} className="text-gray-400 cursor-pointer" onClick={() => fileInputRef.current.click()} />
                     }
                     <input
@@ -105,7 +105,7 @@ export default function LoginPage() {
 
                     {/* Select Options */}
                     <div className='flex justify-center mx-auto mt-3 py-3'>
-                        <select name="role" className='border-2 p-3 rounded-2xl' defaultValue="">
+                        <select name="role" className='border border-gray-300 p-3 rounded-2xl bg-white' defaultValue="">
                             <option value="" disabled>Select your Role</option>
                             <option value="user">
                                 USER
@@ -123,7 +123,7 @@ export default function LoginPage() {
                             type="text"
                             required
                             placeholder="Enter Username"
-                            className="border-2 px-3 py-2 rounded w-64"
+                            className="border border-gray-300 px-3 py-4 rounded-lg w-90 bg-white"
                         />
                     </div>
 
@@ -134,16 +134,20 @@ export default function LoginPage() {
                             type="password"
                             required
                             placeholder="Enter Password"
-                            className="border-2 px-3 py-2 rounded w-64"
+                            className="border border-gray-300 px-3 py-4 rounded-lg w-90 bg-white"
                         />
                     </div>
 
                     <div className="text-center m-4">
-                        <button type="submit" className="border rounded-2xl p-2 px-18 bg-green-200">register</button>
-                        <br />
-                        <button onClick={handleBackToLogin} className="mt-4 border rounded-2xl p-2 bg-red-50">Back to Login</button>
+                        <button type="submit" className="border rounded-lg p-2 w-90 bg-black text-white">register</button>
                     </div>
+
+                    
                 </form>
+                <div className='flex justify-center gap-2'>
+                    <p>Already have an account? </p>
+                    <a onClick={handleBackToLogin} className="border-b">Back to Login</a>
+                </div>
             </main>
         </div>
           

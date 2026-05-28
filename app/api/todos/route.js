@@ -17,7 +17,7 @@ export async function GET(req) {
     const pool = await getConnection();
     const request = pool.request();
     request.input('userId', userId);
-    const result = await request.query('SELECT * FROM todo_item WHERE UserId = @userId');
+    const result = await request.query('SELECT * FROM todo_item WHERE UserId = @userId ORDER BY ItemId DESC');
     return Response.json(result.recordset);
 }
 

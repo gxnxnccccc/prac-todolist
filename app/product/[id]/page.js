@@ -1,11 +1,11 @@
 'use client'
 
-import React from 'react'
-import { useState, useEffect, useRef } from 'react';
-import { useParams } from "next/navigation";
-import { FaStar } from "react-icons/fa";
-import { useRouter } from 'next/navigation';
-import { useUser } from '@/context/UserContext';
+import { useState, useEffect } from 'react'
+import { useParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import { FaStar } from 'react-icons/fa'
+import { useUser } from '@/context/UserContext'
 
 // Known section headers to detect inside flat-text descriptions
 const SECTION_HEADERS = ['Features:', 'Perfect for:', 'Designed to remind you:']
@@ -124,27 +124,48 @@ function renderDescription(text) {
 
 export default function ProductDetail() {
     const { id } = useParams()
+
     const [product, setProduct] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [selectedImage, setSelectedImage] = useState(0)
+    const [thumbOffset, setThumbOffset] = useState(0)
+    
     const [qty, setQty] = useState(1)
     const [slideIndex, setSlideIndex] = useState(0)
-    // const [buyAmount, setBuyAmount] = useState(1)
-    const [addToCartAmount, setAddToCartAmount] = useState(0)
-    const { refreshCart } = useUser()
     const [cartAddedAlert, setCartAddedAlert] = useState(false)
-
-    const router = useRouter();
+    const { refreshCart } = useUser()
+    const router = useRouter()
 
     useEffect(() => {
         if (!id) return
-
-        async function fetchProduct() {
-            const res = await fetch(`/api/products/${id}`)
-            const data = await res.json()
-            setProduct(data)
-        }
-
         fetchProduct()
     }, [id])
+
+    async function fetchProduct() {
+        setLoading(true)
+        const res = await fetch(`/api/products/${id}`)
+        const data = await res.json()
+        setProduct(data)
+        setLoading(false)
+    }
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin" />
+            </div>
+        )
+    }
+    
+    if (!product) return <div className='flex justify-center font-(family-name:--font-geologica)'>Loading...</div>
+
+    const images = product.images ?? []
+    const totalImage = images.length;
+    const THUMBS_PER_PAGE = 4;
+    const maxOffset = Math.max(0, totalImage - THUMBS_PER_PAGE)
+    const canPrev = thumbOffset > 0;
+    const canNext = thumbOffset < maxOffset;
+    const visibleThumbs = images.slice(thumbOffset, thumbOffset + THUMBS_PER_PAGE);
 
     const prevSlide = () => {
         setSlideIndex(i => i === 0 ? product.images.length - 1 : i - 1)
@@ -152,6 +173,16 @@ export default function ProductDetail() {
 
     const nextSlide = () => {
         setSlideIndex(i => i === product.images.length - 1 ? 0 : i + 1)
+    }
+
+    const handleSelectImage = (globalIndex) => {
+        setSelectedImage(globalIndex)
+        if (globalIndex < thumbOffset) {
+            setThumbOffset(globalIndex)
+        }
+        else if (globalIndex >= thumbOffset + THUMBS_PER_PAGE) {
+            setThumbOffset(globalIndex - THUMBS_PER_PAGE + 1)
+        }
     }
 
     const addProductToCart = async () => {
@@ -190,7 +221,7 @@ export default function ProductDetail() {
         }
     }
 
-    if (!product) return <div className='flex justify-center font-[family-name:var(--font-geologica)]'>Loading...</div>
+
 
     return (
         <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen ">
@@ -200,17 +231,107 @@ export default function ProductDetail() {
                 <div className='mt-10 mb-10  mx-10 bg-white rounded-4xl shadow-2xl'>
                     <div className=' flex flex-col sm:flex-row  gap-2 '>
 
-                        {/* ขวา: รูป */}
-                        <div className='m-6 rounded text-center text-gray-500 '>
+                        {/* left: รูป */}
+                        {/* <div className='m-6 rounded text-center text-gray-500 '>
                             Product Preview
                             <div className='relative w-full h-96 mt-2 slider flex justify-center'>
                                 <img className='w-100 h-100 object-cover' src={product.images[slideIndex]} alt={`slide-${slideIndex}`} />
                                 <button onClick={prevSlide} className='absolute left-2 top-1/2 -translate-y-1/2 rounded-xl bg-gray-200 opacity-60 px-2 py-1'>&#10094;</button>
                                 <button onClick={nextSlide} className='absolute right-2 top-1/2 -translate-y-1/2 rounded-xl bg-gray-200 opacity-60 px-2 py-1'>&#10095;</button>
                             </div>
+                        </div> */}
+
+                        <div className='flex flex-col items-center p-6 gap-4 border-gray-100'>
+                            <div className='relative w-100 h-100 bg-gray-100 rounded-2xl overflow-hidden'>
+                                {images[selectedImage] 
+                                ? (
+                                    <Image
+                                        src={images[selectedImage]}
+                                        alt={product.product_name}
+                                        fill
+                                        className='object-contain'
+                                        />
+                                    ) : (
+                                        <div className='w-full h-full flex items-center justify-center text-gray-300 text-sm'>
+                                            No preview image
+                                        </div>
+                                    )
+                                }
+                            </div>
+
+                            <div className='flex items-center gap-1.5 w-full justify-center'>
+                                <button
+                                    onClick={() => setThumbOffset(o => Math.max(0, o - 1))}
+                                    disabled={!canPrev}
+                                    className={`w-6 h-6 rounded-md flex items-center justify-center text-xs transition-all
+                                        ${canPrev
+                                            ? 'bg-gray-200 hover:bg-gray-300 text-gray-700 cursor-pointer'
+                                            : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                                        }
+                                    `}
+                                >
+                                    &#10094;
+                                </button>
+                                <div className='flex gap-1.5'>
+                                    {visibleThumbs.map((url, i) => {
+                                        const globalIndex = thumbOffset + i;
+                                        return (
+                                            <button
+                                                key={globalIndex}
+                                                onClick={() => handleSelectImage(globalIndex)}
+                                                className={`relative w-12 h-12 rounded-lg border-2 overflow-hidden transition-all
+                                                    ${selectedImage == globalIndex
+                                                        ? 'border-gray-900 shadow-sm scale-105'
+                                                        : 'border-transparent bg-gray-200 hover-gray-400'
+                                                    }
+                                                `}
+                                            >
+                                                <Image
+                                                    src={url}
+                                                    alt={`image ${globalIndex + 1}`}
+                                                    fill
+                                                    className='object-cover'
+                                                />
+                                            </button>
+                                        )
+                                    })}
+
+                                </div>
+
+                                <button
+                                    onClick={() => setThumbOffset(o => Math.min(maxOffset, o + 1))}
+                                    disabled={!canNext}
+                                    className={`w-6 h-6 rounded-md flex items-center justify-center text-xs transition-all
+                                        ${canNext
+                                            ? 'bg-gray-200 hover:bg-gray-300 text-black cursor-pointer'
+                                            : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                                        }
+                                    `}
+                                >
+                                    &#10095;
+                                </button>
+                            </div>
+                            
+                            <div className='flex gap-1'>
+                                {images.map((_,i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => handleSelectImage(i)}
+                                        className={`rounded-full transition-all
+                                            ${selectedImage === i
+                                                ? 'w-4 h-1.5 bg-gray-900'
+                                                : 'w-1.5 h-1.5 bg-gray-300 hover:bg-gray-400'
+                                            }
+                                        `}
+                                    >
+
+                                    </button>
+                                ))}
+
+                            </div>
                         </div>
 
-                        {/* ซ้าย: name + stepper */}
+                        {/* right: name + stepper */}
                         <div className='gap-2'>
                             <div className='rounded row-span-2 p-6'>
                                 <div className='text-3xl font-bold'>{product.product_name}</div>

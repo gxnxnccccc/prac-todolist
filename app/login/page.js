@@ -56,8 +56,8 @@ export default function LoginPage() {
 
 
     return (
-        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)]">
-            <main className='mt-8 mx-auto'>
+        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen">
+            <main className='mt-8 mb-8 mx-auto'>
                 <div className="flex justify-center mt-3">
                     <img src='/logos/newLogo.png' alt='Logo' width="200"/>
                 </div>
@@ -72,7 +72,7 @@ export default function LoginPage() {
                                 type="text"
                                 required
                                 placeholder="Enter Username"
-                                className="border border-gray-300 px-3 py-4 rounded-lg w-90"
+                                className="border border-gray-300 px-3 py-4 rounded-lg w-90 bg-white"
                             />
                         </div>
 
@@ -83,7 +83,7 @@ export default function LoginPage() {
                                 type="password"
                                 required
                                 placeholder="Enter Password"
-                                className="border border-gray-300 px-3 py-4 rounded-lg w-90"
+                                className="border border-gray-300 px-3 py-4 rounded-lg w-90 bg-white"
                             />
                         </div>
 
@@ -92,7 +92,8 @@ export default function LoginPage() {
                         </div>
                     </form>
 
-                    <div className='text-center'>
+                    <div className='flex justify-center gap-2'>
+                        <p>New here?</p>
                         <a href='/register' className="border-b">Back to Register</a>
                     </div>
                 </div>

@@ -184,55 +184,16 @@ export default function Page() {
         }
     }
 
-    // const getTaskOverTime = async () => {
-    //     try {
-    //         const userId = localStorage.getItem('UserId')
-    //         const res = await fetch(`/api/dashboards?userId=${userId}`, {
-    //                                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}`}
-    //                                 })
-    //         const { result3 } = await res.json();
-    //         const grouped = result3.reduce((acc, item) => {
-    //             const date = item.create_at.split("T")[0];
-    //             if (!acc[date]) {
-    //                 acc[date] = 0
-    //             }
-    //             acc[date]++;
-    //             return acc[date];
-                
-    //             // if (!acc[date]) {
-    //             //     acc[date] = { 
-    //             //         done: 1,
-    //             //         undone: 0
-    //             //     }
-    //             //     if (item.Status === 1) {
-    //             //     acc[date].done++;
-    //             //     }
-    //             //     else {
-    //             //         acc[date].undone++;
-    //             //     }
-    //             //     return acc;
-    //             // }
-
-    //             const label = Object.key(grouped).sort(); // sort the date
-    //             // const doneList = label.map((i) => grouped[i].done);
-    //             // const undoneList = label.map((i) => grouped[i].undone)
-
-    //             const countData = label.map((i) => grouped[i])
-    //             }, {})
-    //     }
-    //     catch (error) {
-    //         console.log(error)
-    //     }
-    // }
-
     return (
-        <div className="font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen ">
-        <div className='px-8 md:px-15 '>
-            <h1 className='mt-10 text-center text-4xl'>Dashboard</h1>
-            <div className='grid grid-cols-1 sm:grid-col-2 gap-5 mt-10 mx-auto w-full sm:w-2/3 my-2'>
+        <div className="font-[family-name:var(--font-geologica)] min-h-screen ">
+        <div className='px-0 md:px-3'>
+            <h1 className='text-3xl'>Dashboard</h1>
+            <hr className="border-t border-black mt-5"/>
+            <h3 className='mt-5 text-xl'>To do list</h3>
+            <div className='grid grid-cols-1 sm:grid-col-2 gap-5 mt-4 mx-auto my-2'>
                 <div className='grid grid-rows-2  gap-5'>
                     {/* Total */}
-                    <div className=' bg-white border border-[#3d3d3d] rounded-xl pb-10  shadow-md '>
+                    <div className=' bg-white border-2 border-gray-100 rounded-xl pb-10  shadow-md '>
                         <div className=''>
                             <h3 className='text-center mt-5 text-xl'>Total List</h3>
 
@@ -243,13 +204,13 @@ export default function Page() {
                     </div>
 
                     <div className='grid grid-cols-2 gap-5 '>
-                        <div className=' bg-white rounded-xl pb-10 shadow-md border border-[#3d3d3d]'>
+                        <div className=' bg-white rounded-xl pb-10 shadow-md border-2 border-gray-100'>
                             <h3 className='text-center mt-5 text-xl text-green-600'>Done List</h3>
                             {/* <h3 className='text-center'>list</h3> */}
                             <p className='text-center text-5xl mt-9'>{doneList ?? '-'}</p>
                         </div>
 
-                        <div className=' bg-white rounded-xl pb-10  shadow-md border border-[#3d3d3d]'>
+                        <div className=' bg-white rounded-xl pb-10  shadow-md border-2 border-gray-100'>
                             <h3 className='text-center mt-5 text-xl text-red-600'>Undone List</h3>
                             {/* <h3 className='text-center'>list</h3> */}
                             <p className='text-center text-5xl mt-8'>{undoneList ?? '-'}</p>
@@ -264,7 +225,7 @@ export default function Page() {
                     </div>
                 </div> */}
 
-                <div className='bg-white rounded-xl  shadow-md border border-[#3d3d3d]'>
+                <div className='bg-white rounded-xl  shadow-md border-2 border-gray-100'>
                     <h3 className='text-center text-xl mt-5'>Task Over Time</h3>
                     <div className='px-6 mt-4 relative h-80 mb-3'>
                         {taskOverTime ? <Line data={taskOverTime}
@@ -275,7 +236,8 @@ export default function Page() {
                                       : <p className='text-center mt-7'>-</p>}
                     </div>
                 </div>
-
+                
+                <hr className="border-t border-gray-400 mt-5 mx-15"/>
                 
                 
             </div>

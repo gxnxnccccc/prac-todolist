@@ -38,7 +38,7 @@ export default function RootLayout({ children }) {
         <UserProvider>
           {/* <NavBar /> */}
           <ConditionalNavBar />
-          <div className="mt-24">
+          <div className="bg-gray-50">
             {children}
           </div>
         </UserProvider>

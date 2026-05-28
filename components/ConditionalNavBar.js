@@ -5,10 +5,15 @@ import NavBar from './NavBar';
 
 export default function ConditionalNavBar() {
     const pathname = usePathname();
-    const hidden = ['/login', '/register'];
+    const hidden = ['/login', '/register', '/login-register'];
     if (hidden.includes(pathname)) {
         return null;
     }
 
-    return <NavBar />
+    return (
+        <>
+            <NavBar />
+            <div className="h-24" />
+        </>
+    )
 }

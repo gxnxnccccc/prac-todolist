@@ -48,7 +48,7 @@ export default function LoginPage() {
       <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-gray-400/25 rounded-full blur-3xl pointer-events-none" />
 
       {/* Card ── bg-white keeps forms from bleeding through */}
-      <div className="relative overflow-hidden w-205 max-w-full min-h-135 bg-white rounded-3xl shadow-2xl shadow-gray-300/60">
+      <div className="relative overflow-hidden w-full max-w-205 min-h-135 bg-white rounded-3xl shadow-2xl shadow-gray-300/60">
 
         {/* ── Sign Up Form ──────────────────────────────────────────────────── */}
         <div

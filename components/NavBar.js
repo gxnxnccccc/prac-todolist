@@ -111,7 +111,7 @@ const NavBar = () => {
                                 <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/">Home</Link></li>
                                 <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/todo/newTodo">To do</Link></li>
                                 <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/product">Products</Link></li>
-                                <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/dashboard">Dashboard</Link></li>
+                                {/* <li className="ml-10 mr-8 hover:border-b text-xl"><Link href="/dashboard">Dashboard</Link></li> */}
                                 <li className='ml-5 mr-8'>
                                     <button onClick={goWishlistPage}  className=' cursor-pointer border border-[#4f4f4f] py-1.5 px-3 rounded-xl bg-white text-lg'>
                                         <FaHeart className=''/>

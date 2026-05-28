@@ -155,9 +155,9 @@ const CartPage = () => {
                         const cartId_price = c.unit_price * c.buy_quantity
                         
                         return (
-                        <div key={c.cart_id} className='mt-2 border-2 border-gray-200 rounded-xl w-full h-40 sm:h-full bg-white shadow-lg mb-5'>
+                        <div key={c.cart_id} className='mt-2 border-2 border-gray-200 rounded-xl w-full  bg-white shadow-lg mb-5'>
                             <div className='grid grid-rows-1 grid-cols-2 sm:grid-cols-4 p-2 gap-2'>
-                                <div className='flex justify-between w-full h-35 sm:h-full items-center col-span-1 sm:col-span-1'>
+                                <div className='flex justify-between my-auto w-full h-35 sm:h-full items-center col-span-1 sm:col-span-1'>
                                     <button onClick={(e) => {
                                         e.preventDefault()
                                         toggleSelected(c.cart_id)
