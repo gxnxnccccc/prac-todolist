@@ -34,16 +34,16 @@ export default function Page() {
         // getTaskOverTime();
     }, [])
 
-    const getTotalUser = async (username = null) => {
+    const getTotalUser = async (userId = null) => {
         try {
             let path = `/api/admin/dashboards`
             const role = localStorage.getItem('role')
             if (role !== 'admin') {
-                const userId = localStorage.getItem('UserId')
-                path = `/api/dashboards?userId=${userId}`
+                const myId = localStorage.getItem('UserId')
+                path = `/api/dashboards?userId=${myId}`
             }
-            else if (username) {
-                path = `/api/admin/dashboards?username=${username}`
+            else if (userId) {
+                path = `/api/admin/dashboards?user_id=${userId}`
             }
             // const userId = localStorage.getItem('UserId')
             const res = await fetch(`${path}`, {
@@ -233,7 +233,7 @@ export default function Page() {
                             {/* <option value="" disabled>Select User Mode</option> */}
                             <option value="" >All</option>
                             {allUsername && allUsername.map((u, i) => (
-                                <option key={i} value={u.Username}>User ID {u.UserId}: {u.Username}</option>
+                                <option key={i} value={u.user_id}>User ID {u.user_id}: {u.username}</option>
                             ))}
                         </select>
                     </div>

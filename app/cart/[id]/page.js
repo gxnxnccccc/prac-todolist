@@ -19,6 +19,7 @@ const CartPage = () => {
     const [selectedProduct, setSelectedProduct] = useState([])
     const [isCancelOpen, setIsCancelOpen] = useState(false)
     const [isBuyOpen, setIsBuyOpen] = useState(false)
+    const [itemToBuy, setItemToBuy] = useState(null)
     const { refreshCart } = useUser()
 
     useEffect(() => {
@@ -197,7 +198,7 @@ const CartPage = () => {
                                                 <div className='flex flex-row ml-auto gap-2 '>
                                                     <button onClick={() => {setIsCancelOpen(true); setItemToDelete(c)}} className='px-3 sm:px-7 rounded-lg bg-red-500 text-white'>Cancel</button>
                                                     
-                                                    <button onClick={() => {setIsBuyOpen(true)}} className='px-3 sm:px-7 py-0 sm:py-2 rounded-lg bg-orange-300 text-white text-sm sm:text-lg'>Buy Now</button>
+                                                    <button onClick={() => {setIsBuyOpen(true); setItemToBuy(c)}} className='px-3 sm:px-7 py-0 sm:py-2 rounded-lg bg-orange-300 text-white text-sm sm:text-lg'>Buy Now</button>
                                                 </div>
                                             {/* </div> */}
                                         </div>
@@ -225,8 +226,8 @@ const CartPage = () => {
                             <h1 className='text-center text-2xl'>Confirm Purchase</h1>
                             <p>Are you sure to purchase this item?</p>
                             <div className='flex gap-2 self-end'>
-                                <button onClick={() => setIsBuyOpen(false)} className="border px-3 py-2 rounded bg-gray-200 hover:bg-gray-300">Cancel</button>
-                                <button onClick={() => handleOrder([c])} className="border px-3 py-2 rounded bg-orange-300 hover:bg-orange-400 text-white">Confirm</button>
+                                <button onClick={() => { setIsBuyOpen(false); setItemToBuy(null) }} className="border px-3 py-2 rounded bg-gray-200 hover:bg-gray-300">Cancel</button>
+                                <button onClick={() => handleOrder([itemToBuy])} className="border px-3 py-2 rounded bg-orange-300 hover:bg-orange-400 text-white">Confirm</button>
                             </div>
                             </div>
                         </div>

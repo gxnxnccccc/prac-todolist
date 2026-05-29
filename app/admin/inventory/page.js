@@ -42,6 +42,8 @@ const AdminProductPage = () => {
     const [ originalProduct, setOriginalProduct ] = useState(null)
     const [ imageId, setImageId ] = useState([])
 
+    const [ newCategory, setNewCategory ] = useState('')
+
     const router = useRouter()
 
     useEffect(() => {
@@ -293,6 +295,38 @@ const AdminProductPage = () => {
         }
     }
 
+    async function handleAddCategory(e) {
+        if (e?.preventDefault) {
+            e.preventDefault()
+        }
+        try {
+            const data = {
+                categoryType: newCategory
+            }
+
+            const addCategory = await fetch(`/api/admin/inventories`, {
+                                method: 'POST', 
+                                headers: {'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${localStorage.getItem('token')}`},
+                                body: JSON.stringify(data) })
+            if (!addCategory.ok) {
+                const errBody = await addCategory.json().catch(() => ({}));
+                throw new Error(errBody.error ?? `Request failed: ${addCategory.status}`);
+            }
+            const res = await addCategory.json()
+            console.log("Res of aaddCategoryInfo: ", res)
+
+            setNewCategory('')
+            setIsOpen(false)
+            getProductInfo();
+                
+        }
+        catch (error) {
+            console.log("Add type error: ", error)
+        }
+        
+    }
+
     console.log("ImageId: ", imageId)
     console.log('editPreviewUrls: ', editPreviewUrls)
     return (
@@ -339,13 +373,38 @@ const AdminProductPage = () => {
                                     <form>
                                         {/* <div className='flex justify-center mx-auto mt-3 py-3 '> */}
                                             {/* <select name="role" className='mt-2 border-2 border-gray-200 p-2 rounded-xl bg-white' defaultValue="" value={categoryId} onChange={(e) => setCategoryId(e.target.value)}> */}
-                                            <select name="role" className='mt-2 border-2 border-gray-200 p-2 rounded-xl bg-white w-full' value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-                                                {/* <option value="" disabled>Select User Mode</option> */}
+                                            <select name="role" className='mt-2 border-2 border-gray-200 p-2 rounded-xl bg-white w-full' value={categoryId} onChange={(e) => {
+                                                    const val = e.target.value
+                                                    if (val === 'newCategoryType') {
+                                                        setIsOpen('newCategoryType')
+                                                    } else {
+                                                        setCategoryId(val)
+                                                    }
+                                                }}>
                                                 <option value="" disabled>Select Category</option>
                                                 {allCategories && allCategories.map((u, i) => (
                                                     <option key={i} value={u.category_id}>{u.all_category}</option>
                                                 ))}
+                                                <option value="newCategoryType">+ Add</option>
                                             </select>
+                                            {isOpen === 'newCategoryType' && (
+                                                    <div className='fixed inset-0 flex items-center justify-center z-50 bg-[#4f4f4f]/25'>
+                                                        <div className='flex flex-col bg-white rounded-xl px-12 py-8 shadow gap-4'>
+                                                            <h1 className='text-center text-2xl'>Add Category</h1>
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Category name"
+                                                                value={newCategory}
+                                                                onChange={(e) => setNewCategory(e.target.value)}
+                                                                className='border-2 border-gray-200 rounded w-full px-2 py-2'
+                                                            />
+                                                            <div className='flex gap-2 self-end'>
+                                                                <button onClick={() => setIsOpen(false)} className="border px-3 py-2 rounded bg-gray-200 hover:bg-gray-300">Cancel</button>
+                                                                <button onClick={handleAddCategory} className="border px-3 py-2 rounded bg-green-200 hover:bg-green-300">Add</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
                                         {/* </div> */}
                                     </form>
                                 </div>

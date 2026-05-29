@@ -83,6 +83,22 @@ export async function POST(req) { // request(req) is the data from frontend
 
     }
 
+    // Category creation
+    try {
+        const pool = await getConnection();
+        const body = await req.json();
+
+        if (body.categoryType) {
+            const request = pool.request()
+            request.input('category_name', body.categoryType)
+            await request.query('INSERT INTO categories (category_name) VALUES (@category_name)')
+            return NextResponse.json({ success: true })
+        }
+    } catch (error) {
+        console.error('POST /api/admin/inventories category error:', error)
+        return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
     // Product creation
     try {
         const pool = await getConnection();

@@ -130,6 +130,7 @@ export default function ProductDetail() {
     const [selectedImage, setSelectedImage] = useState(0)
     const [thumbOffset, setThumbOffset] = useState(0)
     
+    const [addToCartAmount, setAddToCartAmount] = useState (0)
     const [qty, setQty] = useState(1)
     const [slideIndex, setSlideIndex] = useState(0)
     const [cartAddedAlert, setCartAddedAlert] = useState(false)
@@ -242,7 +243,7 @@ export default function ProductDetail() {
                         </div> */}
 
                         <div className='flex flex-col items-center p-6 gap-4 border-gray-100'>
-                            <div className='relative w-100 h-100 bg-gray-100 rounded-2xl overflow-hidden'>
+                            <div className='relative sm:w-100 sm:h-100 w-60 h-60 md:w-80 md:h-80 bg-gray-100 rounded-2xl overflow-hidden'>
                                 {images[selectedImage] 
                                 ? (
                                     <Image
