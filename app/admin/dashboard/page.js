@@ -218,7 +218,7 @@ export default function Page() {
     // }
 
     return (
-        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)]">
+        <div className="flex flex-col gap-6 font-(family-name:--font-geologica)">
             <div className='mt-5 px-1 sm:px-15'>
                 <h1 className='text-center  text-4xl'>
                     TO DO LIST

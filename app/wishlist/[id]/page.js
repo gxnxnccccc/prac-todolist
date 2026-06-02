@@ -10,6 +10,8 @@ import ProductItemCard from '../../../components/Product_ItemCard'
 const productPage = () => {
 
   const [ allCategories, setAllCategories ] = useState(null)
+  const [ selectedCategoryId, setSelectedCategoryId ] = useState('')
+  const [ allProduct, setAllProduct] = useState([])
   const [ product, setProduct ] = useState([])
   const [ allImage, setAllImages ] = useState([])
   // const [ wishlist, setWishlist ] = useState(false)
@@ -41,6 +43,7 @@ const productPage = () => {
       const data = await res.json()
       
       setAllCategories(data.categories)
+      setAllProduct(data.products)
       setProduct(data.products)
       setAllImages(data.all_images ?? [])
       setWishlist(new Set(data.wishlists.map(w => w.product_id)))
@@ -102,14 +105,36 @@ const productPage = () => {
     }
   } 
   
+  const handleCategoryFilter = (e) => {
+    const value = e.target.value
+    setSelectedCategoryId(value)
+    if (value) {
+      const filtered = allProduct.filter(p => String(p.category_id) === value)
+      setProduct(filtered)
+    } else {
+      setProduct(allProduct)
+    }
+  }
 
   return (
-    <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen">
+    <div className="flex flex-col gap-6 font-(family-name:--font-geologica) bg-gray-50 min-h-screen">
         <div className='px-8 mt-10 md:px-15 '>
           <div className='relative flex justify-center items-center'>
             <h1 className='flex justify-center text-4xl'>Wishlists</h1>
           </div>
           
+          <form className='flex justify-center mt-10  sm:mx-60 gap-4'>
+              {/* <div className='flex justify-center mx-auto mt-3 py-3 '> */}
+                  {/* <select name="role" className='mt-2 border-2 border-gray-200 p-2 rounded-xl bg-white' defaultValue="" value={categoryId} onChange={(e) => setCategoryId(e.target.value)}> */}
+                  <select name="role" className='mt-2 border border-[#4f4f4f] shadow-md p-2 rounded-xl bg-white w-full' value={selectedCategoryId} onChange={handleCategoryFilter}>
+                      <option value="">All Categories</option>
+                      {allCategories && allCategories.map((u, i) => (
+                          <option key={i} value={String(u.category_id)}>{u.all_category}</option>
+                      ))}
+                  </select>
+              {/* </div> */}
+          </form>
+
           <div className='gap-5 mt-10 mx-auto mb-10'>
             <div className='grid grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-4'>
               {product.filter(p => wishlist.has(p.product_id)).map((p) => (

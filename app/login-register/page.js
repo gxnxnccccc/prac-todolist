@@ -41,7 +41,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen overflow-hidden bg-[#efefef] font-[family-name:var(--font-geologica)]">
+    <div className="relative flex items-center justify-center min-h-screen overflow-hidden bg-[#efefef] font-(family-name:--font-geologica)">
 
       {/* Ambient blobs */}
       <div className="absolute -top-24 -left-24 w-96 h-96 bg-gray-300/40 rounded-full blur-3xl pointer-events-none" />

@@ -55,7 +55,7 @@ export default function ProfileLayout({ children }) {
     }
 
     return(
-        <div className="flex flex-col font-[family-name:var(--font-geologica)] bg-gray-100 h-[calc(100vh-6rem)] overflow-hidden">
+        <div className="flex flex-col font-(family-name:--font-geologica) bg-gray-100 h-[calc(100vh-6rem)] overflow-hidden">
             <div className='flex flex-1 min-h-0 mx-2 sm:mx-5 rounded-3xl mt-10 mb-10 gap-3'>
                 <aside className={`relative ${isCollapsed ? 'w-20' : 'w-84'} py-4 px-6 bg-white rounded-2xl shadow-md overflow-y-auto flex flex-col transition-all duration-500`}>
                     <div className='inline-flex items-center text-2xl'>

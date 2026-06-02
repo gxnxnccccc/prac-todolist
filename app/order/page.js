@@ -22,7 +22,7 @@ const OrdersPage = () => {
     }
 
     return (
-        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen">
+        <div className="flex flex-col gap-6 font-(family-name:--font-geologica) bg-gray-50 min-h-screen">
             <div className='mt-10 px-1 sm:px-15 '>
                 <div className='relative flex justify-center items-center'>
                     <h1 className='text-4xl'>Order History</h1>

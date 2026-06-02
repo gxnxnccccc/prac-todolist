@@ -330,7 +330,7 @@ const AdminProductPage = () => {
     console.log("ImageId: ", imageId)
     console.log('editPreviewUrls: ', editPreviewUrls)
     return (
-        <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] bg-gray-50 min-h-screen">
+        <div className="flex flex-col gap-6 font-(family-name:--font-geologica) bg-gray-50 min-h-screen">
             <div className='mt-5 mx-2 sm:mx-5 '>
                 <h1 className='text-center mt-10 text-4xl'>Inventory</h1>
                 <div className='flex flex-col gap-5 mt-10 mx-auto mb-10'>

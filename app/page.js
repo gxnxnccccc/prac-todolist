@@ -102,7 +102,7 @@ export default function Home() {
    
 
 return (
-    <div className='mt-10 font-[family-name:var(--font-geologica)] bg-gray-50'>
+    <div className='mt-10 font-(family-name:--font-geologica) bg-gray-50'>
             <div className='flex justify-center'>
                 <img src="/gif/catReading.gif" alt="Cat Reading Book" className='w-50 h-50' ></img>
             </div>

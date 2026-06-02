@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import jsonwebtoken from 'jsonwebtoken';
 import sql from 'mssql';
 
+
 export async function GET(req) {
     const user = verifyToken(req)
     if (!user) {
@@ -73,9 +74,24 @@ export async function POST(req) {
                 .input('buyAmount', item.buy_quantity)
                 .input('price', item.price)
                 .query(`
-                        INSERT INTO order_products (order_id, product_id, buy_quantity, unit_price)
-                        VALUES (@orderId, @productId, @buyAmount, @price)
-                        `)
+                    BEGIN TRANSACTION;
+
+                    INSERT INTO order_products (order_id, product_id, buy_quantity, unit_price)
+                    VALUES (@orderId, @productId, @buyAmount, @price);
+
+                    UPDATE products
+                    SET stock_quantity = stock_quantity - @buyAmount
+                    WHERE product_id = @productId
+                        AND stock_quantity >= @buyAmount;
+
+                    IF @@ROWCOUNT = 0
+                    BEGIN
+                        ROLLBACK;
+                        THROW 50001, 'Stock not enough', 1;
+                    END
+
+                    COMMIT;
+                `)
 
             await pool.request()
                 .input('cartId', sql.Int, item.cart_id)

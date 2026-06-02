@@ -179,7 +179,7 @@ export default function Home() {
   const handleClose = () => setMenu({ visible: false, x: 0, y: 0, itemId: null });
 
   return (
-    <div className="flex flex-col gap-6 font-[family-name:var(--font-geologica)] mb-10">
+    <div className="flex flex-col gap-6 font-(family-name:--font-geologica) mb-10">
       <div>
         
       </div>

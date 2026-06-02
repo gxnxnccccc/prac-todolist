@@ -9,7 +9,7 @@ export default function ItemCard(props) {
     const [ isOpen, setIsOpen ] = useState(false)
     console.log(props)
     return (
-        <div className='justify-center m-auto font-[family-name:var(--font-geologica)]'>
+        <div className='justify-center m-auto font-(family-name:--font-geologica)'>
           <div
             className="bg-gray-100 text-[#4f4f4f]
                         p-4 rounded-xl items-center

@@ -19,7 +19,7 @@ export default function TodoItemCard(props) {
     const handleClose = () => setMenu({ visible: false, x: 0, y: 0 });
 
     return (
-        <div className='m-auto font-[family-name:var(--font-geologica)]'>
+        <div className='m-auto font-(family-name:--font-geologica)'>
           <div className='flex bg-white shadow-md w-85 sm:w-120 border border-[#3d3d3d] rounded-3xl'>
             <div
               className="w-full text-[#4f4f4f] rounded-xl items-center flex justify-start p-4"

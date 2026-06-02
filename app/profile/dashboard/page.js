@@ -185,7 +185,7 @@ export default function Page() {
     }
 
     return (
-        <div className="font-[family-name:var(--font-geologica)] min-h-screen ">
+        <div className="font-(family-name:--font-geologica) min-h-screen ">
         <div className='px-0 md:px-3'>
             <h1 className='text-3xl'>Dashboard</h1>
             <hr className="border-t border-black mt-5"/>
