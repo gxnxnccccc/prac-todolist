@@ -24,7 +24,7 @@ export default function Page() {
     const [selectedCategory, setSelectedCategory] = useState('')
     const [allId, setAllId] = useState(null)
     const [weeklyReport, setWeeklyReport] = useState(null)
-    const [taskOverTime, setTaskOverTime] = useState(null)
+    const [orderOverTime, setOrderOverTime] = useState(null)
     const [text, setText] = useState('')
 
     const [filters, setFilters] = useState({
@@ -82,28 +82,14 @@ export default function Page() {
             setTotalOrder(data1.result_totalOrder?.[0]?.total_order ?? null)
             setTotalCategory(data1.result_totalCategory?.[0]?.total_category ?? null)
 
-            // const data2 = await res.json()
-            console.log("data1: ", data1)
-            
-            const grouped = (data1.result3 ?? []).reduce((acc, item) => {
-                if (!item.create_at) return acc;
-                const date = item.create_at.split("T")[0];
-                if (!acc[date]) {
-                    acc[date] = 0
-                }
-                acc[date]++;
-                return acc;
-            }, {})
-
-            console.log("Grouped Data: ", grouped)
-
-            const label = Object.keys(grouped).sort();
-            const countData = label.map((i) => grouped[i])
+            const rows = (data1.result_orderOverTime ?? [])
+            const label = rows.map((r) => r.order_day?.split('T')[0] ?? r.order_day)
+            const countData = rows.map((r) => r.total_order)
 
             const graphData = {
                 labels: label,
                 datasets: [{
-                    label: 'Tasks Completed',
+                    label: 'Purchase Order',
                     data: countData,
                     backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
@@ -126,7 +112,7 @@ export default function Page() {
                     borderWidth: 1
                 }]
             };
-            setTaskOverTime(graphData)
+            setOrderOverTime(graphData)
             }
         catch (error) {
             console.log(error)
@@ -218,7 +204,7 @@ export default function Page() {
                     <div className='bg-white rounded-xl pb-10 my-2 shadow-lg col-span-4'>
                         <h3 className='text-center text-2xl  pt-5'>Task Over Time</h3>
                         <div className='px-2 sm:px-6 mt-4 flex justify-center' style={{ height: '300px' }}>
-                            {taskOverTime ? <Line data={taskOverTime} 
+                            {orderOverTime ? <Line key={JSON.stringify(filters)} data={orderOverTime}
                                                   options={{ 
                                                     scales: { y: { ticks: { stepSize: 1 } } },
                                                     responsive: true,

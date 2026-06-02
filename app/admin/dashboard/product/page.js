@@ -67,50 +67,50 @@ export default function Page() {
 
 
             // const data2 = await res.json()
-            console.log("data1: ", data1)
+            // console.log("data1: ", data1)
             
-            const grouped = data1.result3.reduce((acc, item) => {
-                if (!item.create_at) return acc;
-                const date = item.create_at.split("T")[0];
-                if (!acc[date]) {
-                    acc[date] = 0
-                }
-                acc[date]++;
-                return acc;
-            }, {})
+            // const grouped = data1.result3.reduce((acc, item) => {
+            //     if (!item.create_at) return acc;
+            //     const date = item.create_at.split("T")[0];
+            //     if (!acc[date]) {
+            //         acc[date] = 0
+            //     }
+            //     acc[date]++;
+            //     return acc;
+            // }, {})
 
-            console.log("Grouped Data: ", grouped)
+            // console.log("Grouped Data: ", grouped)
 
-            const label = Object.keys(grouped).sort();
-            const countData = label.map((i) => grouped[i])
+            // const label = Object.keys(grouped).sort();
+            // const countData = label.map((i) => grouped[i])
 
-            const graphData = {
-                labels: label,
-                datasets: [{
-                    label: 'Tasks Completed',
-                    data: countData,
-                    backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(255, 205, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(201, 203, 207, 0.2)'
-                ],
-                    borderColor: 
-                    [ 'rgb(255, 99, 132)',
-                    'rgb(255, 159, 64)',
-                    'rgb(255, 205, 86)',
-                    'rgb(75, 192, 192)',
-                    'rgb(54, 162, 235)',
-                    'rgb(153, 102, 255)',
-                    'rgb(201, 203, 207)'
-                ],
-                    borderWidth: 1
-                }]
-            };
-            setTaskOverTime(graphData)
+            // const graphData = {
+            //     labels: label,
+            //     datasets: [{
+            //         label: 'Tasks Completed',
+            //         data: countData,
+            //         backgroundColor: [
+            //         'rgba(255, 99, 132, 0.2)',
+            //         'rgba(255, 159, 64, 0.2)',
+            //         'rgba(255, 205, 86, 0.2)',
+            //         'rgba(75, 192, 192, 0.2)',
+            //         'rgba(54, 162, 235, 0.2)',
+            //         'rgba(153, 102, 255, 0.2)',
+            //         'rgba(201, 203, 207, 0.2)'
+            //     ],
+            //         borderColor: 
+            //         [ 'rgb(255, 99, 132)',
+            //         'rgb(255, 159, 64)',
+            //         'rgb(255, 205, 86)',
+            //         'rgb(75, 192, 192)',
+            //         'rgb(54, 162, 235)',
+            //         'rgb(153, 102, 255)',
+            //         'rgb(201, 203, 207)'
+            //     ],
+            //         borderWidth: 1
+            //     }]
+            // };
+            // setTaskOverTime(graphData)
             }
         catch (error) {
             console.log(error)
@@ -164,7 +164,7 @@ export default function Page() {
                         </div>
                     </div> */}
 
-                    <div className='bg-white rounded-xl pb-10 my-2 shadow-lg col-span-4'>
+                    {/* <div className='bg-white rounded-xl pb-10 my-2 shadow-lg col-span-4'>
                         <h3 className='text-center text-2xl  pt-5'>Task Over Time</h3>
                         <div className='px-2 sm:px-6 mt-4 flex justify-center'>
                             {taskOverTime ? <Line data={taskOverTime} 
@@ -175,7 +175,7 @@ export default function Page() {
                                                     }} />
                                          : <p className='text-center mt-7'>-</p>}
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

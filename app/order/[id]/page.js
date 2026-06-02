@@ -72,7 +72,10 @@ const OrderDetailPage = () => {
                                         <p>Quantity: {item.buy_quantity ?? '-'}</p>
                                         <p>Price/unit: {item.unit_price} ฿</p>
                                     </div> */}
-                                    <div className='absolute right-1 bottom-0'>
+                                    <div className='absolute right-1 bottom-0 flex gap-2'>
+                                        <button onClick={() => router.push(`/review/${item.product_id}?orderId=${id}`)} className='px-6 sm:px-10 py-2 rounded-lg bg-white text-black border-2 '>
+                                            <p className='text-xs sm:text-lg'>Review</p>
+                                        </button>
                                         <button onClick={() => router.push(`/product/${item.product_id}`)} className='px-6 sm:px-10 py-2 rounded-lg bg-black text-white'>
                                             <p className='text-xs sm:text-lg'>Buy Again</p>
                                         </button>

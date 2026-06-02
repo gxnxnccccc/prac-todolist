@@ -18,6 +18,7 @@ export default function Page() {
     const [allId, setAllId] = useState(null)
     const [weeklyReport, setWeeklyReport] = useState(null)
     const [taskOverTime, setTaskOverTime] = useState(null)
+    const [selectedUserId, setSelectedUserId] = useState('')
     const [text, setText] = useState('')
     const router = useRouter()
 
@@ -229,7 +230,7 @@ export default function Page() {
                 {/* Select Options */}
                 <div>
                     <div className='flex justify-center mx-auto mt-10 py-3 '>
-                        <select name="role" className='border p-3 rounded-xl bg-gray-50 w-full' defaultValue="" onChange={(e) => getTotalUser(e.target.value)}>
+                        <select name="role" className='border p-3 rounded-xl bg-gray-50 w-full' value={selectedUserId} onChange={(e) => { setSelectedUserId(e.target.value); getTotalUser(e.target.value); }}>
                             {/* <option value="" disabled>Select User Mode</option> */}
                             <option value="" >All</option>
                             {allUsername && allUsername.map((u, i) => (
@@ -285,8 +286,8 @@ export default function Page() {
 
                     <div className='bg-white rounded-xl pb-10 my-2 shadow-lg col-span-4'>
                         <h3 className='text-center text-2xl  pt-5'>Task Over Time</h3>
-                        <div className='px-2 sm:px-6 mt-4 flex justify-center'>
-                            {taskOverTime ? <Line data={taskOverTime} 
+                        <div className='px-2 sm:px-6 mt-4 flex justify-center' style={{ height: '300px' }}>
+                            {taskOverTime ? <Line key={selectedUserId} data={taskOverTime}
                                                   options={{ 
                                                     scales: { y: { ticks: { stepSize: 1 } } },
                                                     responsive: true,

@@ -31,9 +31,15 @@ export async function GET(req) {
             result_undoneList     = await pool.request().query('SELECT COUNT(ItemId) AS undone_list FROM todo_item WHERE Status = 0')
             result3               = await pool.request().query('SELECT ItemId, List, Status, create_at FROM todo_item')
             result_totalList      = await pool.request().query('SELECT COUNT(ItemId) AS total_list FROM todo_item')
-            result_totalProduct   = await pool.request().query('SELECT COUNT(product_id) AS total_product FROM products')
             result_totalCategory  = await pool.request().query('SELECT COUNT(category_id) AS total_category FROM categories')
             result_totalOrderByDate = await pool.request().query('SELECT COUNT(order_id) AS total_order FROM orders WHERE CAST(order_date AS DATE) = CAST(GETDATE() AS DATE)')
+            if (categoryId) {
+                result_totalProduct = await pool.request()
+                    .input('CategoryId', sql.Int, categoryId)
+                    .query('SELECT COUNT(product_id) AS total_product FROM products WHERE category_id = @CategoryId')
+            } else {
+                result_totalProduct = await pool.request().query('SELECT COUNT(product_id) AS total_product FROM products')
+            }
         }
         else { // query todo-item stats filtered by user
             result_totalUser  = await pool.request()
@@ -95,19 +101,34 @@ export async function GET(req) {
 
         const result_totalOrder = await orderReq.query(orderSql)
 
+        // Order count grouped by day (same filters, for the graph)
+        const orderTimeReq = pool.request()
+        let orderTimeSql = 'SELECT CAST(o.order_date AS DATE) AS order_day, COUNT(DISTINCT o.order_id) AS total_order FROM orders o'
+        if (joins.length) orderTimeSql += ' ' + joins.join(' ')
+        if (conditions.length) orderTimeSql += ' WHERE ' + conditions.join(' AND ')
+        orderTimeSql += ' GROUP BY CAST(o.order_date AS DATE) ORDER BY order_day'
+
+        if (userId)     orderTimeReq.input('UserId',     sql.Int,      userId)
+        if (day)        orderTimeReq.input('Day',        sql.NVarChar, day)
+        if (productId)  orderTimeReq.input('ProductId',  sql.Int,      productId)
+        if (categoryId) orderTimeReq.input('CategoryId', sql.Int,      categoryId)
+
+        const result_orderOverTime = await orderTimeReq.query(orderTimeSql)
+
         return NextResponse.json({
-            result_totalUser:          result_totalUser.recordset,
-            result_doneList:           result_doneList.recordset,
-            result_undoneList:         result_undoneList.recordset,
-            result3:                   result3.recordset,
-            result_totalList:          result_totalList.recordset,
-            result_allUsername:        result_allUsername.recordset,
-            result_allProducts:        result_allProducts.recordset,
+            result_totalUser: result_totalUser.recordset,
+            result_doneList: result_doneList.recordset,
+            result_undoneList: result_undoneList.recordset,
+            result3: result3.recordset,
+            result_totalList: result_totalList.recordset,
+            result_allUsername: result_allUsername.recordset,
+            result_allProducts: result_allProducts.recordset,
             result_totalCategoryProduct: result_totalCategoryProduct.recordset,
-            result_totalOrder:         result_totalOrder.recordset,
-            result_totalProduct:       result_totalProduct?.recordset,
-            result_totalCategory:      result_totalCategory?.recordset,
-            result_totalOrderByDate:   result_totalOrderByDate?.recordset,
+            result_totalOrder: result_totalOrder.recordset,
+            result_totalProduct: result_totalProduct?.recordset,
+            result_totalCategory: result_totalCategory?.recordset,
+            result_totalOrderByDate: result_totalOrderByDate?.recordset,
+            result_orderOverTime: result_orderOverTime.recordset,
         });
     } catch (error) {
         console.error('Dashboard API error:', error)

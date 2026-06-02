@@ -22,6 +22,7 @@ export default function Home() {
     const [ tasks, setTasks ] = useState([])
     const [ selected, setSelected] = useState('all')
     const [ text, setText ] = useState('')
+
     const { cartAmount, setCartAmount } = useUser()
     const router = useRouter()
 
@@ -102,7 +103,7 @@ export default function Home() {
    
 
 return (
-    <div className='mt-10 font-(family-name:--font-geologica) bg-gray-50'>
+    <div className='font-(family-name:--font-geologica) bg-gray-50'>
             <div className='flex justify-center'>
                 <img src="/gif/catReading.gif" alt="Cat Reading Book" className='w-50 h-50' ></img>
             </div>
