@@ -1,10 +1,9 @@
 'use client'
 
 import NavBar from '../../components/NavBar';
-import { use, useState, useEffect } from 'react'; 
+import { useState, useEffect } from 'react';
 import { useUser } from '@/context/UserContext';
 import { useRouter } from 'next/navigation';
-import { useParams } from "next/navigation";
 import React from 'react'
 import { FaHeart } from "react-icons/fa6";
 import { FaCartShopping } from "react-icons/fa6"; // cart
@@ -17,18 +16,16 @@ const productPage = () => {
   const [ allCategories, setAllCategories ] = useState(null)
   const [ product, setProduct ] = useState([])
   const [ allProduct, setAllProduct] = useState([])
-  const [ selectedProduct, setSelectedProduct ] = useState(null)
   const [ allImage, setAllImages ] = useState([])
   const [ selectedCategoryId, setSelectedCategoryId ] = useState('')
   // const [ wishlist, setWishlist ] = useState(false)
   const [ wishlist, setWishlist ] = useState(new Set())
+  const [avgRating, setAvgRating] = useState(null)
 
   const [ addToCartAmount, setAddToCartAmount ] = useState(1)
   const { refreshCart } = useUser()
   const [cartAddedAlert, setCartAddedAlert] = useState(false)
   const [qty, setQty] = useState(1)
-  
-  const { id } = useParams()
 
   const router = useRouter()
 
@@ -36,13 +33,6 @@ const productPage = () => {
     if (!localStorage.getItem('Username')) {
       router.push('/login')
     }
-    async function fetchProduct() {
-        const res = await fetch(`/api/products/${id}`)
-        const data = await res.json()
-        setSelectedProduct(data)
-    }
-    fetchProduct()
-
     getAllProductInfo()
   }, [])
 
@@ -65,6 +55,7 @@ const productPage = () => {
       setProduct(data.products)
       setAllImages(data.all_images ?? [])
       setWishlist(new Set(data.wishlists.map(w => w.product_id)))
+      setAvgRating(data.avgRating)
     }
     catch(error){
       console.log("getAllProductInfo error: ",error)

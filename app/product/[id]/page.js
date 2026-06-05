@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { FaStar } from 'react-icons/fa'
 import { useUser } from '@/context/UserContext'
 import StarRating from '@/components/StarRating'
+import moment from 'moment';
 
 // Known section headers to detect inside flat-text descriptions
 const SECTION_HEADERS = ['Features:', 'Perfect for:', 'Designed to remind you:']
@@ -132,20 +133,35 @@ export default function ProductDetail() {
     const [selectedImage, setSelectedImage] = useState(0)
     const [thumbOffset, setThumbOffset] = useState(0)
     
-    const [addToCartAmount, setAddToCartAmount] = useState (0)
+    const [addToCartAmount, setAddToCartAmount] = useState(0)
     const [qty, setQty] = useState(1)
     const [slideIndex, setSlideIndex] = useState(0)
     const [cartAddedAlert, setCartAddedAlert] = useState(false)
     const [buyAlert, setBuyAlert] = useState(null)
     const [toast, setToast] = useState(null)
 
+    const [review, setReview] = useState(null)
+    const [avgRating, setAvgRating] = useState(null)
+
     const { refreshCart } = useUser()
     const router = useRouter()
 
     useEffect(() => {
         if (!id) return
-        fetchProduct()
+        fetchProduct(),
+        fetchReview()
     }, [id])
+
+    async function fetchReview() {
+        const userId = localStorage.getItem('UserId')
+        const res = await fetch(`/api/reviews/${id}?userId=${userId}`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        })
+        const data = await res.json()
+        console.log('fetchReview response:', data)
+        setReview(data.resultByProduct)
+        setAvgRating(data.avgRating)
+    }
 
     async function fetchProduct() {
         setLoading(true)
@@ -209,7 +225,7 @@ export default function ProductDetail() {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 body: JSON.stringify({
-                    productId: product.product_id,
+                    id: product.product_id,
                     quantity: qty
                 })
             })
@@ -243,8 +259,8 @@ export default function ProductDetail() {
             {/* <div>Product ID: {id}</div>
                 <div>Product Name: {product.product_name}</div> */}
             <div className='bg-gray-200 h-full w-full'>
-                <div className='mt-10 mb-10  mx-10 bg-white rounded-4xl shadow-2xl'>
-                    <div className=' flex flex-col sm:flex-row  gap-2 '>
+                <div className='m-10 bg-white rounded-4xl shadow-2xl'>
+                    <div className='flex flex-col sm:flex-row  gap-2 '>
 
                         {/* left: รูป */}
                         {/* <div className='m-6 rounded text-center text-gray-500 '>
@@ -374,7 +390,7 @@ export default function ProductDetail() {
                             <div className='rounded row-span-2 p-6'>
                                 <div className='text-3xl font-bold'>{product.product_name}</div>
                                 <div className='text-xl inline-flex items-center gap-1'>
-                                    <FaStar className='w-6 h-6 text-yellow-400'/>5.0
+                                    <FaStar className='w-6 h-6 text-yellow-400'/>{avgRating != null ? Number(avgRating).toFixed(1) : '-'}
                                 </div>
                                 <div className='mt-3'>
                                     <p className='font-semibold text-sm text-gray-700 mb-1'>Description</p>
@@ -421,15 +437,48 @@ export default function ProductDetail() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    
+                    
 
-                        
+                </div>
+
+                <div className='mx-10 bg-white rounded-4xl shadow-2xl'>
+                    <div className='mb-5 p-4'>
+                        <h1 className='text-2xl'>All Reviews({product.total_review})</h1>
+                        <div>
+                            {review?.map((r) => (
+                                <div key={r.review_id} className='mt-4'>
+                                    <div className='inline-flex gap-3 items-center'>
+                                        {r.Profile_Image
+                                            ? <img src={r.Profile_Image} alt="profile_img" className="rounded-full object-cover w-10 h-10" />
+                                            : <FaUserCircle size={80} className="text-gray-400" />
+                                        }
+                                        <div>{r.Username}</div>
+                                    </div>
+                                    
+                                    <StarRating className='flex justify-end text-2xl' value={r.star_rating} readOnly />
+                                    <div className='flex gap-2'>
+                                        {JSON.parse(r.like_select || '[]').map((like, i) => (
+                                            <span key={i} className='border rounded-full px-3 py-1 text-sm text-gray-500 bg-gray-100'>{like}</span>
+                                        ))}
+                                    </div>
+                                    <div>{r.review_comment}</div>
+                                    <div className='flex flex-wrap gap-2 mt-2'>
+                                        {(() => { try { const v = JSON.parse(r.review_img || '[]'); return Array.isArray(v) ? v : [v] } catch { return r.review_img ? [r.review_img] : [] } })().map((url, i) => (
+                                            <img key={i} src={url} alt="review" className='w-30 h-30 object-cover rounded' />
+                                        ))}
+                                    </div>
+                                    <div className='mt-2'>{moment.utc(r.review_date).format('DD/MM/YYYY, h:mm:ss')}</div>
+                                    <hr className="border-t border-gray-300 mt-2" />
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div>
-                <StarRating/>
-            </div>
+            
         </div>
     )
 }

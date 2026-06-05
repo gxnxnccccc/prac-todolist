@@ -19,7 +19,7 @@ export async function GET(req) {
     request.input('UserId', userId);
     const result_totalList = await request.query('SELECT COUNT(ItemId) as total_list FROM todo_item WHERE UserId = @userId')
     const result_doneList = await request.query('SELECT COUNT(ItemId) AS done_list FROM todo_item WHERE UserId = @userId AND Status = 1')
-    const result_undoneList = await request.query('SELECT COUNT(ItemId) AS undone_list FROM todo_item WHERE UserId = @userId AND Status = 0')
+    const result_undoneList = await request.query('SELECT COUNT(ItemId) AS undone_list FROM todo_item WHERE UserId = @UserId AND Status = 0')
     const result3 = await request.query('SELECT ItemId, List, Status, create_at FROM todo_item WHERE UserId = @userId')
     // console.log('Checking the db result of GET total list: ', result.recordset);
     return Response.json({

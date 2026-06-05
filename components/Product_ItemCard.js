@@ -37,7 +37,7 @@ export default function ProductItemCard({ p, wishlist, toggleWishlist, addProduc
           </div>
           <div className='flex justify-between items-center'>
             <div className='inline-flex items-center gap-1'>
-              <FaStar className='w-3 h-3 text-yellow-400' />5(67)
+              <FaStar className='w-3 h-3 text-yellow-400' />{p.average_rating != null ? Number(p.average_rating).toFixed(1) : '0.0'}
             </div>
             {addProductToCart && p.stock_quantity > 0 && (
               <>

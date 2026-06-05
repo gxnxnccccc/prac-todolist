@@ -2,21 +2,20 @@
 
 import { useState } from 'react'
 
-export default function StarRating() {
-    const [rating, setRating] = useState(0)
+export default function StarRating({ value = 0, onChange, readOnly = false, className = '' }) {
     const [hover, setHover] = useState(0)
 
     return (
-        <div className='flex flex-row-reverse justify-center gap-4'>
+        <div className={`flex flex-row-reverse ${className}`}>
             {[5,4,3,2,1].map((star) => (
                 <button
                     key={star}
-                    onClick={() => setRating(star)}
+                    onClick={() => !readOnly && onChange?.(star)}
                     onMouseEnter={() => setHover(star)}
                     onMouseLeave={() => setHover(0)}
-                    className={`text-5xl transition-colors duration-300 cursor-pointer
-                                ${(hover || rating) >= star 
-                                    ? 'text-[#ffee8c]' 
+                    className={`transition-colors duration-300 cursor-pointer
+                                ${(hover || value) >= star
+                                    ? 'text-yellow-400' 
                                     : 'text-[#ccc]'
                                 } 
                     `}>

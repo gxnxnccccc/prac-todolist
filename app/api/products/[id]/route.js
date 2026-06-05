@@ -18,7 +18,8 @@ export async function GET(req, ctx) {
             .input('id', sql.Int, numId)
             .query(`
                 SELECT p.product_id, p.product_name, p.description, p.stock_quantity, p.unit_price,
-                    p.add_at, p.update_at, p.category_id, c.category_name
+                    p.add_at, p.update_at, p.category_id, c.category_name,
+                    (SELECT COUNT(review_id) FROM reviews WHERE product_id = p.product_id) AS total_review
                 FROM products p
                 LEFT JOIN categories c ON p.category_id = c.category_id
                 WHERE p.product_id = @id

@@ -17,8 +17,10 @@ export async function GET(req) {
         const result_products = await pool.request().query(`
                 SELECT p.product_id, p.product_name, p.description, p.stock_quantity, p.unit_price,
                 p.add_at, p.update_at, p.category_id, c.category_name,
-                (SELECT TOP 1 image_url FROM product_images 
-                    WHERE product_id = p.product_id ORDER BY image_id) AS image_url
+                (SELECT TOP 1 image_url FROM product_images
+                    WHERE product_id = p.product_id ORDER BY image_id) AS image_url,
+                (SELECT CAST(AVG(CAST(star_rating AS DECIMAL(10,2))) AS DECIMAL(10,1))
+                    FROM reviews WHERE product_id = p.product_id) AS average_rating
             FROM products p
             LEFT JOIN categories c ON p.category_id = c.category_id
             ORDER BY p.product_id DESC --order from newest to oldest
@@ -35,10 +37,21 @@ export async function GET(req) {
                                                         FROM wishlists
                                                         WHERE user_id = @userId
                                                     `)
-                
+        
+        // const result_avgRating = await pool.request()
+        //                                             .input('product_id', productId)
+        //                                             .query(`
+        //                                                     SELECT CAST(AVG(CAST(star_rating AS DECIMAL(10,2))) AS DECIMAL(10,1)) AS average_rating
+        //                                                     FROM reviews
+        //                                                     WHERE product_id = @product_id
+        //                                                 `)
+
         return NextResponse.json({
             categories: result_categories.recordset,
-            products: result_products.recordset,
+            products: result_products.recordset.map(p => ({
+                ...p,
+                average_rating: p.average_rating ?? null
+            })),
             all_images: result_allImageProducts.recordset,
             wishlists: result_wishlists.recordset
         });
